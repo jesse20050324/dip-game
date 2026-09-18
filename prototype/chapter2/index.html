@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>第二章 · 颜色合成</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="sheet">
+      <header class="top">
+        <nav class="beats" id="beats" aria-label="关卡"></nav>
+      </header>
+
+      <section class="zones" aria-label="合成台">
+        <figure class="board" id="targetBoard">
+          <canvas id="targetCanvas" width="432" height="432" aria-label="目标图"></canvas>
+        </figure>
+        <figure class="board" id="workBoard">
+          <canvas id="workCanvas" width="432" height="432" aria-label="合成结果"></canvas>
+        </figure>
+        <aside class="mats" id="mats" aria-label="原料区"></aside>
+      </section>
+
+      <footer class="bar">
+        <button type="button" class="reset" id="reset" aria-label="重置本关">↺</button>
+        <button type="button" class="confirm" id="confirm" hidden aria-label="确定">✓</button>
+      </footer>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

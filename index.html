@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>数字图像处理小游戏</title>
+    <style>
+      :root {
+        --paper: #f1e6d0;
+        --card: #fff8ec;
+        --ink: #3b3128;
+        --muted: #7a6b5b;
+        --line: #d7c4a6;
+        --accent: #c45c26;
+        --accent-deep: #9a3f16;
+        --shadow: 0 10px 28px rgba(70, 48, 24, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+          "Microsoft YaHei", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 12% 8%, #f7ecda 0, transparent 42%),
+          radial-gradient(circle at 90% 0%, #ead9bc 0, transparent 36%),
+          var(--paper);
+      }
+
+      .sheet {
+        width: min(640px, calc(100% - 32px));
+        margin: 48px auto;
+        padding: 36px 32px 32px;
+        background: var(--card);
+        border: 1px solid #eadcc4;
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+      }
+
+      p.kicker {
+        margin: 0 0 8px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        font-size: 0.82rem;
+      }
+
+      h1 {
+        margin: 0 0 14px;
+        font-size: clamp(1.6rem, 4vw, 2rem);
+      }
+
+      .lead {
+        margin: 0 0 28px;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .play {
+        display: inline-block;
+        padding: 12px 22px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      .play:hover {
+        background: var(--accent-deep);
+      }
+
+      .more {
+        margin: 22px 0 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .more a {
+        color: var(--accent-deep);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <p class="kicker">DIGITAL IMAGE PROCESSING</p>
+      <h1>把算法变成能玩的像素关卡</h1>
+      <p class="lead">
+        纯静态网页小游戏。拖滑条、涂颜色、对照目标图，在通关过程中理解灰度、阈值和颜色合成。点开就能玩，不用安装。
+      </p>
+      <a class="play" href="prototype/chapter1/index.html">开始第一章</a>
+      <ul class="more">
+        <li>也可以先看 <a href="prototype/chapter2/index.html">第二章 · 颜色合成</a></li>
+      </ul>
+    </main>
+  </body>
+</html>

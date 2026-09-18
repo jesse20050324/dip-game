@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>切开灰度 · 阈值小关</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="sheet">
+      <header class="top">
+        <div>
+          <p class="kicker">数字图像处理 · 试验台</p>
+          <h1>切开灰度</h1>
+        </div>
+        <nav class="beats" aria-label="三拍进度">
+          <button type="button" class="beat-dot" data-beat="0" aria-current="step">
+            1
+          </button>
+          <button type="button" class="beat-dot" data-beat="1">2</button>
+          <button type="button" class="beat-dot" data-beat="2">3</button>
+        </nav>
+      </header>
+
+      <p class="hint" id="hint"></p>
+
+      <section class="boards" aria-label="图像对照">
+        <figure class="board">
+          <figcaption>原来的灰图</figcaption>
+          <canvas id="srcCanvas" width="432" height="432" aria-label="原来的灰图"></canvas>
+        </figure>
+        <figure class="board">
+          <figcaption>切开之后</figcaption>
+          <canvas id="dstCanvas" width="432" height="432" aria-label="切开之后"></canvas>
+        </figure>
+      </section>
+
+      <section class="axis-card">
+        <div class="axis-head">
+          <span>灰度轴 · 把刀放在尖峰中间</span>
+          <span class="probe" id="probe">悬停格子看灰度</span>
+        </div>
+        <div class="axis" id="axis">
+          <canvas id="histCanvas" width="720" height="88" aria-label="灰度直方图，点击或拖动来移动刀"></canvas>
+          <div class="bands" id="bands"></div>
+          <div class="handles" id="handles"></div>
+          <div class="axis-scale">
+            <span>0 黑</span>
+            <span>128</span>
+            <span>255 白</span>
+          </div>
+        </div>
+        <div class="tray" id="tray" hidden>
+          <p>
+            每种颜色对应原图里的一种灰度。左边小灰块就是那种灰，数字是灰度值。
+            把颜色放到轴上能包住这个数字的那一段。先点一段再点另一段可对调。
+          </p>
+          <div class="chips" id="chips"></div>
+        </div>
+      </section>
+
+      <footer class="bar">
+        <label class="check">
+          <input type="checkbox" id="showNumbers" />
+          在格子上显示灰度
+        </label>
+        <p class="status" id="status">拖动下面的刀，右边会跟着变。</p>
+        <button type="button" class="next" id="next" disabled>下一拍</button>
+      </footer>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

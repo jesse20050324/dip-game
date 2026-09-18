@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>第一章照片感四关 · 草图 v3</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #221e18;
+      color: #e8dcc8;
+      padding: 28px 32px 64px;
+    }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    .note, .brief {
+      color: #a89880;
+      font-size: 13px;
+      line-height: 1.55;
+      max-width: 720px;
+    }
+    .brief { margin: 0 0 28px; padding: 12px 14px; border-left: 3px solid #c4a268; }
+    .brief strong { color: #f0e6d2; }
+    section { margin-bottom: 48px; }
+    h2 { font-size: 15px; margin: 0 0 12px; color: #f0e6d2; }
+    .row { display: flex; gap: 20px; flex-wrap: wrap; }
+    figure { margin: 0; }
+    figcaption { font-size: 12px; color: #9a8b74; margin-top: 8px; text-align: center; }
+    .polaroid {
+      background: #efe6d4;
+      padding: 7px 7px 20px;
+      box-shadow: 0 8px 0 #14110e;
+    }
+    img.shot {
+      display: block;
+      width: 384px;
+      height: 384px;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      background: #111;
+    }
+    img.shot.tall {
+      width: 320px;
+      height: 440px;
+    }
+  </style>
+</head>
+<body>
+  <h1>第一章照片感四关 · 草图 v3 · 64×64</h1>
+  <p class="brief">
+    <strong>像素画家会怎么做：</strong>不追「看起来像照片文件」，追「一张被阈值切过的快照」。
+    一层一个色，光影和抖动一律不做。64 格才写得下一封真的信、一排树、一扇能看的窗。
+    构图按实物：信是满幅扫描件；人是半身像；风景是天大、地下、日期贴在角上；上色是窗边人像。
+    湖和窗洞借用天空层，不新开灰色。
+  </p>
+  <p class="note">图是现成 PNG，编辑器里也能直接打开 sketches 文件夹看。</p>
+
+  <section>
+    <h2>A · 发黄旧信（扫描件满幅）</h2>
+    <div class="row">
+      <figure><div class="polaroid"><img class="shot tall" src="sketches/a-left.png" alt="修好的信"></div><figcaption>左：信纸 + 红信头 + 墨</figcaption></figure>
+      <figure><div class="polaroid"><img class="shot tall" src="sketches/a-gray.png" alt="信灰度"></div><figcaption>右：渍在左下，并进信纸</figcaption></figure>
+    </div>
+  </section>
+  <section>
+    <h2>B · 只要一个人（户外半身像）</h2>
+    <div class="row">
+      <figure><div class="polaroid"><img class="shot" src="sketches/b-left.png" alt="人白底"></div><figcaption>左：白底，头发/肤色/衣服</figcaption></figure>
+      <figure><div class="polaroid"><img class="shot" src="sketches/b-gray.png" alt="人灰度"></div><figcaption>右：五层灰（地+发+衣+肤+天）</figcaption></figure>
+    </div>
+  </section>
+  <section>
+    <h2>C · 去掉日期戳（旅行快照）</h2>
+    <div class="row">
+      <figure><div class="polaroid"><img class="shot" src="sketches/c-left.png" alt="风景无戳"></div><figcaption>左：无戳</figcaption></figure>
+      <figure><div class="polaroid"><img class="shot" src="sketches/c-gray.png" alt="风景有戳"></div><figcaption>右：角上 98 8 12</figcaption></figure>
+    </div>
+  </section>
+  <section>
+    <h2>D · 老照片上色（窗边）</h2>
+    <div class="row">
+      <figure><div class="polaroid"><img class="shot" src="sketches/d-left.png" alt="淡彩"></div><figcaption>左：淡彩线索</figcaption></figure>
+      <figure><div class="polaroid"><img class="shot" src="sketches/d-gray.png" alt="五层灰"></div><figcaption>右：五层灰</figcaption></figure>
+      <figure><div class="polaroid"><img class="shot" src="sketches/d-win.png" alt="浓彩"></div><figcaption>判定：浓彩</figcaption></figure>
+    </div>
+  </section>
+</body>
+</html>
