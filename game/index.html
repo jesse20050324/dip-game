@@ -3,30 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>灰度</title>
+    <title>Game</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="boot" id="boot">
-      <div class="boot-card">
-        <div class="boot-pair" aria-hidden="true">
+    <div class="screen" id="home">
+      <button type="button" class="icon-btn speaker js-mute corner-mute" aria-label="声音"></button>
+      <div class="home-card">
+        <p class="home-kicker">Chapter 1</p>
+        <h1 class="home-title">Game</h1>
+        <div class="home-pair" aria-hidden="true">
           <span class="boot-tile is-dark"></span>
           <span class="boot-tile is-light"></span>
         </div>
-        <button type="button" class="play-btn" id="startBtn" aria-label="开始">▶</button>
-        <nav class="beats boot-beats" id="bootBeats" aria-label="进度"></nav>
+        <button type="button" class="cta" id="startBtn">开始游戏</button>
+        <button type="button" class="cta cta-ghost" id="selectBtn">选关</button>
+        <p class="home-progress" id="homeProgress">0 / 13</p>
       </div>
+    </div>
+
+    <div class="screen" id="levels" hidden>
+      <header class="menu-top">
+        <button type="button" class="icon-btn" id="levelsBack" aria-label="返回主页">
+          <span class="back-mark"></span>
+        </button>
+        <h2 class="menu-title">选关</h2>
+        <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+      </header>
+      <div class="level-grid" id="levelGrid"></div>
     </div>
 
     <div class="sheet" id="playSheet" hidden>
       <header class="top">
-        <button type="button" class="icon-btn" id="homeBtn" aria-label="返回">
-          <span class="home-mark"></span>
+        <button type="button" class="icon-btn" id="homeBtn" aria-label="返回选关">
+          <span class="back-mark"></span>
         </button>
-        <nav class="beats" id="beats" aria-label="关卡"></nav>
-        <button type="button" class="icon-btn" id="muteBtn" aria-pressed="false" aria-label="声音">
-          <span class="mute-mark"></span>
-        </button>
+        <p class="level-label" id="levelLabel">1 / 13</p>
+        <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
       </header>
 
       <p class="scene" id="scene" hidden></p>
@@ -57,13 +70,16 @@
       </footer>
     </div>
 
-    <div class="boot" id="done" hidden>
-      <div class="boot-card">
-        <div class="boot-pair" aria-hidden="true">
+    <div class="screen" id="done" hidden>
+      <div class="home-card">
+        <p class="home-kicker">Chapter 1</p>
+        <h1 class="home-title">Game</h1>
+        <div class="home-pair" aria-hidden="true">
           <span class="boot-tile is-match"></span>
           <span class="boot-tile is-match"></span>
         </div>
-        <button type="button" class="play-btn" id="againBtn" aria-label="返回">↺</button>
+        <p class="home-progress">13 / 13</p>
+        <button type="button" class="cta" id="againBtn">返回主页</button>
       </div>
     </div>
 

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>音效试听</title>
+    <style>
+      :root {
+        --paper: #f1e6d0;
+        --card: #fff8ec;
+        --ink: #3b3128;
+        --muted: #7a6b5b;
+        --line: #d7c4a6;
+        --accent: #c45c26;
+        --accent-deep: #9a3f16;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 12% 8%, #f7ecda 0, transparent 42%),
+          var(--paper);
+        padding: 28px 20px 64px;
+      }
+      h1 { margin: 0 0 8px; font-size: 1.6rem; }
+      .lead { margin: 0 0 28px; color: var(--muted); max-width: 52ch; line-height: 1.55; }
+      section {
+        background: var(--card);
+        border: 1px solid #eadcc4;
+        border-radius: 20px;
+        padding: 18px 18px 14px;
+        margin: 0 auto 16px;
+        max-width: 720px;
+        box-shadow: 0 8px 22px rgba(70, 48, 24, 0.08);
+      }
+      h2 { margin: 0 0 4px; font-size: 1.05rem; }
+      .why { margin: 0 0 12px; color: var(--muted); font-size: 0.9rem; }
+      .row { display: flex; flex-wrap: wrap; gap: 8px; }
+      button {
+        border: 0;
+        border-radius: 14px;
+        padding: 10px 14px;
+        background: #efe0c8;
+        color: var(--ink);
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 2px 0 #cbb89a;
+      }
+      button:active { transform: translateY(1px); box-shadow: 0 1px 0 #cbb89a; }
+      button.playing { background: var(--accent); color: #fff; box-shadow: 0 2px 0 var(--accent-deep); }
+      .now { font-size: 0.8rem; color: var(--muted); margin-top: 10px; min-height: 1.2em; }
+    </style>
+  </head>
+  <body>
+    <h1>音效试听</h1>
+    <p class="lead">
+      Kenney Interface Sounds（CC0）。按功能分组，点按钮试听。正式游戏还没用这里的选择，你点头后再换进去。
+    </p>
+    <div id="lab"></div>
+    <script>
+      const GROUPS = [
+        {
+          id: "tap",
+          title: "点按",
+          why: "开始、返回、选关、喇叭。要短、轻，不要游戏机按键那种脆响。",
+          files: ["click_001.wav", "click_002.wav", "click_003.wav", "click_004.wav", "select_001.wav"],
+        },
+        {
+          id: "chip",
+          title: "落色",
+          why: "颜色放到映射轴上。稍微有一点「放下」的重量。",
+          files: ["drop_001.wav", "drop_002.wav", "drop_003.wav", "pluck_001.wav", "pluck_002.wav"],
+        },
+        {
+          id: "ok",
+          title: "过关",
+          why: "判定成功。短促、暖一点，不要庆功号。",
+          files: ["confirmation_001.wav", "confirmation_002.wav", "confirmation_003.wav", "confirmation_004.wav", "maximize_001.wav"],
+        },
+        {
+          id: "no",
+          title: "错误",
+          why: "判定失败。闷一点，不要警报。",
+          files: ["bong_001.wav", "error_002.wav", "error_003.wav", "error_004.wav", "error_006.wav"],
+        },
+        {
+          id: "reset",
+          title: "重置",
+          why: "本关重来。有一点倒回去的感觉就够。",
+          files: ["back_001.wav", "back_002.wav", "back_003.wav", "back_004.wav", "scratch_001.wav"],
+        },
+      ];
+      let current = null;
+      const lab = document.getElementById("lab");
+      GROUPS.forEach((group) => {
+        const sec = document.createElement("section");
+        sec.innerHTML = `<h2>${group.title}</h2><p class="why">${group.why}</p>`;
+        const row = document.createElement("div");
+        row.className = "row";
+        const now = document.createElement("p");
+        now.className = "now";
+        group.files.forEach((file) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = file.replace(".wav", "");
+          btn.addEventListener("click", () => {
+            if (current) {
+              current.pause();
+              current = null;
+            }
+            row.querySelectorAll("button").forEach((b) => b.classList.remove("playing"));
+            const audio = new Audio(`audio/candidates/${group.id}/${file}`);
+            current = audio;
+            btn.classList.add("playing");
+            now.textContent = file;
+            audio.play().catch(() => {});
+            audio.addEventListener("ended", () => btn.classList.remove("playing"));
+          });
+          row.appendChild(btn);
+        });
+        sec.append(row, now);
+        lab.appendChild(sec);
+      });
+    </script>
+  </body>
+</html>

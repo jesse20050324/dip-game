@@ -528,16 +528,30 @@
   const trayEl = document.getElementById("tray");
   const confirmBtn = document.getElementById("confirm");
   const resetBtn = document.getElementById("reset");
-  const beatsEl = document.getElementById("beats");
   const sceneEl = document.getElementById("scene");
-  const bootEl = document.getElementById("boot");
+  const homeEl = document.getElementById("home");
+  const levelsEl = document.getElementById("levels");
   const doneEl = document.getElementById("done");
   const playSheet = document.getElementById("playSheet");
   const startBtn = document.getElementById("startBtn");
+  const selectBtn = document.getElementById("selectBtn");
   const againBtn = document.getElementById("againBtn");
   const homeBtn = document.getElementById("homeBtn");
-  const muteBtn = document.getElementById("muteBtn");
-  const bootBeats = document.getElementById("bootBeats");
+  const levelsBack = document.getElementById("levelsBack");
+  const levelGrid = document.getElementById("levelGrid");
+  const homeProgress = document.getElementById("homeProgress");
+  const levelLabel = document.getElementById("levelLabel");
+  const muteButtons = Array.from(document.querySelectorAll(".js-mute"));
+
+  const SPEAKER_SVG = `<svg class="speaker-svg" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M3.6 9.2h3.4l4.6-3.7v13L7 14.8H3.6z"/>
+    <path class="waves" d="M15.6 8.4c1.5 1.3 1.5 6 0 7.3"/>
+    <path class="waves" d="M18.3 6.2c2.6 2.3 2.6 9.3 0 11.6"/>
+    <path class="slash" d="M5 5l14 14"/>
+  </svg>`;
+  muteButtons.forEach((btn) => {
+    btn.innerHTML = SPEAKER_SVG;
+  });
 
   const SAVE_KEY = "dip-ch1-cleared";
   const MUTE_KEY = "dip-muted";
@@ -580,26 +594,35 @@
     node.play().catch(() => {});
   }
   function syncMuteUi() {
-    muteBtn.classList.toggle("is-muted", muted);
-    muteBtn.setAttribute("aria-pressed", muted ? "true" : "false");
+    muteButtons.forEach((btn) => {
+      btn.classList.toggle("is-muted", muted);
+      btn.setAttribute("aria-pressed", muted ? "true" : "false");
+    });
   }
-  function showBoot() {
-    playSheet.hidden = true;
+  function hideScreens() {
+    homeEl.hidden = true;
+    levelsEl.hidden = true;
     doneEl.hidden = true;
-    bootEl.hidden = false;
-    renderDots();
+    playSheet.hidden = true;
+  }
+  function showHome() {
+    hideScreens();
+    homeEl.hidden = false;
+    renderMenu();
+  }
+  function showLevels() {
+    hideScreens();
+    levelsEl.hidden = false;
+    renderMenu();
   }
   function showDone() {
-    playSheet.hidden = true;
-    bootEl.hidden = true;
+    hideScreens();
     doneEl.hidden = false;
-    renderDots();
   }
   function enterPlay(i) {
     if (!isOpen(i)) return;
     primeAudio();
-    bootEl.hidden = true;
-    doneEl.hidden = true;
+    hideScreens();
     playSheet.hidden = false;
     loadLevel(i);
   }
@@ -861,37 +884,93 @@
     });
   }
 
-  function fillDots(el) {
-    if (!el) return;
-    el.innerHTML = "";
-    const cleared = getCleared();
-    const next = Math.min(cleared + 1, LEVELS.length - 1);
-    const playing = playSheet && !playSheet.hidden;
-    LEVELS.forEach((_, i) => {
-      const dot = document.createElement("button");
-      dot.type = "button";
-      dot.className = "beat-dot";
-      dot.textContent = String(i + 1);
-      if (i <= cleared) dot.classList.add("is-done");
-      if (playing && i === levelIndex) dot.setAttribute("aria-current", "step");
-      else if (!playing && cleared < LEVELS.length - 1 && i === next) {
-        dot.setAttribute("aria-current", "step");
+  function paintThumb(canvas, spec) {
+    const cells = spec.leftDisplay || spec.target;
+    const rows = cells.length;
+    const cols = cells[0].length;
+    const seamless = !!spec.seamless;
+    const w = canvas.width;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#e4d5b8";
+    ctx.fillRect(0, 0, w, w);
+    const gap = seamless ? 0 : rows <= 5 ? 4 : 1;
+    const cell = Math.max(
+      1,
+      Math.floor(
+        Math.min((w - gap * (cols + 1)) / cols, (w - gap * (rows + 1)) / rows)
+      )
+    );
+    const destW = seamless ? cols * cell : cols * (cell + gap) + gap;
+    const destH = seamless ? rows * cell : rows * (cell + gap) + gap;
+    const ox = Math.floor((w - destW) / 2);
+    const oy = Math.floor((w - destH) / 2);
+    const colorOf = (x, y) =>
+      spec.targetIsColor ? cells[y][x] : grayHex(cells[y][x]);
+    if (seamless) {
+      const buf = document.createElement("canvas");
+      buf.width = cols;
+      buf.height = rows;
+      const bctx = buf.getContext("2d");
+      const img = bctx.createImageData(cols, rows);
+      const data = img.data;
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const [r, g, b] = hexRgb(colorOf(x, y));
+          const i = (y * cols + x) * 4;
+          data[i] = r;
+          data[i + 1] = g;
+          data[i + 2] = b;
+          data[i + 3] = 255;
+        }
       }
+      bctx.putImageData(img, 0, 0);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(buf, 0, 0, cols, rows, ox, oy, destW, destH);
+    } else {
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          ctx.fillStyle = colorOf(x, y);
+          ctx.fillRect(ox + gap + x * (cell + gap), oy + gap + y * (cell + gap), cell, cell);
+        }
+      }
+    }
+  }
+
+  function renderMenu() {
+    const cleared = getCleared();
+    const total = LEVELS.length;
+    const doneCount = Math.max(0, cleared + 1);
+    homeProgress.textContent = `${doneCount} / ${total}`;
+    startBtn.textContent =
+      cleared < 0 ? "开始游戏" : cleared >= total - 1 ? "选关" : "继续游戏";
+
+    const next = Math.min(cleared + 1, total - 1);
+    levelGrid.innerHTML = "";
+    LEVELS.forEach((spec, i) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "level-card";
+      const canvas = document.createElement("canvas");
+      canvas.width = 160;
+      canvas.height = 160;
+      paintThumb(canvas, spec);
+      const num = document.createElement("span");
+      num.className = "level-num";
+      num.textContent = String(i + 1);
+      card.append(canvas, num);
+      if (i <= cleared) card.classList.add("is-done");
       if (!isOpen(i)) {
-        dot.disabled = true;
+        card.classList.add("is-locked");
+        card.disabled = true;
       } else {
-        dot.addEventListener("click", () => {
+        if (i === next && cleared < total - 1) card.classList.add("is-next");
+        card.addEventListener("click", () => {
           playSfx("tap", 0.28);
           enterPlay(i);
         });
       }
-      el.appendChild(dot);
+      levelGrid.appendChild(card);
     });
-  }
-
-  function renderDots() {
-    fillDots(beatsEl);
-    fillDots(bootBeats);
   }
 
   function renderPrompt() {
@@ -1132,22 +1211,33 @@
     primeAudio();
     playSfx("tap", 0.3);
     const cleared = getCleared();
-    if (cleared >= LEVELS.length - 1) showDone();
+    if (cleared >= LEVELS.length - 1) showLevels();
     else enterPlay(cleared + 1);
+  });
+  selectBtn.addEventListener("click", () => {
+    primeAudio();
+    playSfx("tap", 0.28);
+    showLevels();
   });
   homeBtn.addEventListener("click", () => {
     playSfx("tap", 0.28);
-    showBoot();
+    showLevels();
+  });
+  levelsBack.addEventListener("click", () => {
+    playSfx("tap", 0.28);
+    showHome();
   });
   againBtn.addEventListener("click", () => {
     playSfx("tap", 0.28);
-    showBoot();
+    showHome();
   });
-  muteBtn.addEventListener("click", () => {
-    muted = !muted;
-    localStorage.setItem(MUTE_KEY, muted ? "1" : "0");
-    syncMuteUi();
-    if (!muted) playSfx("tap", 0.28);
+  muteButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      muted = !muted;
+      localStorage.setItem(MUTE_KEY, muted ? "1" : "0");
+      syncMuteUi();
+      if (!muted) playSfx("tap", 0.28);
+    });
   });
 
   // ---------- 关卡装载 ----------
@@ -1173,10 +1263,10 @@
     answerRevealed = false;
     dragging = false;
     axisMarker.hidden = true;
-    renderDots();
+    levelLabel.textContent = `${i + 1} / ${LEVELS.length}`;
     renderAll();
   }
 
   syncMuteUi();
-  renderDots();
+  renderMenu();
 })();

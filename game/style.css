@@ -51,52 +51,14 @@ body {
   margin-bottom: 18px;
 }
 
-.beats {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
+.level-label {
+  margin: 0;
   flex: 1;
-}
-
-.beat-dot {
-  width: 34px;
-  height: 34px;
-  border: 2px solid var(--line);
-  border-radius: 50%;
-  background: #fff;
-  color: var(--muted);
-  font: inherit;
+  text-align: center;
+  font-size: 1.05rem;
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 2px 0 #eadcc4;
-}
-
-.beat-dot:hover:not(:disabled) {
-  border-color: #cbb89a;
-}
-
-.beat-dot:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: 0 1px 0 #eadcc4;
-}
-
-.beat-dot.is-done {
-  background: #efe0c8;
+  letter-spacing: 0.04em;
   color: var(--ink);
-}
-
-.beat-dot[aria-current="step"] {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-  box-shadow: 0 2px 0 var(--accent-deep);
-}
-
-.beat-dot:disabled {
-  opacity: 0.28;
-  cursor: default;
-  box-shadow: none;
 }
 
 .scene {
@@ -365,7 +327,7 @@ canvas {
 
 .reset,
 .icon-btn,
-.play-btn {
+.cta {
   border: 0;
   cursor: pointer;
   font: inherit;
@@ -384,8 +346,7 @@ canvas {
 }
 
 .reset:hover,
-.icon-btn:hover,
-.play-btn:hover {
+.icon-btn:hover {
   filter: brightness(0.97);
 }
 
@@ -395,8 +356,7 @@ canvas {
 }
 
 .reset:active,
-.icon-btn:active,
-.play-btn:active {
+.icon-btn:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 #cbb89a;
 }
@@ -433,43 +393,69 @@ canvas {
   place-items: center;
 }
 
-.home-mark {
-  width: 16px;
-  height: 16px;
-  border: 3px solid var(--ink);
-  border-radius: 5px;
-  background: #fff8ec;
-  box-shadow: 3px 3px 0 #cbb89a;
+.back-mark {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-left: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  transform: rotate(45deg);
+  margin-left: 6px;
 }
 
-.mute-mark {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--ink);
-  box-shadow: 7px 0 0 0 var(--ink), 14px 0 0 0 var(--ink);
-  transform: scale(0.72);
+.speaker-svg {
+  width: 26px;
+  height: 26px;
+  fill: var(--ink);
+  stroke: var(--ink);
 }
 
-.icon-btn.is-muted .mute-mark {
-  opacity: 0.28;
+.speaker-svg .waves {
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.speaker-svg .slash {
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  display: none;
+}
+
+.icon-btn.is-muted .waves {
+  display: none;
+}
+
+.icon-btn.is-muted .slash {
+  display: block;
 }
 
 .sheet[hidden],
-.boot[hidden] {
+.screen[hidden] {
   display: none !important;
 }
 
-.boot {
+.screen {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
   padding: 24px;
 }
 
-.boot-card {
-  width: min(420px, 100%);
-  padding: 40px 28px 32px;
+.corner-mute {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+}
+
+#home {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.home-card {
+  width: min(440px, 100%);
+  padding: 44px 28px 32px;
   background: var(--card);
   border: 1px solid #eadcc4;
   border-radius: 28px;
@@ -477,7 +463,23 @@ canvas {
   text-align: center;
 }
 
-.boot-pair {
+.home-kicker {
+  margin: 0 0 6px;
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.home-title {
+  margin: 0 0 22px;
+  font-size: clamp(2.4rem, 7vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.home-pair {
   display: flex;
   justify-content: center;
   gap: 16px;
@@ -485,8 +487,8 @@ canvas {
 }
 
 .boot-tile {
-  width: 88px;
-  height: 88px;
+  width: 72px;
+  height: 72px;
   border-radius: 18px;
   border: 1px solid var(--line);
   box-shadow: 0 3px 0 #eadcc4;
@@ -504,27 +506,141 @@ canvas {
   background: #c45c26;
 }
 
-.play-btn {
-  width: 88px;
+.cta {
+  display: block;
+  width: 100%;
   height: 56px;
+  margin: 0 auto 12px;
   border-radius: 18px;
   background: var(--accent);
   color: #fff;
-  font-size: 22px;
+  font-size: 1.12rem;
+  font-weight: 700;
   box-shadow: 0 3px 0 var(--accent-deep);
 }
 
-.play-btn:hover {
+.cta:hover {
   background: var(--accent-deep);
-  filter: none;
 }
 
-.play-btn:active {
+.cta:active {
+  transform: translateY(2px);
   box-shadow: 0 1px 0 var(--accent-deep);
 }
 
-.boot-beats {
-  margin-top: 28px;
+.cta-ghost {
+  background: var(--paper-deep);
+  color: var(--ink);
+  box-shadow: 0 3px 0 #cbb89a;
+}
+
+.cta-ghost:hover {
+  background: #dcc9a5;
+}
+
+.cta-ghost:active {
+  box-shadow: 0 1px 0 #cbb89a;
+}
+
+.home-progress {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  letter-spacing: 0.06em;
+}
+
+.menu-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(1080px, 100%);
+  margin: 0 auto 22px;
+}
+
+.menu-title {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  font-size: 1.35rem;
+}
+
+.level-grid {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 16px;
+  padding-bottom: 40px;
+}
+
+.level-card {
+  position: relative;
+  margin: 0;
+  padding: 10px 10px 12px;
+  border: 2px solid var(--line);
+  border-radius: 20px;
+  background: var(--card);
+  box-shadow: 0 3px 0 #eadcc4;
+  cursor: pointer;
+  text-align: center;
+  font: inherit;
+}
+
+.level-card canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  background: var(--paper-deep);
+}
+
+.level-card .level-num {
+  display: block;
+  margin-top: 8px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.level-card.is-next {
+  border-color: var(--accent);
+  box-shadow: 0 3px 0 var(--accent-deep);
+}
+
+.level-card.is-done .level-num::after {
+  content: " ✓";
+  color: var(--good);
+}
+
+.level-card.is-locked {
+  cursor: default;
+  box-shadow: none;
+}
+
+.level-card.is-locked canvas {
+  filter: grayscale(1) brightness(0.78);
+  opacity: 0.55;
+}
+
+.level-card.is-locked .level-num {
+  color: var(--muted);
+}
+
+.level-card.is-locked::after {
+  content: "";
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 14px;
+  height: 11px;
+  border: 2px solid var(--muted);
+  border-radius: 3px;
+  background: rgba(241, 230, 208, 0.85);
+  box-shadow: 0 -7px 0 -3px var(--muted);
+}
+
+.level-card:not(.is-locked):active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #eadcc4;
 }
 
 @media (max-width: 820px) {
@@ -532,9 +648,7 @@ canvas {
     grid-template-columns: 1fr;
   }
 
-  .beat-dot {
-    width: 30px;
-    height: 30px;
-    font-size: 13px;
+  .level-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
