@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UI 外壳 · 验收入口</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=Instrument+Serif&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #1c1914;
+        --muted: #6a6156;
+        --paper: #efe7d8;
+        --card: #fbf6ec;
+        --line: #d8ccb6;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "IBM Plex Sans", "Microsoft YaHei", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 8% 0%, #fff8ea, transparent 36%),
+          radial-gradient(circle at 100% 10%, #e7d7b8, transparent 32%),
+          var(--paper);
+      }
+
+      .wrap {
+        width: min(1180px, calc(100% - 36px));
+        margin: 0 auto;
+        padding: 48px 0 72px;
+      }
+
+      .kicker {
+        margin: 0 0 8px;
+        letter-spacing: 0.16em;
+        font-size: 0.76rem;
+        color: var(--muted);
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-family: "Instrument Serif", Georgia, serif;
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        font-weight: 400;
+      }
+
+      .lead {
+        max-width: 68ch;
+        margin: 0 0 18px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .note {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        margin: 0 0 34px;
+        padding: 12px 16px;
+        border: 1px dashed var(--line);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.45);
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 18px;
+      }
+
+      article {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+        padding: 22px 22px 20px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: 0 12px 30px rgba(70, 48, 24, 0.06);
+      }
+
+      .swatch {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        height: 54px;
+        margin-bottom: 16px;
+        overflow: hidden;
+        border-radius: 12px;
+      }
+
+      .swatch i {
+        display: block;
+      }
+
+      .tag {
+        margin: 0 0 6px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+      }
+
+      h2.group {
+        margin: 36px 0 14px;
+        font-family: "Instrument Serif", Georgia, serif;
+        font-size: 1.8rem;
+        font-weight: 400;
+      }
+
+      h2 {
+        margin: 0 0 10px;
+        font-size: 1.35rem;
+      }
+
+      p {
+        margin: 0 0 14px;
+        color: #4f473d;
+        line-height: 1.65;
+      }
+
+      ul {
+        margin: 0 0 18px;
+        padding-left: 18px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      a.open {
+        margin-top: auto;
+        display: inline-flex;
+        align-self: flex-start;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff8ea;
+        text-decoration: none;
+        font-weight: 700;
+      }
+
+      a.open:hover {
+        background: #3a332a;
+      }
+
+      footer {
+        margin-top: 28px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      footer a {
+        color: var(--ink);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <p class="kicker">UI / INTERACTION SHELLS</p>
+      <h1>十版游戏外壳，原关卡网页不动。</h1>
+      <p class="lead">
+        这里只验收整体 UI 和交互：标题页、顺序解锁、选关、对局 HUD、暂停、通关。
+        中间的游戏画面故意留白。点确定会模拟通关并打开下一关。
+        A–E 是偏主题的对照版；F–J 按轻量教育解谜来做：简约、少装饰，关内不再写提示语。
+      </p>
+      <div class="note">
+        <span>共通规则：前一关通过才能进下一关。</span>
+        <span>已过关可回看，锁住的关进不去。</span>
+        <span>默认带着前 3 关已通的演示进度。</span>
+        <span>F–J 关内无字；标题页的 START / CONTINUE 可以有字。</span>
+      </div>
+      <h2 class="group">对照 · A–E</h2>
+      <section class="grid">
+        <article>
+          <div class="swatch">
+            <i style="background:#140807"></i>
+            <i style="background:#7a1410"></i>
+            <i style="background:#c23b22"></i>
+            <i style="background:#e8a87c"></i>
+            <i style="background:#f3d7b3"></i>
+          </div>
+          <p class="tag">A · 暗房</p>
+          <h2>底片夹</h2>
+          <p>把整局收成一间红灯暗房。关卡是一条胶卷：显影过的能回看，未曝光的格子抖一下，进不去。</p>
+          <ul>
+            <li>选关 = 胶卷画幅，不是圆点菜单</li>
+            <li>通关像一次显影</li>
+            <li>最贴后半段修照片的气质</li>
+          </ul>
+          <a class="open" href="a-darkroom/index.html">打开 A</a>
+        </article>
+        <article>
+          <div class="swatch">
+            <i style="background:#070814"></i>
+            <i style="background:#12162b"></i>
+            <i style="background:#ff2d95"></i>
+            <i style="background:#3de0ff"></i>
+            <i style="background:#ffe566"></i>
+          </div>
+          <p class="tag">B · 街机</p>
+          <h2>识图机</h2>
+          <p>最像「游戏」的一版。柜体、闪烁 START、STAGE 格子。锁关直接报错，通关喊 STAGE CLEAR。</p>
+          <ul>
+            <li>选关 = 街机选关盘</li>
+            <li>大颗街机键：重置 / 判定</li>
+            <li>适合想要立刻有街机感的人</li>
+          </ul>
+          <a class="open" href="b-arcade/index.html">打开 B</a>
+        </article>
+        <article>
+          <div class="swatch">
+            <i style="background:#e8dfd2"></i>
+            <i style="background:#f7f1e6"></i>
+            <i style="background:#6b4f3a"></i>
+            <i style="background:#c4a46a"></i>
+            <i style="background:#7a1f2b"></i>
+          </div>
+          <p class="tag">C · 画廊</p>
+          <h2>修复长廊</h2>
+          <p>一条展览走廊。过关的画亮着，没到的画蒙着绒布、拦着绳子。进关像把画从墙上取下来修。</p>
+          <ul>
+            <li>选关 = 横向走动的画框</li>
+            <li>对局像工作室里的两幅对照</li>
+            <li>气质更静，偏独立解谜</li>
+          </ul>
+          <a class="open" href="c-gallery/index.html">打开 C</a>
+        </article>
+        <article>
+          <div class="swatch">
+            <i style="background:#07110d"></i>
+            <i style="background:#132019"></i>
+            <i style="background:#6dffb0"></i>
+            <i style="background:#8aa39a"></i>
+            <i style="background:#ffc857"></i>
+          </div>
+          <p class="tag">D · 控制室</p>
+          <h2>流水线台</h2>
+          <p>把「一条修复流水线」做成世界地图。节点一串连着，上游没提交，下游就是暗的。</p>
+          <ul>
+            <li>选关 = 管线节点图</li>
+            <li>对局是控制台 HUD</li>
+            <li>最能看见全作 15–20 关怎么往下接</li>
+          </ul>
+          <a class="open" href="d-pipeline/index.html">打开 D</a>
+        </article>
+        <article>
+          <div class="swatch">
+            <i style="background:#5c3317"></i>
+            <i style="background:#cbb89a"></i>
+            <i style="background:#f6ecd4"></i>
+            <i style="background:#3d6b7a"></i>
+            <i style="background:#9c2a2a"></i>
+          </div>
+          <p class="tag">E · 手账</p>
+          <h2>灯塔笔记</h2>
+          <p>封面、地图、对开页。过关盖一枚蜡印，没走到的地点是空圈。像带着一本旅途笔记在修图。</p>
+          <ul>
+            <li>选关 = 手绘路线图</li>
+            <li>对局是摊开的本子</li>
+            <li>暖，但结构仍是正经游戏循环</li>
+          </ul>
+          <a class="open" href="e-journal/index.html">打开 E</a>
+        </article>
+      </section>
+      <h2 class="group">简约 · F–J</h2>
+      <section class="grid">
+        <article>
+          <div class="swatch">
+            <i style="background:#f3ece0"></i>
+            <i style="background:#fff8ec"></i>
+            <i style="background:#d7c4a6"></i>
+            <i style="background:#3b3128"></i>
+            <i style="background:#c45c26"></i>
+          </div>
+          <p class="tag">F · 浅纸</p>
+          <h2>圆点纸台</h2>
+          <p>最贴近现在本体：一张浅纸、一排圆点。锁住的点是空心，过了的点才实。关里不写一句话。</p>
+          <ul>
+            <li>选关 = 现在那种圆点，加上顺序锁</li>
+            <li>按钮只留图标</li>
+            <li>适合当「最小改动」对照</li>
+          </ul>
+          <a class="open" href="f-paper/index.html">打开 F</a>
+        </article>
+        <article>
+          <div class="swatch">
+            <i style="background:#f7f5f1"></i>
+            <i style="background:#ffffff"></i>
+            <i style="background:#d4d0c8"></i>
+            <i style="background:#2a2a28"></i>
+            <i style="background:#6e6a62"></i>
+          </div>
+          <p class="tag">G · 细线</p>
+          <h2>发丝线</h2>
+          <p>近白底、一根细线。选关是左边一列序号，右边是空。不靠颜色和装饰说话。</p>
+          <ul>
+            <li>冷一点，像印出来的纸</li>
+            <li>几乎没有圆角和阴影</li>
+            <li>锁关轻轻晃一下</li>
+          </ul>
+          <a class="open" href="g-hairline/index.html">打开 G</a>
+        </article>
+        <article>
+          <div class="swatch">
+            <i style="background:#efe8dc"></i>
+            <i style="background:#f8f2e8"></i>
+            <i style="background:#c8bba6"></i>
+            <i style="background:#4a4036"></i>
+            <i style="background:#b5522a"></i>
+          </div>
+          <p class="tag">H · 点列</p>
+          <h2>只有点</h2>
+          <p>整页就是两排点。当前关略大，锁住的点空着。进关后头顶还是同一排点。</p>
+          <ul>
+            <li>最省字的选关</li>
+            <li>进度一目了然</li>
+            <li>像常见的独立解谜</li>
+          </ul>
+          <a class="open" href="h-dots/index.html">打开 H</a>
+        </article>
+        <article>
+          <div class="swatch">
+            <i style="background:#ebe6de"></i>
+            <i style="background:#f4f0ea"></i>
+            <i style="background:#cfc6ba"></i>
+            <i style="background:#3c3832"></i>
+            <i style="background:#8a8176"></i>
+          </div>
+          <p class="tag">I · 对照</p>
+          <h2>两幅</h2>
+          <p>身份就是左右两块。选关收成一小格网格，进关后只剩对照和底下一排工具。</p>
+          <ul>
+            <li>画面占满，壳尽量瘦</li>
+            <li>不讲故事房间</li>
+            <li>和关卡骨架最贴</li>
+          </ul>
+          <a class="open" href="i-frames/index.html">打开 I</a>
+        </article>
+        <article>
+          <div class="swatch">
+            <i style="background:#e8e0d0"></i>
+            <i style="background:#f6f1e7"></i>
+            <i style="background:#ddd2be"></i>
+            <i style="background:#3b3128"></i>
+            <i style="background:#c45c26"></i>
+          </div>
+          <p class="tag">J · 一页</p>
+          <h2>单张纸</h2>
+          <p>标题、选关、对局都在同一张纸上切换。没有第二个世界，轻得像一页网页。</p>
+          <ul>
+            <li>始终一个卡片轮廓</li>
+            <li>START 之后还是这张纸</li>
+            <li>最接近「轻量网页游戏」</li>
+          </ul>
+          <a class="open" href="j-sheet/index.html">打开 J</a>
+        </article>
+      </section>
+      <footer>
+        现有游戏本体没有改：<a href="../prototype/chapter1/index.html">第一章</a>
+        ·
+        <a href="../index.html">原首页</a>
+      </footer>
+    </main>
+  </body>
+</html>

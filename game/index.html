@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>灰度</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="boot" id="boot">
+      <div class="boot-card">
+        <div class="boot-pair" aria-hidden="true">
+          <span class="boot-tile is-dark"></span>
+          <span class="boot-tile is-light"></span>
+        </div>
+        <button type="button" class="play-btn" id="startBtn" aria-label="开始">▶</button>
+        <nav class="beats boot-beats" id="bootBeats" aria-label="进度"></nav>
+      </div>
+    </div>
+
+    <div class="sheet" id="playSheet" hidden>
+      <header class="top">
+        <button type="button" class="icon-btn" id="homeBtn" aria-label="返回">
+          <span class="home-mark"></span>
+        </button>
+        <nav class="beats" id="beats" aria-label="关卡"></nav>
+        <button type="button" class="icon-btn" id="muteBtn" aria-pressed="false" aria-label="声音">
+          <span class="mute-mark"></span>
+        </button>
+      </header>
+
+      <p class="scene" id="scene" hidden></p>
+      <section class="boards" aria-label="图像对照">
+        <figure class="board" id="targetBoard">
+          <canvas id="targetCanvas" width="432" height="432" aria-label="目标图"></canvas>
+        </figure>
+        <figure class="board" id="workBoard">
+          <canvas id="workCanvas" width="432" height="432" aria-label="操作图"></canvas>
+        </figure>
+      </section>
+
+      <section class="axis-card">
+        <div class="axis" id="axis">
+          <div class="axis-marker" id="axisMarker" hidden></div>
+          <div class="bars" id="bars">
+            <div class="gray-bar" id="grayBar"></div>
+            <div class="map-bar" id="mapBar" hidden></div>
+            <div class="handles-layer" id="handlesLayer"></div>
+          </div>
+        </div>
+        <div class="tray" id="tray" hidden></div>
+      </section>
+
+      <footer class="bar">
+        <button type="button" class="reset" id="reset" aria-label="重置本关">↺</button>
+        <button type="button" class="confirm" id="confirm" hidden aria-label="确定">✓</button>
+      </footer>
+    </div>
+
+    <div class="boot" id="done" hidden>
+      <div class="boot-card">
+        <div class="boot-pair" aria-hidden="true">
+          <span class="boot-tile is-match"></span>
+          <span class="boot-tile is-match"></span>
+        </div>
+        <button type="button" class="play-btn" id="againBtn" aria-label="返回">↺</button>
+      </div>
+    </div>
+
+    <script src="photo-art.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

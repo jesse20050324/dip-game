@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>D · 流水线台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-skin="pipeline">
+    <div class="gridbg"></div>
+    <p class="proto">外壳原型 D · 游戏画面留白 · <a href="../index.html">回五版入口</a></p>
+
+    <section class="screen title-screen" data-screen="title">
+      <p class="lab">SYSTEM READY</p>
+      <h1>REPAIR LINE</h1>
+      <p class="deck">一条修复管线。上游节点没提交，下游保持离线。</p>
+      <div class="title-actions">
+        <button type="button" class="btn primary" data-act="continue" data-if-continue>RESUME NODE · <span data-bind="continue-name"></span></button>
+        <button type="button" class="btn" data-go="select">OPEN SCHEMATIC</button>
+        <button type="button" class="btn ghost" data-act="new">REBOOT LINE</button>
+      </div>
+    </section>
+
+    <section class="screen select-screen" data-screen="select" hidden>
+      <header class="top">
+        <button type="button" class="text" data-go="title">BOOT</button>
+        <div>
+          <p class="lab">PIPELINE MAP</p>
+          <h2>按节点往下接。</h2>
+        </div>
+        <button type="button" class="text" data-act="settings">CFG</button>
+      </header>
+      <div class="schematic">
+        <section>
+          <p class="lab">LINE A · 灰度与阈值</p>
+          <div class="nodes" data-level-list="ch1"></div>
+        </section>
+        <section data-chapter="ch2">
+          <p class="lab">LINE B · 颜色合成 · <span data-bind="ch2-lock"></span></p>
+          <div class="nodes" data-level-list="ch2"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="screen play-screen" data-screen="play" hidden>
+      <header class="hud">
+        <button type="button" class="text" data-go="select">MAP</button>
+        <div class="status">
+          <span data-bind="chapter-kicker"></span>
+          <strong data-bind="level-name"></strong>
+          <em data-bind="progress"></em>
+        </div>
+        <button type="button" class="text" data-act="pause">HALT</button>
+      </header>
+      <p class="scene" data-bind="scene"></p>
+      <section class="viewports">
+        <figure>
+          <figcaption>IN</figcaption>
+          <div class="blank">NO FRAME</div>
+        </figure>
+        <figure>
+          <figcaption>OUT</figcaption>
+          <div class="blank">NO FRAME</div>
+        </figure>
+      </section>
+      <section class="module">
+        <div class="axis">
+          <div class="gray"></div>
+          <div class="map">
+            <i style="background:#6dffb0;flex:2"></i>
+            <i style="background:#ffc857;flex:1.4"></i>
+            <i style="background:#8aa39a;flex:1.6"></i>
+            <i class="empty" style="flex:1.2"></i>
+          </div>
+          <button type="button" class="handle" style="left:28%" aria-label="边界"></button>
+          <button type="button" class="handle" style="left:52%" aria-label="边界"></button>
+          <button type="button" class="handle" style="left:74%" aria-label="边界"></button>
+        </div>
+        <div class="tray">
+          <button type="button" class="chip" style="background:#6dffb0" aria-label="色块"></button>
+          <button type="button" class="chip on" style="background:#ffc857" aria-label="色块"></button>
+          <button type="button" class="chip" style="background:#8aa39a" aria-label="色块"></button>
+          <button type="button" class="chip" style="background:#ff5a5a" aria-label="色块"></button>
+        </div>
+        <div class="play-bar">
+          <button type="button" class="btn" data-act="reset">REVERT</button>
+          <button type="button" class="btn primary" data-act="confirm">COMMIT</button>
+        </div>
+      </section>
+    </section>
+
+    <div class="overlay" data-overlay="pause" hidden>
+      <div class="panel">
+        <p class="lab">HALTED</p>
+        <h2>进程挂起</h2>
+        <button type="button" class="btn primary" data-act="close">RESUME</button>
+        <button type="button" class="btn" data-go="select">SCHEMATIC</button>
+        <button type="button" class="btn ghost" data-act="settings">CFG</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="clear" hidden>
+      <div class="panel ok">
+        <p class="lab">NODE COMMITTED</p>
+        <h2><span data-bind="level-name"></span> 已写入。</h2>
+        <p>NEXT <span data-bind="next-name"></span></p>
+        <button type="button" class="btn primary" data-act="next">NEXT NODE</button>
+        <button type="button" class="btn" data-act="replay">REOPEN</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="settings" hidden>
+      <div class="panel">
+        <p class="lab">CONFIG</p>
+        <h2>控制台</h2>
+        <p>清空后整条管线掉回离线。</p>
+        <button type="button" class="btn" data-act="wipe">WIPE SAVE</button>
+        <button type="button" class="btn primary" data-act="close">CLOSE</button>
+      </div>
+    </div>
+    <div class="toast" data-toast data-on="0"></div>
+    <template data-level-template>
+      <button type="button" class="node">
+        <i class="dot"></i>
+        <b data-bind="index"></b>
+        <strong data-bind="name"></strong>
+        <em data-bind="status-label"></em>
+      </button>
+    </template>
+    <script src="../core.js"></script>
+    <script>
+      GameShell.create({
+        storageKey: "ui-shell-d-pipeline",
+        lockedText: "UPSTREAM REQUIRED",
+      });
+    </script>
+  </body>
+</html>

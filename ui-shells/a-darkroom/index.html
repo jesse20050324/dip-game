@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A · 暗房底片夹</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Instrument+Serif&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-skin="darkroom">
+    <div class="safe"></div>
+    <div class="grain"></div>
+    <p class="proto">外壳原型 A · 游戏画面留白 · <a href="../index.html">回五版入口</a></p>
+
+    <section class="screen title-screen" data-screen="title">
+      <div class="bulb"></div>
+      <p class="lab">PIXEL DARKROOM</p>
+      <h1>暗房还亮着。</h1>
+      <p class="deck">一卷待修的底片。只能按格显影，前一格没出来，后一格就还是黑的。</p>
+      <div class="title-actions">
+        <button type="button" class="btn primary" data-act="continue" data-if-continue>继续未完成的底片 · <span data-bind="continue-name"></span></button>
+        <button type="button" class="btn" data-go="select">打开底片夹</button>
+        <button type="button" class="btn ghost" data-act="new">新的一卷</button>
+      </div>
+    </section>
+
+    <section class="screen select-screen" data-screen="select" hidden>
+      <header class="select-top">
+        <button type="button" class="text-btn" data-go="title">← 暗房</button>
+        <div>
+          <p class="lab">FILM HOLDER</p>
+          <h2>按画幅往下显。</h2>
+        </div>
+        <button type="button" class="text-btn" data-act="settings">设定</button>
+      </header>
+      <div class="chapter-row">
+        <article class="chapter-card" data-chapter="ch1">
+          <p class="lab" data-bind="chapter-kicker">CHAPTER 01</p>
+          <h3>灰度与阈值</h3>
+          <p>已显影 <span data-bind="cleared-count">0</span> 格</p>
+        </article>
+        <article class="chapter-card" data-chapter="ch2">
+          <p class="lab">CHAPTER 02</p>
+          <h3>颜色合成</h3>
+          <p data-bind="ch2-lock">上一章未完成</p>
+        </article>
+      </div>
+      <div class="film-wrap">
+        <div class="sprocket"></div>
+        <div class="frames" data-level-list="ch1"></div>
+        <div class="sprocket"></div>
+      </div>
+      <div class="film-wrap dim" data-chapter="ch2">
+        <div class="sprocket"></div>
+        <div class="frames" data-level-list="ch2"></div>
+        <div class="sprocket"></div>
+      </div>
+    </section>
+
+    <section class="screen play-screen" data-screen="play" hidden>
+      <header class="play-top">
+        <button type="button" class="icon-btn" data-go="select" aria-label="回底片夹">▤</button>
+        <div class="rebate">
+          <span data-bind="chapter-kicker"></span>
+          <strong data-bind="level-id"></strong>
+          <em data-bind="level-name"></em>
+          <span data-bind="progress"></span>
+        </div>
+        <button type="button" class="icon-btn" data-act="pause" aria-label="暂停">Ⅱ</button>
+      </header>
+      <p class="scene" data-bind="scene"></p>
+      <section class="boards">
+        <figure>
+          <figcaption>来件</figcaption>
+          <div class="blank">游戏画面</div>
+        </figure>
+        <figure>
+          <figcaption>工作稿</figcaption>
+          <div class="blank">游戏画面</div>
+        </figure>
+      </section>
+      <section class="bench">
+        <div class="axis">
+          <div class="gray"></div>
+          <div class="map">
+            <i style="background:#f4efe3;flex:2"></i>
+            <i style="background:#d4a017;flex:1.4"></i>
+            <i style="background:#2b3a67;flex:1.6"></i>
+            <i class="empty" style="flex:1.2"></i>
+          </div>
+          <button type="button" class="handle" style="left:28%" aria-label="边界"></button>
+          <button type="button" class="handle" style="left:52%" aria-label="边界"></button>
+          <button type="button" class="handle" style="left:74%" aria-label="边界"></button>
+        </div>
+        <div class="tray">
+          <button type="button" class="chip" style="background:#f4efe3" aria-label="色块"></button>
+          <button type="button" class="chip on" style="background:#d4a017" aria-label="色块"></button>
+          <button type="button" class="chip" style="background:#2b3a67" aria-label="色块"></button>
+          <button type="button" class="chip" style="background:#8c2f1b" aria-label="色块"></button>
+        </div>
+        <div class="play-bar">
+          <button type="button" class="btn" data-act="reset">↺ 重置</button>
+          <button type="button" class="btn primary" data-act="confirm">确定显影</button>
+        </div>
+      </section>
+    </section>
+
+    <div class="overlay" data-overlay="pause" hidden>
+      <div class="panel">
+        <p class="lab">SAFE LIGHT</p>
+        <h2>灯先关上。</h2>
+        <button type="button" class="btn primary" data-act="close">继续修</button>
+        <button type="button" class="btn" data-go="select">回底片夹</button>
+        <button type="button" class="btn ghost" data-act="settings">设定</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="clear" hidden>
+      <div class="panel develop">
+        <p class="lab">DEVELOPED</p>
+        <h2><span data-bind="level-name"></span> 显出来了。</h2>
+        <p>下一格：<span data-bind="next-name"></span></p>
+        <button type="button" class="btn primary" data-act="next">下一格</button>
+        <button type="button" class="btn" data-act="replay">再看这一格</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="settings" hidden>
+      <div class="panel">
+        <p class="lab">SETTINGS</p>
+        <h2>暗房设定</h2>
+        <p>进度只存在这台浏览器里。清空后从第一格重新显影。</p>
+        <button type="button" class="btn" data-act="wipe">清空进度</button>
+        <button type="button" class="btn primary" data-act="close">关闭</button>
+      </div>
+    </div>
+
+    <div class="toast" data-toast data-on="0"></div>
+    <template data-level-template>
+      <button type="button" class="frame">
+        <span class="idx" data-bind="index"></span>
+        <strong data-bind="name"></strong>
+        <em data-bind="status-label"></em>
+      </button>
+    </template>
+    <script src="../core.js"></script>
+    <script>
+      GameShell.create({
+        storageKey: "ui-shell-a-darkroom",
+        lockedText: "这格还没曝光。先把前一格显出来。",
+      });
+    </script>
+  </body>
+</html>

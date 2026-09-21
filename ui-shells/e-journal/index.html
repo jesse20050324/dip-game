@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>E · 灯塔笔记</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Libre+Baskerville:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-skin="journal">
+    <p class="proto">外壳原型 E · 游戏画面留白 · <a href="../index.html">回五版入口</a></p>
+
+    <section class="screen title-screen" data-screen="title">
+      <div class="cover">
+        <p class="lab">FIELD NOTES</p>
+        <h1>灯塔笔记</h1>
+        <p class="hand">一路修过去，盖一枚印，才准翻下一页。</p>
+        <div class="title-actions">
+          <button type="button" class="btn primary" data-act="continue" data-if-continue>翻到 <span data-bind="continue-name"></span></button>
+          <button type="button" class="btn" data-go="select">打开地图</button>
+          <button type="button" class="btn ghost" data-act="new">换一本新笔记</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen select-screen" data-screen="select" hidden>
+      <header class="top">
+        <button type="button" class="text" data-go="title">合上</button>
+        <div>
+          <p class="lab">THE ROUTE</p>
+          <h2>走过的地方有印。</h2>
+        </div>
+        <button type="button" class="text" data-act="settings">扉页</button>
+      </header>
+      <div class="mapbook">
+        <section>
+          <p class="lab">岸上 · 灰度与阈值</p>
+          <div class="path" data-level-list="ch1"></div>
+        </section>
+        <section data-chapter="ch2">
+          <p class="lab">海上 · 颜色合成 · <span data-bind="ch2-lock"></span></p>
+          <div class="path" data-level-list="ch2"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="screen play-screen" data-screen="play" hidden>
+      <header class="top">
+        <button type="button" class="text" data-go="select">回地图</button>
+        <div class="ribbon">
+          <span data-bind="chapter-title"></span>
+          <strong data-bind="level-name"></strong>
+          <em data-bind="progress"></em>
+        </div>
+        <button type="button" class="text" data-act="pause">夹页</button>
+      </header>
+      <p class="scene hand" data-bind="scene"></p>
+      <section class="spread">
+        <figure>
+          <figcaption>左页 · 来件</figcaption>
+          <div class="blank">这一页留给游戏</div>
+        </figure>
+        <figure>
+          <figcaption>右页 · 手稿</figcaption>
+          <div class="blank">这一页留给游戏</div>
+        </figure>
+      </section>
+      <section class="gutter">
+        <div class="axis">
+          <div class="gray"></div>
+          <div class="map">
+            <i style="background:#f6ecd4;flex:2"></i>
+            <i style="background:#3d6b7a;flex:1.4"></i>
+            <i style="background:#9c2a2a;flex:1.6"></i>
+            <i class="empty" style="flex:1.2"></i>
+          </div>
+          <button type="button" class="handle" style="left:28%" aria-label="边界"></button>
+          <button type="button" class="handle" style="left:52%" aria-label="边界"></button>
+          <button type="button" class="handle" style="left:74%" aria-label="边界"></button>
+        </div>
+        <div class="tray">
+          <button type="button" class="chip" style="background:#f6ecd4" aria-label="色块"></button>
+          <button type="button" class="chip on" style="background:#3d6b7a" aria-label="色块"></button>
+          <button type="button" class="chip" style="background:#9c2a2a" aria-label="色块"></button>
+          <button type="button" class="chip" style="background:#5c3317" aria-label="色块"></button>
+        </div>
+        <div class="play-bar">
+          <button type="button" class="btn" data-act="reset">擦掉重来</button>
+          <button type="button" class="btn primary" data-act="confirm">盖印过关</button>
+        </div>
+      </section>
+    </section>
+
+    <div class="overlay" data-overlay="pause" hidden>
+      <div class="panel">
+        <p class="lab">BOOKMARK</p>
+        <h2>夹在这一页。</h2>
+        <button type="button" class="btn primary" data-act="close">接着写</button>
+        <button type="button" class="btn" data-go="select">回地图</button>
+        <button type="button" class="btn ghost" data-act="settings">扉页</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="clear" hidden>
+      <div class="panel stamp-panel">
+        <div class="wax">印</div>
+        <h2><span data-bind="level-name"></span> 收下了。</h2>
+        <p>下一站：<span data-bind="next-name"></span></p>
+        <button type="button" class="btn primary" data-act="next">去下一站</button>
+        <button type="button" class="btn" data-act="replay">再看这一页</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="settings" hidden>
+      <div class="panel">
+        <p class="lab">FLYLEAF</p>
+        <h2>扉页</h2>
+        <p>清空后，地图上的印会全部消失。</p>
+        <button type="button" class="btn" data-act="wipe">清空进度</button>
+        <button type="button" class="btn primary" data-act="close">合上</button>
+      </div>
+    </div>
+    <div class="toast" data-toast data-on="0"></div>
+    <template data-level-template>
+      <button type="button" class="stop">
+        <i class="mark"></i>
+        <b data-bind="index"></b>
+        <strong data-bind="name"></strong>
+        <em data-bind="status-label"></em>
+      </button>
+    </template>
+    <script src="../core.js"></script>
+    <script>
+      GameShell.create({
+        storageKey: "ui-shell-e-journal",
+        lockedText: "还没走到这里。路是顺着走的。",
+      });
+    </script>
+  </body>
+</html>

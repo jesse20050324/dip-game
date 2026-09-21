@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>B · 识图机</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-skin="arcade">
+    <div class="scan"></div>
+    <p class="proto">外壳原型 B · 游戏画面留白 · <a href="../index.html">回五版入口</a></p>
+    <div class="cabinet">
+      <section class="screen title-screen" data-screen="title">
+        <p class="blink">INSERT COIN</p>
+        <h1>识图机</h1>
+        <p class="deck">STAGE 按顺序开。没过的关是黑块，按了会 ERROR。</p>
+        <div class="title-actions">
+          <button type="button" class="arcade-btn start" data-act="continue" data-if-continue>CONTINUE <span data-bind="continue-name"></span></button>
+          <button type="button" class="arcade-btn" data-go="select">STAGE SELECT</button>
+          <button type="button" class="arcade-btn dim" data-act="new">1P START</button>
+        </div>
+      </section>
+
+      <section class="screen select-screen" data-screen="select" hidden>
+        <header class="hud">
+          <button type="button" data-go="title">TITLE</button>
+          <h2>STAGE SELECT</h2>
+          <button type="button" data-act="settings">OPT</button>
+        </header>
+        <div class="worlds">
+          <div>
+            <p class="lab">WORLD 1 · GRAY</p>
+            <div class="stage-grid" data-level-list="ch1"></div>
+          </div>
+          <div class="world" data-chapter="ch2">
+            <p class="lab">WORLD 2 · COLOR · <span data-bind="ch2-lock"></span></p>
+            <div class="stage-grid" data-level-list="ch2"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen play-screen" data-screen="play" hidden>
+        <header class="hud">
+          <button type="button" data-go="select">MAP</button>
+          <div class="stats">
+            <span>STAGE <b data-bind="level-id"></b></span>
+            <span data-bind="level-name"></span>
+            <span>CLEAR <b data-bind="cleared-count"></b></span>
+          </div>
+          <button type="button" data-act="pause">PAUSE</button>
+        </header>
+        <p class="scene" data-bind="scene"></p>
+        <section class="boards">
+          <figure>
+            <figcaption>TARGET</figcaption>
+            <div class="blank">NO SIGNAL</div>
+          </figure>
+          <figure>
+            <figcaption>WORK</figcaption>
+            <div class="blank">NO SIGNAL</div>
+          </figure>
+        </section>
+        <section class="console">
+          <div class="axis">
+            <div class="gray"></div>
+            <div class="map">
+              <i style="background:#ffe566;flex:2"></i>
+              <i style="background:#3de0ff;flex:1.4"></i>
+              <i style="background:#ff2d95;flex:1.6"></i>
+              <i class="empty" style="flex:1.2"></i>
+            </div>
+            <button type="button" class="handle" style="left:28%" aria-label="边界"></button>
+            <button type="button" class="handle" style="left:52%" aria-label="边界"></button>
+            <button type="button" class="handle" style="left:74%" aria-label="边界"></button>
+          </div>
+          <div class="tray">
+            <button type="button" class="chip" style="background:#ffe566" aria-label="色块"></button>
+            <button type="button" class="chip on" style="background:#3de0ff" aria-label="色块"></button>
+            <button type="button" class="chip" style="background:#ff2d95" aria-label="色块"></button>
+            <button type="button" class="chip" style="background:#7cff6b" aria-label="色块"></button>
+          </div>
+          <div class="play-bar">
+            <button type="button" class="round" data-act="reset">RST</button>
+            <button type="button" class="round big" data-act="confirm">OK</button>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <div class="overlay" data-overlay="pause" hidden>
+      <div class="panel">
+        <h2>PAUSE</h2>
+        <button type="button" data-act="close">RESUME</button>
+        <button type="button" data-go="select">STAGE SELECT</button>
+        <button type="button" data-act="settings">OPTIONS</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="clear" hidden>
+      <div class="panel flash">
+        <p class="blink">STAGE CLEAR</p>
+        <h2 data-bind="level-name"></h2>
+        <p>NEXT <span data-bind="next-name"></span></p>
+        <button type="button" data-act="next">NEXT STAGE</button>
+        <button type="button" data-act="replay">REPLAY</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="settings" hidden>
+      <div class="panel">
+        <h2>OPTIONS</h2>
+        <p>进度存在本机。清空后从 STAGE 01 开始。</p>
+        <button type="button" data-act="wipe">RESET DATA</button>
+        <button type="button" data-act="close">BACK</button>
+      </div>
+    </div>
+    <div class="toast" data-toast data-on="0"></div>
+    <template data-level-template>
+      <button type="button" class="stage">
+        <b data-bind="index"></b>
+        <span data-bind="name"></span>
+        <i data-bind="status-label"></i>
+      </button>
+    </template>
+    <script src="../core.js"></script>
+    <script>
+      GameShell.create({
+        storageKey: "ui-shell-b-arcade",
+        lockedText: "ERROR // STAGE LOCKED",
+      });
+    </script>
+  </body>
+</html>

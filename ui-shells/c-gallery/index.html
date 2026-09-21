@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>C · 修复长廊</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-skin="gallery">
+    <p class="proto">外壳原型 C · 游戏画面留白 · <a href="../index.html">回五版入口</a></p>
+
+    <section class="screen title-screen" data-screen="title">
+      <div class="poster">
+        <p class="lab">A QUIET EXHIBITION</p>
+        <h1>修复长廊</h1>
+        <p class="deck">走廊里的画按顺序揭开。蒙着绒布的，绳子还拦着，不能进。</p>
+        <div class="title-actions">
+          <button type="button" class="btn primary" data-act="continue" data-if-continue>从 <span data-bind="continue-name"></span> 继续</button>
+          <button type="button" class="btn" data-go="select">走进长廊</button>
+          <button type="button" class="btn ghost" data-act="new">新的展览</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen select-screen" data-screen="select" hidden>
+      <header class="top">
+        <button type="button" class="text" data-go="title">出门</button>
+        <div>
+          <p class="lab">THE HALL</p>
+          <h2>先亮起来的，才能取下来修。</h2>
+        </div>
+        <button type="button" class="text" data-act="settings">馆务</button>
+      </header>
+      <div class="rooms">
+        <section>
+          <p class="lab">东厅 · 灰度与阈值</p>
+          <div class="corridor" data-level-list="ch1"></div>
+        </section>
+        <section data-chapter="ch2">
+          <p class="lab">西厅 · 颜色合成 · <span data-bind="ch2-lock"></span></p>
+          <div class="corridor" data-level-list="ch2"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="screen play-screen" data-screen="play" hidden>
+      <header class="top">
+        <button type="button" class="text" data-go="select">回长廊</button>
+        <div class="plaque">
+          <span data-bind="chapter-title"></span>
+          <strong data-bind="level-name"></strong>
+          <em data-bind="progress"></em>
+        </div>
+        <button type="button" class="text" data-act="pause">暂停</button>
+      </header>
+      <p class="scene" data-bind="scene"></p>
+      <section class="studio">
+        <figure>
+          <div class="blank">画芯留白</div>
+          <figcaption>来件</figcaption>
+        </figure>
+        <figure>
+          <div class="blank">画芯留白</div>
+          <figcaption>工作台</figcaption>
+        </figure>
+      </section>
+      <section class="bench">
+        <div class="axis">
+          <div class="gray"></div>
+          <div class="map">
+            <i style="background:#f4efe3;flex:2"></i>
+            <i style="background:#c4a46a;flex:1.4"></i>
+            <i style="background:#2c241c;flex:1.6"></i>
+            <i class="empty" style="flex:1.2"></i>
+          </div>
+          <button type="button" class="handle" style="left:28%" aria-label="边界"></button>
+          <button type="button" class="handle" style="left:52%" aria-label="边界"></button>
+          <button type="button" class="handle" style="left:74%" aria-label="边界"></button>
+        </div>
+        <div class="tray">
+          <button type="button" class="chip" style="background:#f4efe3" aria-label="色块"></button>
+          <button type="button" class="chip on" style="background:#c4a46a" aria-label="色块"></button>
+          <button type="button" class="chip" style="background:#2c241c" aria-label="色块"></button>
+          <button type="button" class="chip" style="background:#7a1f2b" aria-label="色块"></button>
+        </div>
+        <div class="play-bar">
+          <button type="button" class="btn" data-act="reset">重铺画布</button>
+          <button type="button" class="btn primary" data-act="confirm">完成修复</button>
+        </div>
+      </section>
+    </section>
+
+    <div class="overlay" data-overlay="pause" hidden>
+      <div class="panel">
+        <p class="lab">INTERMISSION</p>
+        <h2>先歇一下。</h2>
+        <button type="button" class="btn primary" data-act="close">回到画前</button>
+        <button type="button" class="btn" data-go="select">回长廊</button>
+        <button type="button" class="btn ghost" data-act="settings">馆务</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="clear" hidden>
+      <div class="panel">
+        <p class="lab">ACCESSIONED</p>
+        <h2><span data-bind="level-name"></span> 已入藏。</h2>
+        <p>下一幅：<span data-bind="next-name"></span></p>
+        <button type="button" class="btn primary" data-act="next">下一幅</button>
+        <button type="button" class="btn" data-act="replay">再看这幅</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="settings" hidden>
+      <div class="panel">
+        <p class="lab">FRONT DESK</p>
+        <h2>馆务</h2>
+        <p>清空后，长廊会重新蒙上绒布。</p>
+        <button type="button" class="btn" data-act="wipe">清空进度</button>
+        <button type="button" class="btn primary" data-act="close">关闭</button>
+      </div>
+    </div>
+    <div class="toast" data-toast data-on="0"></div>
+    <template data-level-template>
+      <button type="button" class="painting">
+        <span class="cloth"></span>
+        <span class="rope"></span>
+        <b data-bind="index"></b>
+        <strong data-bind="name"></strong>
+        <em data-bind="status-label"></em>
+      </button>
+    </template>
+    <script src="../core.js"></script>
+    <script>
+      GameShell.create({
+        storageKey: "ui-shell-c-gallery",
+        lockedText: "这幅还蒙着。绳子后面的先别碰。",
+      });
+    </script>
+  </body>
+</html>

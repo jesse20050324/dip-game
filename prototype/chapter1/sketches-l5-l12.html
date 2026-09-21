@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>第五关 / 第十二关 · 候选图案</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #221e18;
+      color: #e8dcc8;
+      padding: 28px 32px 80px;
+    }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    h2.chapter {
+      font-size: 18px;
+      margin: 40px 0 10px;
+      color: #f0e6d2;
+      border-bottom: 1px solid #3d3428;
+      padding-bottom: 8px;
+    }
+    .brief {
+      color: #a89880;
+      font-size: 13px;
+      line-height: 1.55;
+      max-width: 860px;
+      margin: 0 0 22px;
+      padding: 12px 14px;
+      border-left: 3px solid #c4a268;
+    }
+    .brief strong { color: #f0e6d2; }
+    .jump { font-size: 13px; margin: 0 0 20px; }
+    .jump a { color: #d4b87a; margin-right: 16px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+      gap: 28px;
+    }
+    article {
+      background: #2c261e;
+      border: 1px solid #3d3428;
+      padding: 16px 16px 18px;
+    }
+    h3 {
+      font-size: 15px;
+      margin: 0 0 4px;
+      color: #f0e6d2;
+    }
+    .why {
+      font-size: 12px;
+      color: #9a8b74;
+      margin: 0 0 12px;
+      line-height: 1.45;
+    }
+    .row { display: flex; gap: 14px; flex-wrap: wrap; }
+    figure { margin: 0; }
+    figcaption {
+      font-size: 11px;
+      color: #9a8b74;
+      margin-top: 6px;
+      text-align: center;
+    }
+    canvas {
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      background: #111;
+      box-shadow: 0 6px 0 #14110e;
+    }
+    canvas.n24 { width: 144px; height: 144px; }
+    canvas.n64 { width: 192px; height: 192px; }
+  </style>
+</head>
+<body>
+  <h1>第五关 / 第十二关 · 候选图案（只看图，不是正式关）</h1>
+  <p class="jump">
+    <a href="#l5">第五关 · 一个边界</a>
+    <a href="#l12">第十二关 · 去掉戳</a>
+  </p>
+
+  <h2 class="chapter" id="l5">第五关 · 十种新形状</h2>
+  <p class="brief">
+    <strong>机制和现在第五关完全一样：</strong>24×24，一层一层往外扩的灰度环，一把刀切成两段，托盘只有深 / 浅两色。
+    涂反就是反色图。目标仍是「中间一块浅色、外面深色」。
+    现在这关是同心圆（国旗式），下面十套都换成别的形状，环的距离场跟着形状走，所以一刀仍能切出干净轮廓。
+  </p>
+  <div class="grid" id="gallery5"></div>
+
+  <h2 class="chapter" id="l12">第十二关 · 十种新风景 + 戳</h2>
+  <p class="brief">
+    <strong>机制和现在第十二关完全一样：</strong>64×64，四层灰：地 50 / 中景 110 / 天 180 / 戳 240。
+    天预填并锁住。戳是最亮那一层，必须并进天。戳只盖在天上，不压中景和地。
+    每套三张：开局左图（带戳彩图）· 右图灰度 · 修好（无戳）。
+  </p>
+  <div class="grid" id="gallery12"></div>
+
+  <script>
+    const N5 = 24;
+    const C = 11.5;
+    const DARK = "#2b241c";
+    const LIGHT = "#f4efe4";
+
+    function grid(w, h, fill) {
+      return Array.from({ length: h }, () => Array(w).fill(fill));
+    }
+    function set(g, x, y, v) {
+      if (y >= 0 && y < g.length && x >= 0 && x < g[0].length) g[y][x] = v;
+    }
+    function grayHex(v) {
+      const h = Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0");
+      return "#" + h + h + h;
+    }
+    function blit(canvas, cells, css) {
+      const rows = cells.length;
+      const cols = cells[0].length;
+      canvas.width = cols;
+      canvas.height = rows;
+      canvas.className = css;
+      const ctx = canvas.getContext("2d");
+      const img = ctx.createImageData(cols, rows);
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const hex = typeof cells[y][x] === "number" ? grayHex(cells[y][x]) : cells[y][x];
+          const i = (y * cols + x) * 4;
+          img.data[i] = parseInt(hex.slice(1, 3), 16);
+          img.data[i + 1] = parseInt(hex.slice(3, 5), 16);
+          img.data[i + 2] = parseInt(hex.slice(5, 7), 16);
+          img.data[i + 3] = 255;
+        }
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+    function card(parent, id, name, why, views, css) {
+      const article = document.createElement("article");
+      article.innerHTML = "<h3>" + id + " · " + name + "</h3><p class=\"why\">" + why + "</p><div class=\"row\"></div>";
+      const row = article.querySelector(".row");
+      views.forEach(([label, cells]) => {
+        const fig = document.createElement("figure");
+        const canvas = document.createElement("canvas");
+        blit(canvas, cells, css);
+        const cap = document.createElement("figcaption");
+        cap.textContent = label;
+        fig.append(canvas, cap);
+        row.append(fig);
+      });
+      parent.append(article);
+    }
+
+    function fieldGrid(fn) {
+      const f = grid(N5, N5, 0);
+      let max = 0.001;
+      for (let y = 0; y < N5; y++) {
+        for (let x = 0; x < N5; x++) {
+          f[y][x] = fn(x, y);
+          if (f[y][x] > max) max = f[y][x];
+        }
+      }
+      return { f, max };
+    }
+    function fromField(fn, cutD, inn, out) {
+      const { f } = fieldGrid(fn);
+      const step = (cutD * 2) / 10;
+      const target = grid(N5, N5, out);
+      const gray = grid(N5, N5, 0);
+      for (let y = 0; y < N5; y++) {
+        for (let x = 0; x < N5; x++) {
+          const ring = Math.min(9, Math.floor(f[y][x] / step));
+          gray[y][x] = 25 + ring * 25;
+          if (f[y][x] < cutD) target[y][x] = inn;
+        }
+      }
+      return { target, gray };
+    }
+
+    const L5 = [
+      {
+        id: 1, name: "方",
+        why: "切比雪夫距离，一刀切出实心方块。浅奶油 / 深褐。",
+        inn: "#efe6d4", out: "#3a2a1c", cut: 7,
+        fn: (x, y) => Math.max(Math.abs(x - C), Math.abs(y - C)),
+      },
+      {
+        id: 2, name: "菱",
+        why: "曼哈顿距离，嵌套菱形。浅金 / 墨蓝。",
+        inn: "#e4c86a", out: "#243044", cut: 9,
+        fn: (x, y) => Math.abs(x - C) + Math.abs(y - C),
+      },
+      {
+        id: 3, name: "椭圆",
+        why: "压扁的圆，横构图。浅米 / 墨绿。",
+        inn: "#f0e6d2", out: "#2a3a2c", cut: 7,
+        fn: (x, y) => Math.hypot((x - C) / 1.4, y - C),
+      },
+      {
+        id: 4, name: "三角",
+        why: "尖朝上的实心三角。浅牙 / 砖红。",
+        inn: "#f4efe4", out: "#6b2e24", cut: 10,
+        fn: (x, y) => {
+          const apexY = 5;
+          const baseY = 19;
+          const halfBase = 8;
+          if (y < apexY) return 20 + (apexY - y);
+          if (y > baseY) return 20 + (y - baseY);
+          const t = (y - apexY) / (baseY - apexY);
+          const half = halfBase * t;
+          const dx = Math.abs(x - C);
+          if (dx <= half) {
+            const s = Math.max(t, dx / halfBase / Math.max(t, 0.05));
+            return s * 10;
+          }
+          return 10 + (dx - half);
+        },
+      },
+      {
+        id: 5, name: "十字",
+        why: "离坐标轴越近越深，一刀切出十字。浅米 / 靛。",
+        inn: "#f0e4d0", out: "#2a2848", cut: 3.4,
+        fn: (x, y) => Math.min(Math.abs(x - C), Math.abs(y - C)),
+      },
+      {
+        id: 6, name: "六边",
+        why: "六角距离，实心六边形。薄荷 / 深青。",
+        inn: "#d8ead4", out: "#1e3434", cut: 7,
+        fn: (x, y) => {
+          const dx = Math.abs(x - C), dy = Math.abs(y - C);
+          return Math.max(dy, dx * 0.866 + dy * 0.5);
+        },
+      },
+      {
+        id: 7, name: "胶囊",
+        why: "横放圆角条，像一粒药。浅沙 / 褐。",
+        inn: "#ead8b8", out: "#3c2a1e", cut: 4.4,
+        fn: (x, y) => {
+          const px = Math.abs(x - C) - 4;
+          const py = y - C;
+          return px < 0 ? Math.abs(py) : Math.hypot(px, py);
+        },
+      },
+      {
+        id: 8, name: "扇形",
+        why: "只在一个夹角里量半径，一刀切出饼块。浅杏 / 炭灰。",
+        inn: "#f0d8b4", out: "#2c2c2c", cut: 13,
+        fn: (x, y) => {
+          const dx = x - C, dy = y - 16;
+          const a = Math.atan2(dx, -dy);
+          const r = Math.hypot(dx, dy);
+          return Math.abs(a) > 0.58 ? 40 : r;
+        },
+      },
+      {
+        id: 9, name: "水滴",
+        why: "下圆上尖。浅蓝 / 海军蓝。",
+        inn: "#c8dcec", out: "#1c2840", cut: 7.2,
+        fn: (x, y) => {
+          const px = x - C;
+          const py = y - 13;
+          const w = 0.32 + 0.68 * Math.max(0.18, (py + 9) / 17);
+          return Math.hypot(px / w, py);
+        },
+      },
+      {
+        id: 10, name: "盾",
+        why: "上圆下尖。浅银 / 酒红。",
+        inn: "#e8e0d4", out: "#4a1e28", cut: 7,
+        fn: (x, y) => {
+          if (y < 12) return Math.hypot((x - C) * 1.05, y - 10);
+          const t = (y - 12) / 9;
+          const half = 7.2 * (1 - t);
+          const dx = Math.abs(x - C);
+          return dx <= half ? t * 7 : 8 + (dx - half);
+        },
+      },
+    ];
+
+    const g5 = document.getElementById("gallery5");
+    L5.forEach((s) => {
+      const { target, gray } = fromField(s.fn, s.cut, s.inn, s.out);
+      card(g5, s.id, s.name, s.why, [
+        ["修好（目标）", target],
+        ["灰度多层", gray],
+      ], "n24");
+    });
+
+    const N12 = 64;
+    const STAMP = "#f2efe4";
+    const GRAY = { ground: 50, mid: 110, sky: 180, stamp: 240 };
+    const F = {
+      A: [".#.", "#.#", "###", "#.#", "#.#"],
+      C: ["###", "#..", "#..", "#..", "###"],
+      E: ["###", "#..", "##.", "#..", "###"],
+      G: ["###", "#..", "#.#", "#.#", "###"],
+      I: ["###", ".#.", ".#.", ".#.", "###"],
+      J: [".##", "..#", "..#", "#.#", ".#."],
+      K: ["#.#", "#.#", "##.", "#.#", "#.#"],
+      L: ["#..", "#..", "#..", "#..", "###"],
+      M: ["#.#", "###", "#.#", "#.#", "#.#"],
+      N: ["#.#", "##.", "#.#", "#.#", "#.#"],
+      O: ["###", "#.#", "#.#", "#.#", "###"],
+      S: ["###", "#..", "###", "..#", "###"],
+      T: ["###", ".#.", ".#.", ".#.", ".#."],
+      U: ["#.#", "#.#", "#.#", "#.#", "###"],
+      Z: ["###", "..#", ".#.", "#..", "###"],
+      "0": ["###", "#.#", "#.#", "#.#", "###"],
+      "1": [".#.", "##.", ".#.", ".#.", "###"],
+      "2": ["###", "..#", "###", "#..", "###"],
+      "4": ["#.#", "#.#", "###", "..#", "..#"],
+      "7": ["###", "..#", ".#.", ".#.", ".#."],
+      "8": ["###", "#.#", "###", "#.#", "###"],
+      "9": ["###", "#.#", "###", "..#", "###"],
+      " ": ["...", "...", "...", "...", "..."],
+    };
+    function text(g, x, y, str, v) {
+      let cx = x;
+      for (const ch of str) {
+        (F[ch] || F[" "]).forEach((row, j) => {
+          [...row].forEach((c, i) => { if (c === "#") set(g, cx + i, y + j, v); });
+        });
+        cx += 4;
+      }
+    }
+    function stampOnSky(g, x, y, str) {
+      const t = grid(N12, N12, 0);
+      text(t, x, y, str, 1);
+      for (let j = 0; j < N12; j++) {
+        for (let i = 0; i < N12; i++) {
+          if (t[j][i] && g[j][i] === "sky") g[j][i] = "stamp";
+        }
+      }
+    }
+    function rolesToColor(roles, pal) {
+      return roles.map((row) => row.map((r) => (r === "stamp" ? STAMP : pal[r])));
+    }
+    function rolesToGray(roles) {
+      return roles.map((row) => row.map((r) => GRAY[r]));
+    }
+    function horizon(g, role, yAtX, fromTop) {
+      for (let x = 0; x < N12; x++) {
+        const y0 = Math.round(yAtX(x));
+        if (fromTop) {
+          for (let y = 0; y < y0; y++) set(g, x, y, role);
+        } else {
+          for (let y = y0; y < N12; y++) set(g, x, y, role);
+        }
+      }
+    }
+    function pine(g, bx, top, h, v) {
+      for (let i = 0; i < h; i++) {
+        const w = 1 + Math.floor(i / 2);
+        for (let x = bx - w; x <= bx + w; x++) set(g, x, top + i, v);
+      }
+    }
+
+    function sceneDunes() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "mid", (x) => 26 + 5 * Math.sin(x / 7) + (x > 40 ? 3 : 0));
+      horizon(g, "ground", (x) => 44 + 3 * Math.sin(x / 5));
+      return g;
+    }
+    function sceneBeach() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "mid", () => 36);
+      horizon(g, "ground", (x) => 50 + Math.round(2 * Math.sin(x / 6)));
+      return g;
+    }
+    function sceneSnow() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "mid", (x) => {
+        const a = 16 * Math.exp(-Math.pow((x - 18) / 7, 2));
+        const b = 20 * Math.exp(-Math.pow((x - 40) / 8, 2));
+        return 38 - a - b;
+      });
+      horizon(g, "ground", () => 48);
+      return g;
+    }
+    function sceneWheat() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "ground", (x) => 34 + Math.round(2 * Math.sin(x / 8)));
+      for (const x of [8, 14, 22, 30, 38, 46, 54]) {
+        pine(g, x, 28 + (x % 5), 6, "mid");
+      }
+      return g;
+    }
+    function sceneLake() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "mid", () => 30);
+      horizon(g, "ground", (x) => (x < 12 || x > 52 ? 42 : 64));
+      for (let x = 12; x <= 52; x++) {
+        for (let y = 42; y < N12; y++) set(g, x, y, "mid");
+      }
+      return g;
+    }
+    function sceneNight() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "mid", (x) => 32 + 4 * Math.sin(x / 9));
+      horizon(g, "ground", (x) => 50 + Math.round(Math.sin(x / 4)));
+      return g;
+    }
+    function sceneCanyon() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "mid", (x) => {
+        const gap = Math.exp(-Math.pow((x - 32) / 6, 2));
+        return 22 + 20 * gap;
+      });
+      horizon(g, "ground", (x) => 50 + 6 * Math.exp(-Math.pow((x - 32) / 7, 2)));
+      return g;
+    }
+    function sceneIsle() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "mid", () => 38);
+      for (let x = 14; x <= 50; x++) {
+        const h = 38 - Math.round(12 * Math.sqrt(Math.max(0, 1 - Math.pow((x - 32) / 18, 2))));
+        for (let y = h; y < 38; y++) set(g, x, y, "ground");
+      }
+      return g;
+    }
+    function sceneVolcano() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "ground", () => 50);
+      for (let x = 16; x <= 48; x++) {
+        const t = 1 - Math.abs(x - 32) / 16;
+        const top = 50 - Math.round(22 * t);
+        for (let y = top; y < 50; y++) set(g, x, y, "mid");
+      }
+      return g;
+    }
+    function sceneRoad() {
+      const g = grid(N12, N12, "sky");
+      horizon(g, "mid", (x) => 36 + Math.round(2 * Math.sin(x / 7)));
+      for (let y = 40; y < N12; y++) {
+        const w = 2 + Math.floor((y - 40) / 4);
+        for (let x = 32 - w; x <= 32 + w; x++) set(g, x, y, "ground");
+      }
+      return g;
+    }
+
+    const L12 = [
+      { id: 1, name: "沙丘", why: "两道沙坡，戳写 JUN 4。", stamp: [36, 8, "JUN 4"],
+        pal: { sky: "#c8d8e4", mid: "#d4a06a", ground: "#c47a3a" }, make: sceneDunes },
+      { id: 2, name: "海边", why: "天 / 海 / 沙三带，戳 98 7。", stamp: [42, 8, "98 7"],
+        pal: { sky: "#8eb8d8", mid: "#3d7ea0", ground: "#d2b07a" }, make: sceneBeach },
+      { id: 3, name: "雪峰", why: "两座尖峰，地是雪。戳 2002。", stamp: [4, 8, "2002"],
+        pal: { sky: "#b8cce0", mid: "#6a7c8c", ground: "#e8e4dc" }, make: sceneSnow },
+      { id: 4, name: "麦田", why: "金地加一排树。戳 AUG 9。", stamp: [4, 6, "AUG 9"],
+        pal: { sky: "#7eafd2", mid: "#4f7d58", ground: "#d4a24a" }, make: sceneWheat },
+      { id: 5, name: "湖", why: "两岸夹一汪水。戳 NO 8。", stamp: [4, 8, "NO 8"],
+        pal: { sky: "#9cc4dc", mid: "#3a6e88", ground: "#5a8a58" }, make: sceneLake },
+      { id: 6, name: "夜丘", why: "深蓝天，浅色戳仍是水印。戳 12 24。", stamp: [36, 8, "12 24"],
+        pal: { sky: "#2a3858", mid: "#3a3040", ground: "#5a4030" }, make: sceneNight },
+      { id: 7, name: "峡谷", why: "中间裂开。戳 AZ。", stamp: [4, 6, "AZ"],
+        pal: { sky: "#e0c8a4", mid: "#c46a3a", ground: "#6a3a28" }, make: sceneCanyon },
+      { id: 8, name: "孤岛", why: "一汪海，中间一块岛。戳 ISLE。", stamp: [4, 6, "ISLE"],
+        pal: { sky: "#8eb8d0", mid: "#2f6f88", ground: "#4a8a58" }, make: sceneIsle },
+      { id: 9, name: "火山", why: "一座锥。戳 ETNA。", stamp: [4, 6, "ETNA"],
+        pal: { sky: "#c8b8b0", mid: "#6a4034", ground: "#3a2a28" }, make: sceneVolcano },
+      { id: 10, name: "路", why: "草地中间一条路。戳 KM 12。", stamp: [4, 6, "KM 12"],
+        pal: { sky: "#7eafd2", mid: "#4f7d58", ground: "#c17a4a" }, make: sceneRoad },
+    ];
+
+    const g12 = document.getElementById("gallery12");
+    L12.forEach((s) => {
+      const clean = s.make();
+      const stamped = s.make();
+      stampOnSky(stamped, s.stamp[0], s.stamp[1], s.stamp[2]);
+      card(g12, s.id, s.name, s.why, [
+        ["开局左图（带戳）", rolesToColor(stamped, s.pal)],
+        ["右图灰度", rolesToGray(stamped)],
+        ["修好（无戳）", rolesToColor(clean, s.pal)],
+      ], "n64");
+    });
+  </script>
+</body>
+</html>

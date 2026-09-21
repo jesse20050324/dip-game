@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>J · 单张纸</title>
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-skin="sheet">
+    <p class="proto">J · <a href="../index.html">入口</a></p>
+    <div class="sheet">
+      <section class="screen title-screen" data-screen="title">
+        <div class="title-actions">
+          <button type="button" class="btn primary" data-act="continue" data-if-continue>CONTINUE</button>
+          <button type="button" class="btn" data-go="select">LEVELS</button>
+          <button type="button" class="btn ghost" data-act="new">START</button>
+        </div>
+      </section>
+
+      <section class="screen select-screen" data-screen="select" hidden>
+        <header class="top">
+          <button type="button" class="icon" data-go="title">←</button>
+          <button type="button" class="icon" data-act="settings">⚙</button>
+        </header>
+        <div class="nums" data-level-list="ch1"></div>
+        <div class="nums dim" data-chapter="ch2" data-level-list="ch2"></div>
+      </section>
+
+      <section class="screen play-screen" data-screen="play" hidden>
+        <header class="top">
+          <button type="button" class="icon" data-go="select">←</button>
+          <span class="num" data-bind="level-id"></span>
+          <button type="button" class="icon" data-act="pause">Ⅱ</button>
+        </header>
+        <section class="boards">
+          <figure><div class="blank"></div></figure>
+          <figure><div class="blank"></div></figure>
+        </section>
+        <section class="tools">
+          <div class="axis">
+            <div class="gray"></div>
+            <div class="map">
+              <i style="background:#f6f1e7;flex:2"></i>
+              <i style="background:#d4a017;flex:1.4"></i>
+              <i style="background:#3b3128;flex:1.6"></i>
+              <i class="empty" style="flex:1.2"></i>
+            </div>
+            <button type="button" class="handle" style="left:28%"></button>
+            <button type="button" class="handle" style="left:52%"></button>
+            <button type="button" class="handle" style="left:74%"></button>
+          </div>
+          <div class="tray">
+            <button type="button" class="chip" style="background:#f6f1e7"></button>
+            <button type="button" class="chip on" style="background:#d4a017"></button>
+            <button type="button" class="chip" style="background:#3b3128"></button>
+            <button type="button" class="chip" style="background:#c45c26"></button>
+          </div>
+          <div class="bar">
+            <button type="button" class="icon fat" data-act="reset">↺</button>
+            <button type="button" class="icon fat primary" data-act="confirm">✓</button>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <div class="overlay" data-overlay="pause" hidden>
+      <div class="panel">
+        <button type="button" class="btn primary" data-act="close">CONTINUE</button>
+        <button type="button" class="btn" data-go="select">LEVELS</button>
+        <button type="button" class="btn ghost" data-act="settings">⚙</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="clear" hidden>
+      <div class="panel">
+        <button type="button" class="btn primary" data-act="next">NEXT</button>
+        <button type="button" class="btn" data-act="replay">↺</button>
+      </div>
+    </div>
+    <div class="overlay" data-overlay="settings" hidden>
+      <div class="panel">
+        <button type="button" class="btn" data-act="wipe">RESET</button>
+        <button type="button" class="btn primary" data-act="close">CLOSE</button>
+      </div>
+    </div>
+
+    <template data-level-template>
+      <button type="button" class="n"><span data-bind="index"></span></button>
+    </template>
+    <script src="../core.js"></script>
+    <script>
+      GameShell.create({ storageKey: "ui-shell-j-sheet", wordless: true });
+    </script>
+  </body>
+</html>

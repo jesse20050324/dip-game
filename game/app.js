@@ -1,3 +1,4 @@
+// 正式游戏快照。改关卡先在 prototype/chapter1 试，同意后再把那边的关卡数据迁过来。
 (() => {
   const MIN_GAP = 10;
   const DARK = "#2b241c";
@@ -529,6 +530,79 @@
   const resetBtn = document.getElementById("reset");
   const beatsEl = document.getElementById("beats");
   const sceneEl = document.getElementById("scene");
+  const bootEl = document.getElementById("boot");
+  const doneEl = document.getElementById("done");
+  const playSheet = document.getElementById("playSheet");
+  const startBtn = document.getElementById("startBtn");
+  const againBtn = document.getElementById("againBtn");
+  const homeBtn = document.getElementById("homeBtn");
+  const muteBtn = document.getElementById("muteBtn");
+  const bootBeats = document.getElementById("bootBeats");
+
+  const SAVE_KEY = "dip-ch1-cleared";
+  const MUTE_KEY = "dip-muted";
+  const SFX = {
+    tap: "audio/tap.wav",
+    chip: "audio/chip.wav",
+    ok: "audio/ok.wav",
+    no: "audio/no.wav",
+    reset: "audio/reset.wav",
+  };
+  const sfxNodes = {};
+  let muted = localStorage.getItem(MUTE_KEY) === "1";
+
+  function getCleared() {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw == null || raw === "") return -1;
+    const n = Number(raw);
+    return Number.isInteger(n) ? n : -1;
+  }
+  function markCleared(i) {
+    if (i > getCleared()) localStorage.setItem(SAVE_KEY, String(i));
+  }
+  function isOpen(i) {
+    return i <= getCleared() + 1;
+  }
+  function primeAudio() {
+    Object.entries(SFX).forEach(([name, src]) => {
+      if (sfxNodes[name]) return;
+      const a = new Audio(src);
+      a.preload = "auto";
+      sfxNodes[name] = a;
+    });
+  }
+  function playSfx(name, vol = 0.38) {
+    if (muted) return;
+    const src = sfxNodes[name];
+    if (!src) return;
+    const node = src.cloneNode();
+    node.volume = vol;
+    node.play().catch(() => {});
+  }
+  function syncMuteUi() {
+    muteBtn.classList.toggle("is-muted", muted);
+    muteBtn.setAttribute("aria-pressed", muted ? "true" : "false");
+  }
+  function showBoot() {
+    playSheet.hidden = true;
+    doneEl.hidden = true;
+    bootEl.hidden = false;
+    renderDots();
+  }
+  function showDone() {
+    playSheet.hidden = true;
+    bootEl.hidden = true;
+    doneEl.hidden = false;
+    renderDots();
+  }
+  function enterPlay(i) {
+    if (!isOpen(i)) return;
+    primeAudio();
+    bootEl.hidden = true;
+    doneEl.hidden = true;
+    playSheet.hidden = false;
+    loadLevel(i);
+  }
 
   // ---------- 状态 ----------
 
@@ -787,17 +861,37 @@
     });
   }
 
-  function renderDots() {
-    beatsEl.innerHTML = "";
+  function fillDots(el) {
+    if (!el) return;
+    el.innerHTML = "";
+    const cleared = getCleared();
+    const next = Math.min(cleared + 1, LEVELS.length - 1);
+    const playing = playSheet && !playSheet.hidden;
     LEVELS.forEach((_, i) => {
       const dot = document.createElement("button");
       dot.type = "button";
       dot.className = "beat-dot";
       dot.textContent = String(i + 1);
-      if (i === levelIndex) dot.setAttribute("aria-current", "step");
-      dot.addEventListener("click", () => loadLevel(i));
-      beatsEl.appendChild(dot);
+      if (i <= cleared) dot.classList.add("is-done");
+      if (playing && i === levelIndex) dot.setAttribute("aria-current", "step");
+      else if (!playing && cleared < LEVELS.length - 1 && i === next) {
+        dot.setAttribute("aria-current", "step");
+      }
+      if (!isOpen(i)) {
+        dot.disabled = true;
+      } else {
+        dot.addEventListener("click", () => {
+          playSfx("tap", 0.28);
+          enterPlay(i);
+        });
+      }
+      el.appendChild(dot);
     });
+  }
+
+  function renderDots() {
+    fillDots(beatsEl);
+    fillDots(bootBeats);
   }
 
   function renderPrompt() {
@@ -891,6 +985,7 @@
     if (level.lockedRegions && level.lockedRegions.includes(i)) return;
     regionColors[i] = color;
     selectedChip = null;
+    playSfx("chip", 0.34);
     renderAll();
   }
 
@@ -1004,15 +1099,21 @@
 
   function judgeNow() {
     if (checkWin()) {
+      markCleared(levelIndex);
+      playSfx("ok", 0.42);
       if (level.leftDisplay && !answerRevealed) {
         answerRevealed = true;
         renderBoards();
       }
       flash(true);
+      const wait = level.leftDisplay ? 1400 : 700;
       if (levelIndex < LEVELS.length - 1) {
-        setTimeout(() => loadLevel(levelIndex + 1), level.leftDisplay ? 1400 : 700);
+        setTimeout(() => enterPlay(levelIndex + 1), wait);
+      } else {
+        setTimeout(showDone, wait);
       }
     } else {
+      playSfx("no", 0.34);
       flash(false);
       if (level.judge === "release") {
         grays = level.source.map((r) => r.slice());
@@ -1023,7 +1124,31 @@
   }
 
   confirmBtn.addEventListener("click", judgeNow);
-  resetBtn.addEventListener("click", () => loadLevel(levelIndex));
+  resetBtn.addEventListener("click", () => {
+    playSfx("reset", 0.32);
+    loadLevel(levelIndex);
+  });
+  startBtn.addEventListener("click", () => {
+    primeAudio();
+    playSfx("tap", 0.3);
+    const cleared = getCleared();
+    if (cleared >= LEVELS.length - 1) showDone();
+    else enterPlay(cleared + 1);
+  });
+  homeBtn.addEventListener("click", () => {
+    playSfx("tap", 0.28);
+    showBoot();
+  });
+  againBtn.addEventListener("click", () => {
+    playSfx("tap", 0.28);
+    showBoot();
+  });
+  muteBtn.addEventListener("click", () => {
+    muted = !muted;
+    localStorage.setItem(MUTE_KEY, muted ? "1" : "0");
+    syncMuteUi();
+    if (!muted) playSfx("tap", 0.28);
+  });
 
   // ---------- 关卡装载 ----------
 
@@ -1052,5 +1177,6 @@
     renderAll();
   }
 
-  loadLevel(0);
+  syncMuteUi();
+  renderDots();
 })();
