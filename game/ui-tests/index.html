@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>外壳试玩</title>
+    <style>
+      :root {
+        --paper: #f1e6d0;
+        --card: #fff8ec;
+        --ink: #3b3128;
+        --muted: #7a6b5b;
+        --line: #d7c4a6;
+        --accent: #c45c26;
+        --accent-deep: #9a3f16;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
+      body {
+        font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 12% 8%, #f7ecda 0, transparent 42%),
+          radial-gradient(circle at 90% 0%, #ead9bc 0, transparent 36%),
+          var(--paper);
+        padding: 28px 18px 64px;
+      }
+      .wrap { width: min(720px, 100%); margin: 0 auto; }
+      .kicker {
+        margin: 0 0 6px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-size: 0.75rem;
+      }
+      h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 6vw, 2.4rem); }
+      .lead { margin: 0 0 22px; color: var(--muted); line-height: 1.65; }
+      article {
+        margin: 0 0 16px;
+        padding: 20px 18px 18px;
+        background: var(--card);
+        border: 1px solid #eadcc4;
+        border-radius: 24px;
+        box-shadow: 0 10px 28px rgba(70, 48, 24, 0.08);
+      }
+      .tag { margin: 0 0 4px; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.12em; }
+      h2 { margin: 0 0 8px; font-size: 1.35rem; }
+      p { margin: 0 0 12px; color: #4f473d; line-height: 1.6; }
+      ul { margin: 0 0 16px; padding-left: 18px; color: var(--muted); line-height: 1.55; }
+      a.open {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 18px;
+        border-radius: 16px;
+        background: var(--accent);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+        box-shadow: 0 3px 0 var(--accent-deep);
+      }
+      a.open:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--accent-deep); }
+      footer { margin-top: 22px; color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+      footer a { color: var(--accent-deep); }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <p class="kicker">UI tests · phone preview</p>
+      <h1>三套游戏壳，关卡还是那两关。</h1>
+      <p class="lead">
+        官方 <code>game/</code> 没动。这里只试「进关前后」像不像一款真正的轻解谜：开始 / 继续、选关、暂停、设置、关于。点进去可以玩第 1、第 2 关。
+      </p>
+
+      <article>
+        <p class="tag">A · 书桌</p>
+        <h2>一颗主按钮</h2>
+        <p>标题很空。第一次写「开始」，有进度改成「继续」，全通了变成「选关」。选关、设置、关于是下面一排小字。暂停盖一层纸，不是返回键。</p>
+        <ul>
+          <li>静音在进关前</li>
+          <li>锁关看得到、点了会晃</li>
+          <li>设置里才能清进度，而且要确认</li>
+        </ul>
+        <a class="open" href="a/index.html">打开 A</a>
+      </article>
+
+      <article>
+        <p class="tag">B · 图鉴</p>
+        <h2>两张照片当选关</h2>
+        <p>封面像一本薄相册。选关是两张歪一点的照片：第一张、蘑菇。设置单独成页。通关盖一枚「修好了」。</p>
+        <ul>
+          <li>继续仍是封面最大的橙色按钮</li>
+          <li>关于页写了声音来源</li>
+          <li>暂停可以回图鉴或合上封面</li>
+        </ul>
+        <a class="open" href="b/index.html">打开 B</a>
+      </article>
+
+      <article>
+        <p class="tag">C · 一页纸</p>
+        <h2>不换房间</h2>
+        <p>标题、选关、对局、暂停都在同一张圆角纸上翻。继续会写「继续第 2 关」。选关是两个点：空心锁着，橙色是当前。</p>
+        <ul>
+          <li>暂停不另开暗房，只换这张纸的内容</li>
+          <li>版本号只在封面上</li>
+          <li>Esc 也能暂停（桌面）</li>
+        </ul>
+        <a class="open" href="c/index.html">打开 C</a>
+      </article>
+
+      <footer>
+        研究笔记：<a href="../../docs/ui-shell-research.md">docs/ui-shell-research.md</a>
+        · 正式游戏：<a href="../index.html">game/</a>
+        · 工坊仍可跳关：<a href="../../prototype/chapter1/index.html">prototype/chapter1/</a>
+      </footer>
+    </main>
+  </body>
+</html>

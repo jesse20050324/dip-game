@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>灰度 · 书桌</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-variant="desk">
+    <div class="screen" id="home">
+      <button type="button" class="icon-btn speaker js-mute corner-mute" aria-label="声音"></button>
+      <div class="home-card">
+        <p class="home-kicker">Chapter 1</p>
+        <h1 class="home-title">灰度</h1>
+        <div class="home-pair" aria-hidden="true">
+          <span class="boot-tile is-dark"></span>
+          <span class="boot-tile is-light"></span>
+        </div>
+        <button type="button" class="cta" id="primaryBtn">开始</button>
+        <nav class="quiet-row" aria-label="其它">
+          <button type="button" class="text-link" id="selectBtn">选关</button>
+          <button type="button" class="text-link" id="settingsBtn">设置</button>
+          <button type="button" class="text-link" id="creditsBtn">关于</button>
+        </nav>
+        <p class="home-progress" id="homeProgress">0 / 2</p>
+        <p class="home-ver">0.3 · desk</p>
+      </div>
+    </div>
+
+    <div class="screen" id="levels" hidden>
+      <header class="menu-top">
+        <button type="button" class="icon-btn" id="levelsBack" aria-label="返回主页">
+          <span class="back-mark"></span>
+        </button>
+        <h2 class="menu-title">选关</h2>
+        <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+      </header>
+      <div class="level-row" id="levelGrid"></div>
+    </div>
+
+    <div class="play-wrap" id="play" hidden>
+      <div class="sheet">
+        <header class="top">
+          <button type="button" class="icon-btn" id="pauseBtn" aria-label="暂停">
+            <span class="pause-mark" aria-hidden="true"><i></i><i></i></span>
+          </button>
+          <p class="level-label" id="levelLabel">1 / 2</p>
+          <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+        </header>
+        <section class="boards" aria-label="图像对照">
+          <figure class="board" id="targetBoard">
+            <canvas id="targetCanvas" width="432" height="432" aria-label="目标图"></canvas>
+          </figure>
+          <figure class="board" id="workBoard">
+            <canvas id="workCanvas" width="432" height="432" aria-label="操作图"></canvas>
+          </figure>
+        </section>
+        <section class="axis-card">
+          <div class="axis">
+            <div class="axis-marker" id="axisMarker" hidden></div>
+            <div class="bars">
+              <div class="gray-bar" id="grayBar"></div>
+              <div class="handles-layer" id="handlesLayer"></div>
+            </div>
+          </div>
+        </section>
+        <footer class="play-bar">
+          <button type="button" class="reset" id="reset" aria-label="重置本关">↺</button>
+          <button type="button" class="confirm" id="confirm" hidden aria-label="确定">✓</button>
+        </footer>
+      </div>
+    </div>
+
+    <div class="screen" id="done" hidden>
+      <div class="home-card">
+        <p class="home-kicker">Chapter 1</p>
+        <h1 class="home-title">灰度</h1>
+        <div class="home-pair" aria-hidden="true">
+          <span class="boot-tile is-match"></span>
+          <span class="boot-tile is-match"></span>
+        </div>
+        <p class="done-line">修好了</p>
+        <button type="button" class="cta" id="againBtn">回主页</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="pause" hidden>
+      <div class="overlay-card">
+        <p class="overlay-kicker">暂停</p>
+        <button type="button" class="cta" id="resumeBtn">继续</button>
+        <button type="button" class="cta cta-ghost" id="pauseLevelsBtn">选关</button>
+        <button type="button" class="cta cta-ghost" id="pauseHomeBtn">回标题</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="settings" hidden>
+      <div class="overlay-card">
+        <p class="overlay-kicker">设置</p>
+        <button type="button" class="setting-row js-mute" id="settingsMute">
+          <span>声音</span>
+          <span class="setting-val" id="muteVal">开</span>
+        </button>
+        <button type="button" class="cta cta-ghost" id="resetAskBtn">清除进度</button>
+        <button type="button" class="cta" id="settingsClose">好</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="confirmReset" hidden>
+      <div class="overlay-card">
+        <p class="overlay-kicker">清除进度？</p>
+        <p class="overlay-copy">两关都要重开。声音设置会留下。</p>
+        <button type="button" class="cta" id="resetNoBtn">取消</button>
+        <button type="button" class="cta cta-ghost" id="resetYesBtn">清除</button>
+      </div>
+    </div>
+
+    <div class="screen" id="credits" hidden>
+      <header class="menu-top">
+        <button type="button" class="icon-btn" id="creditsBack" aria-label="返回主页">
+          <span class="back-mark"></span>
+        </button>
+        <h2 class="menu-title">关于</h2>
+        <span class="icon-btn" style="visibility: hidden"></span>
+      </header>
+      <div class="home-card credits-card">
+        <p class="home-kicker">A DIP puzzle</p>
+        <h1 class="home-title" style="font-size: 2rem; margin-bottom: 12px">灰度</h1>
+        <p class="credits-p">在纸上把右边修成左边。这是外壳试玩 A：书桌。关卡只有前两关。</p>
+        <p class="credits-p">声音：Kenney Interface Sounds（CC0）。</p>
+        <p class="home-ver">0.3 · desk</p>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>

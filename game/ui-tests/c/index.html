@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>灰度 · 一页纸</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-variant="folio">
+    <div class="folio" id="folio">
+      <header class="folio-top" id="folioTop">
+        <button type="button" class="icon-btn" id="leftBtn" aria-label="返回">
+          <span class="back-mark"></span>
+        </button>
+        <p class="folio-mark" id="folioMark">灰度</p>
+        <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+      </header>
+
+      <div class="panel" id="home">
+        <p class="home-kicker">A page · Chapter 1</p>
+        <h1 class="home-title">灰度</h1>
+        <div class="home-pair" aria-hidden="true">
+          <span class="boot-tile is-dark"></span>
+          <span class="boot-tile is-light"></span>
+        </div>
+        <button type="button" class="cta" id="primaryBtn">开始</button>
+        <nav class="quiet-row">
+          <button type="button" class="text-link" id="selectBtn">选关</button>
+          <button type="button" class="text-link" id="settingsBtn">设置</button>
+          <button type="button" class="text-link" id="creditsBtn">关于</button>
+        </nav>
+        <p class="home-progress" id="homeProgress">0 / 2</p>
+        <p class="home-ver">0.3 · folio</p>
+      </div>
+
+      <div class="panel" id="levels" hidden>
+        <div class="dot-row" id="levelGrid"></div>
+        <p class="soft-note">空心还没走到。点了会晃一下。</p>
+      </div>
+
+      <div class="panel play-panel" id="play" hidden>
+        <section class="boards" aria-label="图像对照">
+          <figure class="board" id="targetBoard">
+            <canvas id="targetCanvas" width="432" height="432" aria-label="目标图"></canvas>
+          </figure>
+          <figure class="board" id="workBoard">
+            <canvas id="workCanvas" width="432" height="432" aria-label="操作图"></canvas>
+          </figure>
+        </section>
+        <section class="axis-card">
+          <div class="axis">
+            <div class="axis-marker" id="axisMarker" hidden></div>
+            <div class="bars">
+              <div class="gray-bar" id="grayBar"></div>
+              <div class="handles-layer" id="handlesLayer"></div>
+            </div>
+          </div>
+        </section>
+        <footer class="play-bar">
+          <button type="button" class="reset" id="reset" aria-label="重置本关">↺</button>
+          <button type="button" class="confirm" id="confirm" hidden aria-label="确定">✓</button>
+        </footer>
+      </div>
+
+      <div class="panel" id="pause" hidden>
+        <p class="home-kicker">Paused on the same page</p>
+        <button type="button" class="cta" id="resumeBtn">继续这一页</button>
+        <button type="button" class="cta cta-ghost" id="pauseLevelsBtn">选关</button>
+        <button type="button" class="cta cta-ghost" id="pauseHomeBtn">回封面</button>
+      </div>
+
+      <div class="panel" id="settings" hidden>
+        <p class="home-kicker">Settings</p>
+        <button type="button" class="setting-row js-mute" id="settingsMute">
+          <span>声音</span>
+          <span class="setting-val" id="muteVal">开</span>
+        </button>
+        <button type="button" class="cta cta-ghost" id="resetAskBtn">清除进度</button>
+      </div>
+
+      <div class="panel" id="confirmReset" hidden>
+        <p class="home-kicker">Sure?</p>
+        <p class="overlay-copy">两关进度清掉。声音留下。</p>
+        <button type="button" class="cta" id="resetNoBtn">取消</button>
+        <button type="button" class="cta cta-ghost" id="resetYesBtn">清除</button>
+      </div>
+
+      <div class="panel" id="credits" hidden>
+        <p class="home-kicker">About</p>
+        <p class="credits-p">外壳试玩 C：标题、选关、对局、暂停都在这一张纸上翻。不另开房间。</p>
+        <p class="credits-p">声音 Kenney Interface Sounds（CC0）。</p>
+        <p class="home-ver">0.3 · folio</p>
+      </div>
+
+      <div class="panel" id="done" hidden>
+        <div class="home-pair" aria-hidden="true">
+          <span class="boot-tile is-match"></span>
+          <span class="boot-tile is-match"></span>
+        </div>
+        <p class="done-line">这一页齐了</p>
+        <button type="button" class="cta" id="againBtn">回封面</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>
