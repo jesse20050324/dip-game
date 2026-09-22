@@ -1,0 +1,140 @@
+body[data-scheme="stamp"] main {
+  width: min(420px, 100%);
+  margin: 12px auto 0;
+}
+
+.pass {
+  position: relative;
+  padding: 22px 18px 12px;
+  background:
+    radial-gradient(circle at 0 12px, transparent 9px, #fff8ec 10px) left / 18px 28px repeat-y,
+    radial-gradient(circle at 100% 12px, transparent 9px, #fff8ec 10px) right / 18px 28px repeat-y;
+  background-color: #fff8ec;
+  border-radius: 18px;
+  outline: 2px dashed #c45c26;
+  outline-offset: 6px;
+  box-shadow: 0 12px 0 #e4d5b8;
+  transform: rotate(-1.4deg);
+}
+
+.card-mute {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.serial {
+  margin: 8px 0 0;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.pass h1 {
+  margin: 6px 0 4px;
+  font-size: 2.6rem;
+}
+
+.deck {
+  margin: 0 0 16px;
+  color: var(--muted);
+}
+
+.stamp-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  min-height: 168px;
+  margin-bottom: 8px;
+}
+
+.stamp {
+  position: relative;
+  width: 118px;
+  height: 118px;
+  padding: 8px;
+  border: 3px dashed #cbb89a;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.stamp canvas {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+}
+
+.stamp em {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  font-style: normal;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.stamp.is-next {
+  width: 142px;
+  height: 142px;
+  border-style: solid;
+  border-color: var(--accent);
+  color: var(--accent-deep);
+  box-shadow: 0 4px 0 var(--accent-deep);
+}
+
+.stamp.is-done {
+  border-style: solid;
+  border-color: var(--accent);
+  background: #fff8ec;
+  color: var(--accent-deep);
+  box-shadow: 0 4px 0 var(--accent-deep);
+}
+
+.stamp.is-done em {
+  display: none;
+}
+
+.stamp.is-done::after {
+  content: "好";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+.stamp.is-done canvas {
+  outline: 3px solid #fff;
+}
+
+.stamp.is-locked {
+  cursor: pointer;
+}
+
+.stamp.is-locked canvas {
+  filter: grayscale(1) brightness(0.8);
+  opacity: 0.55;
+}
+
+#playSlot:not(:empty) {
+  margin-top: 18px;
+}
+
+body.is-playing .pass {
+  display: none;
+}

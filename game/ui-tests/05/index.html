@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6d0" />
+    <title>灰度 · 抽屉</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-scheme="drawer">
+    <a class="index-link" href="../index.html">全部外壳</a>
+    <p class="eyebrow">05 · 抽屉</p>
+    <main class="desk">
+      <button type="button" class="icon-btn speaker js-mute desk-mute" aria-label="声音"></button>
+      <section id="closed">
+        <button type="button" class="sticking" id="tabOut" hidden>抽出</button>
+        <div class="front">
+          <div class="slot" aria-hidden="true"></div>
+          <p class="inside-note">里面两夹。第二夹先系着。</p>
+          <button type="button" class="cta" id="pull" data-action="primary">拉开</button>
+          <p class="ver">0.4</p>
+        </div>
+      </section>
+      <section id="open" hidden>
+        <div class="folders" id="folders"></div>
+        <div class="tray">
+          <button type="button" class="setting-row js-mute">
+            <span>声音</span>
+            <span data-mute-label>声音开着</span>
+          </button>
+          <button type="button" class="cta cta-ghost" id="resetAsk">烧掉记录</button>
+        </div>
+        <article class="taped">
+          <p class="credits-p">抽屉底的卡片。灰度。把右边修成左边。</p>
+          <p class="credits-p">声音：Kenney Interface Sounds（CC0）。click_003、drop_002、confirmation_001、error_005、back_003。</p>
+          <p class="ver">0.4 · 抽屉</p>
+        </article>
+        <button type="button" class="cta" id="shut">合上</button>
+      </section>
+      <div id="playSlot"></div>
+    </main>
+
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">夹子推回去一半</p>
+        <button type="button" class="cta" id="resumeBtn">摊开</button>
+        <button type="button" class="cta cta-ghost" id="pauseDrawer">放回抽屉</button>
+        <button type="button" class="cta cta-ghost js-mute"><span data-mute-label>声音开着</span></button>
+        <button type="button" class="cta cta-ghost" id="pauseDesk">合上书桌</button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">烧掉记录？</p>
+        <p class="overlay-copy">两夹回到没抽过。桌上的喇叭还在。</p>
+        <button type="button" class="cta" id="wipeNo">留下</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">烧掉</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>

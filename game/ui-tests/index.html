@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>外壳试玩</title>
+    <title>十种外壳</title>
     <style>
       :root {
         --paper: #f1e6d0;
@@ -23,9 +23,9 @@
           radial-gradient(circle at 12% 8%, #f7ecda 0, transparent 42%),
           radial-gradient(circle at 90% 0%, #ead9bc 0, transparent 36%),
           var(--paper);
-        padding: 28px 18px 64px;
+        padding: 28px 16px 72px;
       }
-      .wrap { width: min(720px, 100%); margin: 0 auto; }
+      .wrap { width: min(760px, 100%); margin: 0 auto; }
       .kicker {
         margin: 0 0 6px;
         letter-spacing: 0.16em;
@@ -33,27 +33,37 @@
         color: var(--muted);
         font-size: 0.75rem;
       }
-      h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 6vw, 2.4rem); }
+      h1 { margin: 0 0 10px; font-size: clamp(1.8rem, 6vw, 2.5rem); }
       .lead { margin: 0 0 22px; color: var(--muted); line-height: 1.65; }
       article {
-        margin: 0 0 16px;
-        padding: 20px 18px 18px;
+        display: grid;
+        grid-template-columns: 72px 1fr;
+        gap: 14px;
+        align-items: center;
+        margin: 0 0 12px;
+        padding: 14px;
         background: var(--card);
         border: 1px solid #eadcc4;
-        border-radius: 24px;
-        box-shadow: 0 10px 28px rgba(70, 48, 24, 0.08);
+        border-radius: 22px;
+        box-shadow: 0 8px 22px rgba(70, 48, 24, 0.07);
       }
-      .tag { margin: 0 0 4px; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.12em; }
-      h2 { margin: 0 0 8px; font-size: 1.35rem; }
-      p { margin: 0 0 12px; color: #4f473d; line-height: 1.6; }
-      ul { margin: 0 0 16px; padding-left: 18px; color: var(--muted); line-height: 1.55; }
+      .mark {
+        width: 72px;
+        height: 72px;
+        border-radius: 18px;
+        background: var(--paper);
+        position: relative;
+      }
+      .tag { margin: 0; color: var(--muted); font-size: 0.75rem; letter-spacing: 0.12em; }
+      h2 { margin: 2px 0 6px; font-size: 1.2rem; }
+      p { margin: 0 0 10px; color: #4f473d; line-height: 1.5; }
       a.open {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-height: 48px;
-        padding: 0 18px;
-        border-radius: 16px;
+        min-height: 44px;
+        padding: 0 16px;
+        border-radius: 14px;
         background: var(--accent);
         color: #fff;
         text-decoration: none;
@@ -61,53 +71,153 @@
         box-shadow: 0 3px 0 var(--accent-deep);
       }
       a.open:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--accent-deep); }
-      footer { margin-top: 22px; color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+      details {
+        margin-top: 22px;
+        color: var(--muted);
+      }
+      details a { color: var(--accent-deep); }
+      footer { margin-top: 18px; color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
       footer a { color: var(--accent-deep); }
+      .m1 { background: #3b3128; border-radius: 16px; }
+      .m1::after { content: ""; position: absolute; inset: 10px; border-radius: 8px; background: #fff8ec; }
+      .m2 { background: #fff8ec; box-shadow: inset 8px 0 0 #c45c26; }
+      .m3 { border: 2px dashed #c45c26; background: #fff8ec; }
+      .m3::after { content: ""; position: absolute; width: 28px; height: 28px; border: 2px solid #c45c26; border-radius: 50%; left: 22px; top: 22px; }
+      .m4 { background: transparent; border-top: 2px solid #3b3128; border-bottom: 2px solid #3b3128; border-radius: 0; }
+      .m5 { background: linear-gradient(#f7ecda, #e4d5b8); border-radius: 0 0 16px 16px; }
+      .m5::after { content: ""; position: absolute; left: 18px; right: 18px; top: 16px; height: 8px; border-radius: 99px; background: #3b3128; }
+      .m6 { background: #3b3128; }
+      .m6::before, .m6::after { content: ""; position: absolute; top: 8px; bottom: 8px; width: 8px; background: radial-gradient(circle, #f1e6d0 2px, transparent 3px) 0 0 / 8px 12px; }
+      .m6::before { left: 6px; }
+      .m6::after { right: 6px; }
+      .m7 { background: #c45c26; border-radius: 6px; }
+      .m7::after { content: "1"; position: absolute; inset: 16px 0 0; text-align: center; color: #fff8ec; font-weight: 800; font-size: 28px; }
+      .m8 { background: #fff8ec; overflow: hidden; }
+      .m8::before {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; top: 0;
+        height: 26px;
+        background: #e7d3b4;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+      }
+      .m8b { position: absolute; inset: 22px 8px 8px; background: #fff8ec; border-radius: 0 0 8px 8px; box-shadow: 0 0 0 1px #e4d5b8; }
+      .m9 { background: transparent; }
+      .m9 i, .m9 b { position: absolute; background: #fff8ec; box-shadow: 0 4px 0 rgba(59,49,40,.15); }
+      .m9 i { width: 28px; height: 36px; left: 10px; top: 16px; }
+      .m9 b { width: 26px; height: 32px; right: 10px; top: 26px; }
+      .m10 { background: #fff8ec; box-shadow: inset 0 0 0 6px #e4d5b8; }
+      .m10::after { content: ""; position: absolute; inset: 16px; border: 3px solid #c45c26; border-radius: 8px; }
     </style>
   </head>
   <body>
     <main class="wrap">
-      <p class="kicker">UI tests · phone preview</p>
-      <h1>三套游戏壳，关卡还是那两关。</h1>
+      <p class="kicker">UI tests · ten shells</p>
+      <h1>十种外壳，关卡还是那两关。</h1>
       <p class="lead">
-        官方 <code>game/</code> 没动。这里只试「进关前后」像不像一款真正的轻解谜：开始 / 继续、选关、暂停、设置、关于。点进去可以玩第 1、第 2 关。
+        同一套纸色、同一颗厚按钮。每一种是不同的地方，不是换一下排列。点进去能玩第 1、第 2 关。进度各自记着，不碰正式游戏。
       </p>
 
       <article>
-        <p class="tag">A · 书桌</p>
-        <h2>一颗主按钮</h2>
-        <p>标题很空。第一次写「开始」，有进度改成「继续」，全通了变成「选关」。选关、设置、关于是下面一排小字。暂停盖一层纸，不是返回键。</p>
-        <ul>
-          <li>静音在进关前</li>
-          <li>锁关看得到、点了会晃</li>
-          <li>设置里才能清进度，而且要确认</li>
-        </ul>
-        <a class="open" href="a/index.html">打开 A</a>
+        <div class="mark m1" aria-hidden="true"></div>
+        <div>
+          <p class="tag">01</p>
+          <h2>掌机</h2>
+          <p>开机键在机身上。暂停是屏幕里的系统菜单。设置在背面，不跟开始并排。</p>
+          <a class="open" href="01/index.html">打开掌机</a>
+        </div>
+      </article>
+      <article>
+        <div class="mark m2" aria-hidden="true"></div>
+        <div>
+          <p class="tag">02</p>
+          <h2>章节</h2>
+          <p>封面、缎带、目录、扉页。有进度才露出书签，继续是从夹住的那一章翻开。</p>
+          <a class="open" href="02/index.html">打开章节</a>
+        </div>
+      </article>
+      <article>
+        <div class="mark m3" aria-hidden="true"></div>
+        <div>
+          <p class="tag">03</p>
+          <h2>集章</h2>
+          <p>没有单独的选关页。卡片上的两枚章就是关卡，背面才是声音、清除和版权。</p>
+          <a class="open" href="03/index.html">打开集章</a>
+        </div>
+      </article>
+      <article>
+        <div class="mark m4" aria-hidden="true"></div>
+        <div>
+          <p class="tag">04</p>
+          <h2>馆签</h2>
+          <p>不说开始，说走近。墙上已经挂着没看完的那一件，目录只负责换墙上的画。</p>
+          <a class="open" href="04/index.html">打开馆签</a>
+        </div>
+      </article>
+      <article>
+        <div class="mark m5" aria-hidden="true"></div>
+        <div>
+          <p class="tag">05</p>
+          <h2>抽屉</h2>
+          <p>没进度是关着的抽屉。有进度时夹子探出来，抽它就继续。清除藏在抽屉里面。</p>
+          <a class="open" href="05/index.html">打开抽屉</a>
+        </div>
+      </article>
+      <article>
+        <div class="mark m6" aria-hidden="true"></div>
+        <div>
+          <p class="tag">06</p>
+          <h2>胶片</h2>
+          <p>片门就是选关。声音和擦片是机身上的旋钮，永远不另开一页设置。</p>
+          <a class="open" href="06/index.html">打开胶片</a>
+        </div>
+      </article>
+      <article>
+        <div class="mark m7" aria-hidden="true"></div>
+        <div>
+          <p class="tag">07</p>
+          <h2>台历</h2>
+          <p>只有今天能撕开。明天露一角但撕不掉。已经过的日子躺在废页堆里。</p>
+          <a class="open" href="07/index.html">打开台历</a>
+        </div>
+      </article>
+      <article>
+        <div class="mark m8" aria-hidden="true"><span class="m8b"></span></div>
+        <div>
+          <p class="tag">08</p>
+          <h2>信件</h2>
+          <p>桌上只有最上面一封。拆开才是继续。第二封先封着，读过的另放一叠。</p>
+          <a class="open" href="08/index.html">打开信件</a>
+        </div>
+      </article>
+      <article>
+        <div class="mark m9" aria-hidden="true"><i></i><b></b></div>
+        <div>
+          <p class="tag">09</p>
+          <h2>展墙</h2>
+          <p>第一次是进门，之后直接站在墙前。点画才靠近，暂停是退后半步。</p>
+          <a class="open" href="09/index.html">打开展墙</a>
+        </div>
+      </article>
+      <article>
+        <div class="mark m10" aria-hidden="true"></div>
+        <div>
+          <p class="tag">10</p>
+          <h2>样片</h2>
+          <p>灯箱上两格。放大镜停在下一张。铅笔勾是进度，橡皮要按两次。</p>
+          <a class="open" href="10/index.html">打开样片</a>
+        </div>
       </article>
 
-      <article>
-        <p class="tag">B · 图鉴</p>
-        <h2>两张照片当选关</h2>
-        <p>封面像一本薄相册。选关是两张歪一点的照片：第一张、蘑菇。设置单独成页。通关盖一枚「修好了」。</p>
-        <ul>
-          <li>继续仍是封面最大的橙色按钮</li>
-          <li>关于页写了声音来源</li>
-          <li>暂停可以回图鉴或合上封面</li>
-        </ul>
-        <a class="open" href="b/index.html">打开 B</a>
-      </article>
-
-      <article>
-        <p class="tag">C · 一页纸</p>
-        <h2>不换房间</h2>
-        <p>标题、选关、对局、暂停都在同一张圆角纸上翻。继续会写「继续第 2 关」。选关是两个点：空心锁着，橙色是当前。</p>
-        <ul>
-          <li>暂停不另开暗房，只换这张纸的内容</li>
-          <li>版本号只在封面上</li>
-          <li>Esc 也能暂停（桌面）</li>
-        </ul>
-        <a class="open" href="c/index.html">打开 C</a>
-      </article>
+      <details>
+        <summary>上一轮的三张菜单（书桌 / 图鉴 / 一页纸）</summary>
+        <p>这三套被退回了：还是同一排功能换了排版。留在这里对照，不再当入口。</p>
+        <p>
+          <a href="a/index.html">A 书桌</a>
+          · <a href="b/index.html">B 图鉴</a>
+          · <a href="c/index.html">C 一页纸</a>
+        </p>
+      </details>
 
       <footer>
         研究笔记：<a href="../../docs/ui-shell-research.md">docs/ui-shell-research.md</a>

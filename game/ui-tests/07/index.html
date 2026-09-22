@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6d0" />
+    <title>灰度 · 台历</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-scheme="calendar">
+    <a class="index-link" href="../index.html">全部外壳</a>
+    <p class="eyebrow">07 · 台历</p>
+    <main class="stand">
+      <section class="cal" id="cal">
+        <header class="cal-head" id="calHead">今天</header>
+        <div id="today">
+          <p class="daynum" id="daynum">1</p>
+          <p class="dayname" id="dayname">深浅</p>
+          <button type="button" class="cta" id="openDay" data-action="primary">撕开今天</button>
+          <button type="button" class="tomorrow" id="tomorrow" data-locked="1">2　蘑菇</button>
+        </div>
+        <div id="blank" hidden>
+          <p class="daynum">—</p>
+          <p class="dayname">撕完了</p>
+          <button type="button" class="cta" id="seeTorn" data-action="primary">看撕下的</button>
+        </div>
+        <div id="playSlot"></div>
+      </section>
+      <div class="torn" id="torn"></div>
+      <div class="base">
+        <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+        <button type="button" class="text-link" id="drawerBtn">底座抽屉</button>
+        <button type="button" class="text-link" id="markBtn">印刷所</button>
+        <p class="ver">0.4</p>
+      </div>
+      <section class="panel" id="drawer" hidden>
+        <h2>底座</h2>
+        <button type="button" class="setting-row js-mute">
+          <span>声音</span>
+          <span data-mute-label>声音开着</span>
+        </button>
+        <button type="button" class="cta cta-ghost" id="resetAsk">撕掉整本</button>
+        <button type="button" class="cta" id="drawerClose">推回去</button>
+      </section>
+      <section class="panel" id="mark" hidden>
+        <h2>印刷所</h2>
+        <p class="credits-p">灰度。把右边修成左边。印在底座背面，不印在今天这页。</p>
+        <p class="credits-p">声音：Kenney Interface Sounds（CC0）。click_003、drop_002、confirmation_001、error_005、back_003。</p>
+        <button type="button" class="cta" id="markClose">扣上</button>
+        <p class="ver">0.4 · 台历</p>
+      </section>
+    </main>
+
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">曲别针夹住</p>
+        <button type="button" class="cta" id="resumeBtn">继续今天</button>
+        <button type="button" class="cta cta-ghost" id="pauseStand">合上台历</button>
+        <button type="button" class="cta cta-ghost js-mute"><span data-mute-label>声音开着</span></button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">撕掉整本？</p>
+        <p class="overlay-copy">两天回到第一页。铃铛的开关留下。</p>
+        <button type="button" class="cta" id="wipeNo">留下</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">撕掉</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>

@@ -1,0 +1,131 @@
+body[data-scheme="proof"] .table {
+  width: min(560px, 100%);
+  margin: 8px auto 0;
+  padding: 16px;
+  background: #fff8ec;
+  border-radius: 28px;
+  box-shadow: inset 0 0 0 10px #e4d5b8, 0 14px 0 #d7c4a6;
+}
+
+.margin {
+  margin: 4px 8px 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  transform: rotate(-0.4deg);
+}
+
+.sheet {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.frame {
+  position: relative;
+  margin: 0;
+  padding: 8px;
+  border: 0;
+  border-radius: 16px;
+  background: #f1e6d0;
+  font: inherit;
+  color: var(--ink);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.frame canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.frame span {
+  display: block;
+  margin-top: 6px;
+  text-align: center;
+}
+
+.frame.is-loupe {
+  outline: 6px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.frame.is-locked canvas {
+  filter: grayscale(1) brightness(0.72);
+  opacity: 0.7;
+}
+
+.frame.is-done::after {
+  content: "勾";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 3px 0 var(--accent-deep);
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.lamp,
+.eraser {
+  min-height: 64px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--paper-deep);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  box-shadow: 0 4px 0 #cbb89a;
+  cursor: pointer;
+}
+
+.lamp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.lamp i {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #c45c26;
+  box-shadow: 0 0 0 6px rgba(196, 92, 38, 0.25);
+}
+
+body.is-quiet .lamp i {
+  background: #7a6b5b;
+  box-shadow: none;
+}
+
+.lamp:active,
+.eraser:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #cbb89a;
+}
+
+body.is-playing .sheet,
+body.is-playing .tools,
+body.is-playing .margin {
+  display: none;
+}
+
+body[data-scheme="proof"] .boards {
+  border: 8px solid var(--accent);
+  border-radius: 28px;
+  padding: 8px;
+  background: #fff8ec;
+}

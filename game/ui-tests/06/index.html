@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6d0" />
+    <title>灰度 · 胶片</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-scheme="film">
+    <a class="index-link" href="../index.html">全部外壳</a>
+    <p class="eyebrow">06 · 胶片</p>
+    <main class="projector">
+      <div class="strip">
+        <div class="gate">
+          <section id="home">
+            <div class="transport">
+              <button type="button" class="icon-btn" id="prev" aria-label="上一格">‹</button>
+              <div id="frameView"></div>
+              <button type="button" class="icon-btn" id="next" aria-label="下一格">›</button>
+            </div>
+            <p class="frame-name" id="frameName">1 深浅</p>
+          </section>
+          <div id="playSlot"></div>
+          <section id="leader" hidden>
+            <p class="leader-mark">完</p>
+            <p>两格都放完了。</p>
+            <button type="button" class="cta" id="leaderClose">回到片门</button>
+          </section>
+        </div>
+      </div>
+      <button type="button" class="cta home-only" id="project" data-action="primary">放映</button>
+      <div class="knobs home-only">
+        <button type="button" class="knob js-mute" aria-label="声音">
+          <span data-mute-label>声音开着</span>
+        </button>
+        <button type="button" class="knob" id="resetAsk">擦片</button>
+      </div>
+      <p class="engraved home-only" id="engraved">
+        灰度。把右边修成左边。声音：Kenney Interface Sounds（CC0），click_003、drop_002、confirmation_001、error_005、back_003。0.4 · 胶片
+      </p>
+    </main>
+
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">片门停住</p>
+        <button type="button" class="cta" id="resumeBtn">继续放映</button>
+        <button type="button" class="cta cta-ghost" id="pauseGate">回到片门</button>
+        <button type="button" class="cta cta-ghost js-mute"><span data-mute-label>声音开着</span></button>
+        <button type="button" class="cta cta-ghost" id="pauseHead">片头</button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">擦掉片边记号？</p>
+        <p class="overlay-copy">两格回到没放。灯还是你刚才调的。</p>
+        <button type="button" class="cta" id="wipeNo">留下</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">擦掉</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>

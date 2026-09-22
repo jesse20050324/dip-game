@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6d0" />
+    <title>灰度 · 馆签</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-scheme="label">
+    <a class="index-link" href="../index.html">全部外壳</a>
+    <main class="gallery" id="gallery">
+      <figure class="frame">
+        <canvas id="spotCanvas" width="220" height="220"></canvas>
+        <figcaption id="spotCap">1.1</figcaption>
+      </figure>
+      <aside class="placard">
+        <div class="placard-top">
+          <p class="eyebrow in">04 · 馆签</p>
+          <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+        </div>
+        <h1>灰度</h1>
+        <p class="meta" id="meta">无题，两件</p>
+        <button type="button" class="cta" id="approach" data-action="primary">走近</button>
+        <ol id="accessions"></ol>
+        <p class="fine">0.4 · 墙上的小字，不是菜单。</p>
+        <button type="button" class="text-link" id="noteBtn">参观说明</button>
+      </aside>
+    </main>
+    <section class="note" id="note" hidden>
+      <h2>参观说明</h2>
+      <p class="credits-p">灰度。把右边修成左边。说明折在标签旁边，不挂在画上。</p>
+      <p class="credits-p">声音：Kenney Interface Sounds（CC0）。click_003、drop_002、confirmation_001、error_005、back_003。</p>
+      <button type="button" class="setting-row js-mute">
+        <span>声音</span>
+        <span data-mute-label>声音开着</span>
+      </button>
+      <button type="button" class="cta cta-ghost" id="resetAsk">撤下进度</button>
+      <button type="button" class="cta" id="noteClose">折好</button>
+      <p class="ver">0.4 · 馆签</p>
+    </section>
+    <div id="playSlot"></div>
+
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">请先退后</p>
+        <button type="button" class="cta" id="resumeBtn">留在这件</button>
+        <button type="button" class="cta cta-ghost" id="pauseWall">回到墙前</button>
+        <button type="button" class="cta cta-ghost js-mute"><span data-mute-label>声音开着</span></button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">撤下进度？</p>
+        <p class="overlay-copy">两件都回到未看。喇叭还在标签上。</p>
+        <button type="button" class="cta" id="wipeNo">留下</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">撤下</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>

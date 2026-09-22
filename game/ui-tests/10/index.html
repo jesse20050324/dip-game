@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6d0" />
+    <title>灰度 · 样片</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-scheme="proof">
+    <a class="index-link" href="../index.html">全部外壳</a>
+    <p class="eyebrow">10 · 样片</p>
+    <main class="table">
+      <p class="margin" id="margin">页边：灰度。把右边修成左边。0.4。声音 Kenney CC0：click_003、drop_002、confirmation_001、error_005、back_003。</p>
+      <div class="sheet" id="sheet"></div>
+      <div class="tools">
+        <button type="button" class="lamp js-mute" aria-label="声音">
+          <i></i>
+          <span data-mute-label>声音开着</span>
+        </button>
+        <button type="button" class="eraser" id="resetAsk">橡皮</button>
+      </div>
+      <div id="playSlot"></div>
+    </main>
+
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">放大镜抬起来</p>
+        <button type="button" class="cta" id="resumeBtn">放下放大镜</button>
+        <button type="button" class="cta cta-ghost" id="pauseSheet">回到灯箱</button>
+        <button type="button" class="cta cta-ghost js-mute"><span data-mute-label>声音开着</span></button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">擦掉铅笔？</p>
+        <p class="overlay-copy">勾选消失。灯还亮着你留下的样子。</p>
+        <button type="button" class="cta" id="wipeNo">留下</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">擦掉</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6d0" />
+    <title>灰度 · 信件</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-scheme="post">
+    <a class="index-link" href="../index.html">全部外壳</a>
+    <p class="eyebrow">08 · 信件</p>
+    <main class="desk">
+      <button type="button" class="icon-btn speaker js-mute desk-mute" aria-label="声音"></button>
+      <div class="pile" id="pile">
+        <button type="button" class="env under" id="under" data-locked="1">
+          <span>下一封还封着</span>
+        </button>
+        <article class="env top" id="top">
+          <div class="flap" aria-hidden="true"></div>
+          <p class="to">给修图的人</p>
+          <h1>灰度</h1>
+          <p class="subject" id="subject">第一封 · 深浅</p>
+          <button type="button" class="cta" id="openLetter" data-action="primary">拆开</button>
+          <button type="button" class="text-link" id="flipBtn">看背面</button>
+          <p class="ver">0.4</p>
+        </article>
+        <article class="env top empty" id="empty" hidden>
+          <h1>没有新信</h1>
+          <p class="subject">两封都读过了。</p>
+          <button type="button" class="cta" id="toRead" data-action="primary">去看已读</button>
+        </article>
+      </div>
+      <div class="read" id="read"></div>
+      <section class="backside" id="backside" hidden>
+        <h2>回信地址</h2>
+        <p class="credits-p">灰度。把右边修成左边。地址写在背面，拆开之前就能看见。</p>
+        <p class="credits-p">声音：Kenney Interface Sounds（CC0）。click_003、drop_002、confirmation_001、error_005、back_003。</p>
+        <button type="button" class="setting-row js-mute">
+          <span>声音</span>
+          <span data-mute-label>声音开着</span>
+        </button>
+        <button type="button" class="cta cta-ghost" id="resetAsk">退回全部</button>
+        <button type="button" class="cta" id="backClose">扣上</button>
+        <p class="ver">0.4 · 信件</p>
+      </section>
+      <div id="playSlot" class="letter"></div>
+    </main>
+
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">信折起来</p>
+        <button type="button" class="cta" id="resumeBtn">继续读</button>
+        <button type="button" class="cta cta-ghost" id="pauseDesk">放回桌上</button>
+        <button type="button" class="cta cta-ghost js-mute"><span data-mute-label>声音开着</span></button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">退回全部？</p>
+        <p class="overlay-copy">两封重新封上。声音开关留在背面。</p>
+        <button type="button" class="cta" id="wipeNo">留下</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">退回</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>

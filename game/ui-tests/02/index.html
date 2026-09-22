@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6d0" />
+    <title>灰度 · 章节</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-scheme="book">
+    <a class="index-link" href="../index.html">全部外壳</a>
+    <p class="eyebrow">02 · 章节</p>
+    <main class="book">
+      <div class="spine" aria-hidden="true"></div>
+      <div class="page">
+        <div class="ribbon" id="ribbon" hidden>缎带</div>
+        <section id="cover">
+          <button type="button" class="icon-btn speaker js-mute page-mute" aria-label="声音"></button>
+          <p class="kicker">Chapter 1</p>
+          <h1>灰度</h1>
+          <p class="deck" id="deck">一本两章的薄书。</p>
+          <ol class="toc-preview" id="preview"></ol>
+          <button type="button" class="cta" id="primaryBtn" data-action="primary">翻开</button>
+          <nav class="quiet">
+            <button type="button" class="text-link" id="tocBtn">目录</button>
+            <button type="button" class="text-link" id="coloBtn">扉页</button>
+          </nav>
+          <p class="ver">0.4</p>
+        </section>
+        <section id="toc" hidden>
+          <h2>目录</h2>
+          <div id="tocList"></div>
+          <button type="button" class="cta cta-ghost" id="tocClose">合上</button>
+        </section>
+        <section id="colo" hidden>
+          <h2>扉页</h2>
+          <p class="credits-p">灰度。把右边修成左边。</p>
+          <p class="credits-p">声音：Kenney Interface Sounds（CC0）。click_003、drop_002、confirmation_001、error_005、back_003。</p>
+          <button type="button" class="setting-row js-mute">
+            <span>声音</span>
+            <span data-mute-label>声音开着</span>
+          </button>
+          <button type="button" class="cta cta-ghost" id="resetAsk">擦掉阅读记录</button>
+          <button type="button" class="cta" id="coloClose">回到封面</button>
+          <p class="ver">0.4 · 章节</p>
+        </section>
+        <div id="playSlot"></div>
+        <section id="endpage" hidden>
+          <p class="kicker">终</p>
+          <h1>完</h1>
+          <p class="deck">两章都读完了。</p>
+          <button type="button" class="cta" id="endClose">合上</button>
+        </section>
+      </div>
+    </main>
+
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">缎带夹在这里</p>
+        <button type="button" class="cta" id="resumeBtn">读下去</button>
+        <button type="button" class="cta cta-ghost" id="pauseToc">回到目录</button>
+        <button type="button" class="cta cta-ghost js-mute"><span data-mute-label>声音开着</span></button>
+        <button type="button" class="cta cta-ghost" id="pauseCover">合上书</button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">擦掉阅读记录？</p>
+        <p class="overlay-copy">两章回到没翻开。声音开关留在扉页。</p>
+        <button type="button" class="cta" id="wipeNo">留下</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">擦掉</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>

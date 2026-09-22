@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6d0" />
+    <title>灰度 · 集章</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-scheme="stamp">
+    <a class="index-link" href="../index.html">全部外壳</a>
+    <p class="eyebrow">03 · 集章</p>
+    <main>
+      <article class="pass" id="pass">
+        <div id="front">
+          <button type="button" class="icon-btn speaker js-mute card-mute" aria-label="声音"></button>
+          <p class="serial">NO. 04 · 两枚</p>
+          <h1>灰度</h1>
+          <p class="deck" id="deck">还没盖章</p>
+          <div class="stamp-row" id="stampRow"></div>
+          <button type="button" class="text-link" id="flipBtn">翻到背面</button>
+          <p class="ver">0.4</p>
+        </div>
+        <div id="back" hidden>
+          <h2>背面</h2>
+          <p class="credits-p">灰度。把右边修成左边。章盖在正面，说明印在这里。</p>
+          <p class="credits-p">声音：Kenney Interface Sounds（CC0）。click_003、drop_002、confirmation_001、error_005、back_003。</p>
+          <button type="button" class="setting-row js-mute">
+            <span>声音</span>
+            <span data-mute-label>声音开着</span>
+          </button>
+          <button type="button" class="cta cta-ghost" id="resetAsk">洗掉章</button>
+          <button type="button" class="cta" id="unflip">翻回来</button>
+          <p class="ver">0.4 · 集章</p>
+        </div>
+      </article>
+      <div id="playSlot"></div>
+    </main>
+
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">先按住这张卡</p>
+        <button type="button" class="cta" id="resumeBtn">接着盖</button>
+        <button type="button" class="cta cta-ghost" id="pauseCard">回到卡片</button>
+        <button type="button" class="cta cta-ghost js-mute"><span data-mute-label>声音开着</span></button>
+        <button type="button" class="cta cta-ghost" id="pauseBack">翻到背面</button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">洗掉章？</p>
+        <p class="overlay-copy">两枚都消失。背面的声音开关还在。</p>
+        <button type="button" class="cta" id="wipeNo">留下</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">洗掉</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>

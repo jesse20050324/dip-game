@@ -1,0 +1,172 @@
+/* Shared chrome for the ten shells. Metaphor layouts live in each skin.css. */
+body[data-scheme] {
+  overflow-x: hidden;
+  padding: max(12px, env(safe-area-inset-top)) 14px 48px;
+}
+
+body[data-scheme] button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.index-link {
+  position: fixed;
+  z-index: 25;
+  top: max(10px, env(safe-area-inset-top));
+  left: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 248, 236, 0.92);
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+body.is-playing .index-link {
+  display: none;
+}
+
+.eyebrow {
+  margin: 28px 0 0;
+  text-align: center;
+  color: var(--muted);
+  letter-spacing: 0.16em;
+  font-size: 0.75rem;
+}
+
+.ver {
+  margin: 12px 0 0;
+  color: #b5a48e;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.text-link {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  padding: 8px 4px;
+  cursor: pointer;
+}
+
+.text-link:hover {
+  color: var(--ink);
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 56px;
+  margin: 0 0 12px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--paper-deep);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: 0 3px 0 #cbb89a;
+  cursor: pointer;
+}
+
+.setting-row .speaker-svg {
+  display: none;
+}
+
+.cover {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(59, 49, 40, 0.35);
+}
+
+.cover-card {
+  width: min(380px, 100%);
+  padding: 26px 20px 18px;
+  background: var(--card);
+  border: 1px solid #eadcc4;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.overlay-kicker {
+  margin: 0 0 16px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.overlay-copy {
+  margin: -6px 0 16px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.credits-p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  line-height: 1.6;
+  text-align: left;
+}
+
+body[data-scheme] #play {
+  width: min(640px, 100%);
+  margin: 0 auto;
+  padding: 8px 2px 16px;
+}
+
+body[data-scheme] .play-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+body[data-scheme] .level-label {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+body[data-scheme="pocket"] .boards,
+body[data-scheme="book"] .boards,
+body[data-scheme="stamp"] .boards,
+body[data-scheme="film"] .boards,
+body[data-scheme="calendar"] .boards {
+  grid-template-columns: 1fr;
+}
+
+.nudge {
+  animation: nudge 0.32s ease;
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  25% {
+    translate: -7px 0;
+  }
+  75% {
+    translate: 7px 0;
+  }
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}

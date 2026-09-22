@@ -1,0 +1,116 @@
+body[data-scheme="calendar"] .stand {
+  width: min(380px, 100%);
+  margin: 8px auto 0;
+}
+
+.cal {
+  background: #fff8ec;
+  border-radius: 8px 8px 18px 18px;
+  box-shadow: 0 12px 0 #e4d5b8;
+  overflow: hidden;
+  position: relative;
+}
+
+.cal-head {
+  background: #c45c26;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.22em;
+  padding: 10px 8px;
+  font-weight: 800;
+}
+
+.daynum {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 6.2rem;
+  line-height: 0.9;
+  font-weight: 750;
+}
+
+.dayname {
+  margin: 0 0 12px;
+  text-align: center;
+  color: var(--muted);
+  letter-spacing: 0.14em;
+}
+
+#today,
+#blank {
+  padding: 0 16px 16px;
+  position: relative;
+}
+
+.tomorrow {
+  position: absolute;
+  right: 0;
+  top: 8px;
+  width: 92px;
+  min-height: 64px;
+  border: 0;
+  border-radius: 12px 0 0 12px;
+  background: #f1e6d0;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 800;
+  box-shadow: -3px 3px 0 #e4d5b8;
+  cursor: pointer;
+}
+
+.torn {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.scrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 14px;
+  background: #fff8ec;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 750;
+  box-shadow: 0 3px 0 #e4d5b8;
+  cursor: pointer;
+}
+
+.base {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 14px;
+  margin-top: 14px;
+  padding: 12px;
+  background: #e7d3b4;
+  border-radius: 18px;
+}
+
+.base .ver {
+  width: 100%;
+  text-align: center;
+}
+
+.panel {
+  margin-top: 12px;
+  padding: 16px;
+  background: #fff8ec;
+  border-radius: 18px;
+}
+
+body.is-playing #today,
+body.is-playing #blank,
+body.is-playing .torn,
+body.is-playing .base,
+body.is-playing .panel {
+  display: none;
+}
+
+#play {
+  padding: 12px;
+}

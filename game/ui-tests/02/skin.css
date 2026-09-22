@@ -1,0 +1,122 @@
+body[data-scheme="book"] .book {
+  width: min(480px, 100%);
+  margin: 16px auto 0;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  min-height: 72vh;
+  background: #fff8ec;
+  border-radius: 6px 26px 26px 6px;
+  box-shadow: 0 14px 0 #e4d5b8, 0 24px 36px rgba(70, 48, 24, 0.12);
+  position: relative;
+}
+
+.spine {
+  border-radius: 6px 0 0 6px;
+  background: repeating-linear-gradient(#c45c26 0 10px, #9a3f16 10px 13px);
+}
+
+.page {
+  position: relative;
+  padding: 28px 22px 22px;
+}
+
+.page-mute {
+  position: absolute;
+  top: 12px;
+  left: 8px;
+}
+
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: 28px;
+  width: 16px;
+  height: 36px;
+  background: #c45c26;
+  color: transparent;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 3px 0 #9a3f16;
+}
+
+.kicker,
+.deck {
+  text-align: center;
+  color: var(--muted);
+}
+
+.kicker {
+  margin: 0 0 6px;
+  letter-spacing: 0.18em;
+  font-size: 0.75rem;
+}
+
+.page h1,
+.page h2 {
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+.page h1 {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.deck {
+  margin: 0 0 16px;
+}
+
+.toc-preview,
+#tocList {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.line,
+.chapter {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+}
+
+.line.is-locked,
+.chapter.is-locked {
+  color: #b5a48e;
+  cursor: pointer;
+}
+
+.chapter {
+  background: #f7efe1;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 3px 0 #eadcc4;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.chapter.is-next {
+  border-color: var(--accent);
+  box-shadow: 0 3px 0 var(--accent-deep);
+}
+
+.quiet {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+#play {
+  width: 100%;
+}

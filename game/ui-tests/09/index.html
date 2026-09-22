@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1e6d0" />
+    <title>灰度 · 展墙</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="skin.css" />
+  </head>
+  <body data-scheme="wall">
+    <a class="index-link" href="../index.html">全部外壳</a>
+    <section class="door" id="door">
+      <button type="button" class="icon-btn speaker js-mute door-mute" aria-label="声音"></button>
+      <p class="eyebrow">09 · 展墙</p>
+      <h1>灰度</h1>
+      <p class="deck">门后面是两幅画。</p>
+      <button type="button" class="cta" id="enterRoom" data-action="primary">进来</button>
+      <p class="ver">0.4</p>
+    </section>
+    <main class="room" id="room" hidden>
+      <p class="hint" id="hint">先看左边</p>
+      <div class="hang" id="hang"></div>
+      <div class="bench">
+        <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+        <button type="button" class="text-link" id="plaqueBtn">长椅铭牌</button>
+        <button type="button" class="text-link" id="leaveBtn">离开房间</button>
+      </div>
+    </main>
+    <section class="plaque" id="plaque" hidden>
+      <h2>铭牌</h2>
+      <p class="credits-p">灰度。把右边修成左边。字在长椅上，不在画框里。</p>
+      <p class="credits-p">声音：Kenney Interface Sounds（CC0）。click_003、drop_002、confirmation_001、error_005、back_003。</p>
+      <button type="button" class="setting-row js-mute">
+        <span>声音</span>
+        <span data-mute-label>声音开着</span>
+      </button>
+      <button type="button" class="cta cta-ghost" id="resetAsk">闭馆重挂</button>
+      <button type="button" class="cta" id="plaqueClose">回到墙边</button>
+      <p class="ver">0.4 · 展墙</p>
+    </section>
+    <div id="playSlot" class="zoom"></div>
+
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">退后半步</p>
+        <button type="button" class="cta" id="resumeBtn">再靠近</button>
+        <button type="button" class="cta cta-ghost" id="pauseRoom">回到墙边</button>
+        <button type="button" class="cta cta-ghost js-mute"><span data-mute-label>声音开着</span></button>
+        <button type="button" class="cta cta-ghost" id="pauseLeave">离开房间</button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">闭馆重挂？</p>
+        <p class="overlay-copy">两幅回到第一次。长椅上的喇叭不动。</p>
+        <button type="button" class="cta" id="wipeNo">留下</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">重挂</button>
+      </div>
+    </div>
+
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="shell.js"></script>
+  </body>
+</html>
