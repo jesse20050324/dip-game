@@ -16,36 +16,25 @@
     figure { margin: 0; }
     figcaption { font-size: 11px; color: #9a8b74; margin-top: 6px; text-align: center; }
     canvas { display: block; background: #111; image-rendering: pixelated; box-shadow: 0 6px 0 #14110e; }
-    canvas.big { width: 160px; height: 160px; }
-    canvas.wide { width: 192px; height: 192px; }
   </style>
 </head>
 <body>
-  <h1>只换图，不换玩法</h1>
-  <p class="brief">和第 12 关当时一样：正式关先不动。每套看三张。点进某一套之前，通关规则还是原来的。</p>
+  <h1>逻辑不动，颜色和图案可以换</h1>
+  <p class="brief">正式关先不动。第 2 关仍是黑白：滑条对的是深浅，不能上色。第 8/9 关仍是五层灰、第 9 关删掉最亮那一层（它只盖在背景上）。第 13 关仍是五层灰，左边淡、做对才浓。每套的颜色和画面各自不同。</p>
 
-  <h2>第 2 关 · 5×5 补瓦片 · 十张</h2>
-  <p class="brief">三层灰：底 230 / 主体 70 / 茎或第二色 150。坏图固定三处：主体上两格变成 235，底上有一格 40。开局仍预选第一处坏格。</p>
+  <h2>第 2 关 · 黑白 5×5 · 十张</h2>
+  <p class="brief">还是补三格错瓦。底、主体、第二色都是灰，没有彩色。</p>
   <div class="grid" id="l2"></div>
 
-  <h2>第 8 / 9 关 · 同一张 24×24 风景 · 十张</h2>
-  <p class="brief">五层灰不变：路 36 / 地 88 / 山 142 / 天 210 / 日 248。第 8 关涂出带太阳的彩色。第 9 关左图没有太阳，把日并进天才算删掉。</p>
+  <h2>第 8 / 9 关 · 五层，颜色各不相同 · 十张</h2>
+  <p class="brief">第 8 关把五层涂开。第 9 关左图没有最亮的那一件，把它并进背景才算删掉。灰度档位不变，所以边界还是原来的四刀。</p>
   <div class="grid" id="l89"></div>
 
-  <h2>第 13 关 · 64×64 上色 · 十张</h2>
-  <p class="brief">五层灰不变：地 40 / 人 90 / 墙 140 / 天 190 / 领 230。左图淡彩不判定，做对后才换成浓彩。</p>
+  <h2>第 13 关 · 五层上色，颜色各不相同 · 十张</h2>
+  <p class="brief">左图是这张自己的淡彩，不判定。做对后换成这张自己的浓彩。最亮一层仍是一小块高光。</p>
   <div class="grid" id="l13"></div>
 
 <script>
-const LAND = {
-  path: "#eddfc6", ground: "#c4785a", mountain: "#6b8f71", sky: "#7ba7c9", sun: "#e8b84a",
-};
-const C = {
-  sky: "#7eafd2", ground: "#c17a4a", wall: "#c4a078", person: "#b84332", collar: "#efe6d0",
-};
-const FADE = { ground: "#d5c2b0", person: "#d2b8b0", wall: "#d4c8b8", sky: "#d8e2ea", collar: "#e8e4dc" };
-const GRAY13 = { ground: 40, person: 90, wall: 140, sky: 190, collar: 230 };
-
 function grayHex(v) {
   const h = Math.max(0, Math.min(255, v)).toString(16).padStart(2, "0");
   return "#" + h + h + h;
@@ -98,26 +87,23 @@ function breakTiles(grid) {
   return g;
 }
 function asGray(grid) { return grid.map((row) => row.map(grayHex)); }
-
+function breakMushroom(grid) {
+  const g = grid.map((r) => r.slice());
+  g[0][2] = 235; g[2][0] = 235; g[3][3] = 40;
+  return g;
+}
 const L2 = [
-  ["蘑菇", "现在这一张。坏格也是现在这三处：帽上两洞，底下一颗黑点。", "..##.\n.####\n#####\n..+..\n..+.."],
+  ["蘑菇", "现在这一张，黑白。", "..##.\n.####\n#####\n..+..\n..+.."],
   ["树", "圆冠，一截干。", "..#..\n.###.\n#####\n..+..\n..+.."],
-  ["房子", "三角顶，方身，门是第二色。", "..#..\n.###.\n.###.\n.#+#.\n.#+#."],
+  ["房子", "三角顶，门是第二色。", "..#..\n.###.\n.###.\n.#+#.\n.#+#."],
   ["船", "船体加一根桅。", ".....\n..+..\n..+..\n#####\n.###."],
-  ["杯子", "杯口比杯身宽，右边一截柄。", ".....\n#####\n.##+.\n.##+.\n.###."],
+  ["杯子", "杯口宽，右边一截柄。", ".....\n#####\n.##+.\n.##+.\n.###."],
   ["鱼", "身子加一格尾。", ".....\n.###.\n####+\n.###.\n....."],
   ["伞", "伞面在上，柄在中。", ".....\n.###.\n#####\n..+..\n..+.."],
   ["鸟", "头、身、一格喙。", ".....\n..##+\n.####\n..##.\n....."],
   ["花", "四瓣围一芯。", "..#..\n.#+#.\n..#..\n..+..\n..+.."],
   ["旗", "旗杆加一面旗。", "+###.\n+##..\n+....\n+....\n+...."],
 ];
-function breakMushroom(grid) {
-  const g = grid.map((r) => r.slice());
-  g[0][2] = 235;
-  g[2][0] = 235;
-  g[3][3] = 40;
-  return g;
-}
 L2.forEach(([name, why, spec], i) => {
   const fixed = rows(spec);
   const broken = i === 0 ? breakMushroom(fixed) : breakTiles(fixed);
@@ -127,103 +113,110 @@ L2.forEach(([name, why, spec], i) => {
   ]);
 });
 
+const INK = 36, MID = 88, HI = 142, BG8 = 210, POP = 248;
 function land(draw) {
   const n = 24;
-  const g = Array.from({ length: n }, () => Array(n).fill(210));
+  const g = Array.from({ length: n }, () => Array(n).fill(BG8));
   const set = (x, y, v) => { if (x >= 0 && x < n && y >= 0 && y < n) g[y][x] = v; };
   const get = (x, y) => (x >= 0 && x < n && y >= 0 && y < n ? g[y][x] : -1);
-  draw(set, get, n);
+  draw(set, get);
   return g;
 }
-function sunOnSky(set, get, cx, cy, r) {
+function blob(set, cx, cy, r, v) {
   for (let y = Math.floor(cy - r); y <= cy + r; y++)
     for (let x = Math.floor(cx - r); x <= cx + r; x++)
-      if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r && get(x, y) === 210) set(x, y, 248);
+      if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r) set(x, y, v);
+}
+function popOnBg(set, get, cx, cy, r) {
+  for (let y = Math.floor(cy - r); y <= cy + r; y++)
+    for (let x = Math.floor(cx - r); x <= cx + r; x++)
+      if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r && get(x, y) === BG8) set(x, y, POP);
+}
+function paint8(g, pal, drop) {
+  const map = { 36: pal.ink, 88: pal.mid, 142: pal.hi, 210: pal.bg, 248: drop ? pal.bg : pal.pop };
+  return g.map((row) => row.map((v) => map[v]));
 }
 const scenes89 = [
-  ["双峰", "现在这一张：两座山、一条路、右上角太阳。", (set, get) => {
-    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
+  ["双峰", "现在这一张：沙路、土、山、天蓝、黄日。", { ink: "#eddfc6", mid: "#c4785a", hi: "#6b8f71", bg: "#7ba7c9", pop: "#e8b84a" }, (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
     for (let y = 0; y < 24; y++) for (let x = 0; x < 24; x++) {
-      if (y > 8 && y < 17 && Math.abs(x - 10) < (y - 6) * 0.95) set(x, y, 142);
-      if (y > 10 && y < 17 && Math.abs(x - 16) < (y - 8) * 0.85) set(x, y, 142);
-      if (Math.abs(x - 12) <= 1 && y >= 14) set(x, y, 36);
+      if (y > 8 && y < 17 && Math.abs(x - 10) < (y - 6) * 0.95) set(x, y, HI);
+      if (y > 10 && y < 17 && Math.abs(x - 16) < (y - 8) * 0.85) set(x, y, HI);
+      if (Math.abs(x - 12) <= 1 && y >= 14) set(x, y, INK);
     }
-    sunOnSky(set, get, 18.5, 4.5, 3.4);
+    popOnBg(set, get, 18.5, 4.5, 3.4);
   }],
-  ["岛", "地是一块岛，路很短，太阳在左。", (set, get) => {
-    for (let y = 15; y < 22; y++) for (let x = 6; x < 18; x++) if ((x - 12) ** 2 / 36 + (y - 18) ** 2 / 16 <= 1) set(x, y, 88);
-    for (let y = 12; y < 18; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 12) < (y - 10) * 0.7) set(x, y, 142);
-    for (let y = 16; y < 21; y++) set(12, y, 36);
-    sunOnSky(set, get, 5, 5, 3);
+  ["夜航", "深蓝夜空、深海、浅帆、船体。删的是月亮。", { ink: "#c9d4e4", mid: "#1c3148", hi: "#d8e2ee", bg: "#0c1730", pop: "#f3e7b2" }, (set, get) => {
+    for (let y = 14; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
+    for (let y = 8; y < 14; y++) for (let x = 4; x < 16; x++) set(x, y, INK);
+    for (let y = 4; y < 12; y++) for (let x = 10; x < 14; x++) set(x, y, HI);
+    popOnBg(set, get, 19, 4, 2.6);
   }],
-  ["火山", "一座山，太阳坐在山顶上，只占天。", (set, get) => {
-    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
-    for (let y = 6; y < 18; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 12) < (y - 4) * 0.7) set(x, y, 142);
-    for (let y = 14; y < 24; y++) { set(11, y, 36); set(12, y, 36); }
-    sunOnSky(set, get, 12, 3.2, 2.4);
+  ["红果", "绿叶、褐枝、红果、浅天。删的是阳光。", { ink: "#6a3a28", mid: "#d24b45", hi: "#2f7a45", bg: "#9fd0ea", pop: "#ffe08a" }, (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 11; x <= 13; x++) set(x, y, INK);
+    blob(set, 8, 10, 5, HI);
+    blob(set, 15, 12, 4.2, HI);
+    blob(set, 7, 11, 2.1, MID);
+    blob(set, 14, 13, 1.8, MID);
+    popOnBg(set, get, 19, 4, 2.8);
   }],
-  ["城", "山换成几块高矮房子，太阳在右。", (set, get) => {
-    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
-    [[2, 10, 4, 6], [7, 8, 3, 8], [12, 12, 5, 4], [18, 9, 4, 7]].forEach(([x, y, w, h]) => {
-      for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) set(i, j, 142);
-    });
-    for (let y = 16; y < 24; y++) { set(8, y, 36); set(15, y, 36); }
-    sunOnSky(set, get, 20, 4, 2.8);
+  ["雪夜", "雪地、松、屋、夜空。删的是窗里的暖光。", { ink: "#243044", mid: "#e8eef4", hi: "#1d4034", bg: "#1a2744", pop: "#ffb15a" }, (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
+    for (let y = 8; y < 18; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 6) < (y - 6) * 0.55) set(x, y, HI);
+    for (let y = 12; y < 17; y++) for (let x = 14; x < 21; x++) set(x, y, INK);
+    for (let x = 13; x < 22; x++) if (Math.abs(x - 17) < 5) set(x, 11, INK);
+    for (let y = 13; y < 16; y++) for (let x = 16; x < 19; x++) set(x, y, BG8);
+    popOnBg(set, get, 17, 14, 1.4);
   }],
-  ["桥", "地分成两截，路从中间接上。", (set, get) => {
-    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) if (x < 7 || x > 16) set(x, y, 88);
-    for (let x = 6; x < 18; x++) { set(x, 17, 36); set(x, 18, 36); }
-    for (let y = 10; y < 17; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 4) < (y - 8) * 0.5) set(x, y, 142);
-    sunOnSky(set, get, 18, 6, 3);
+  ["热气球", "筐、红球、浅条纹、晴空。删的是太阳。", { ink: "#8a5a32", mid: "#e25b4a", hi: "#f4e2c4", bg: "#79b7dc", pop: "#ffe566" }, (set, get) => {
+    blob(set, 12, 9, 5.2, MID);
+    for (let y = 8; y < 12; y++) for (let x = 8; x < 16; x++) if ((x - 12) ** 2 + (y - 9) ** 2 <= 27) set(x, y, HI);
+    for (let y = 15; y < 18; y++) for (let x = 10; x < 15; x++) set(x, y, INK);
+    for (let y = 14; y < 16; y++) set(12, y, INK);
+    popOnBg(set, get, 4.5, 4.5, 2.4);
   }],
-  ["丘陵", "山很矮，铺满地平线。", (set, get) => {
-    for (let x = 0; x < 24; x++) {
-      const top = 12 + Math.round(Math.sin(x / 3) * 2);
-      for (let y = top; y < 16; y++) set(x, y, 142);
-      for (let y = 16; y < 24; y++) set(x, y, 88);
-    }
-    for (let y = 15; y < 24; y++) set(6, y, 36);
-    sunOnSky(set, get, 17, 4, 3.2);
+  ["舞台", "地板、红幕、人、深背景。删的是顶灯。", { ink: "#3a2c24", mid: "#9a2434", hi: "#f0d8b4", bg: "#141c30", pop: "#fff1a8" }, (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, INK);
+    for (let y = 0; y < 16; y++) { for (let x = 0; x < 4; x++) set(x, y, MID); for (let x = 20; x < 24; x++) set(x, y, MID); }
+    blob(set, 12, 12, 3.2, HI);
+    for (let y = 14; y < 18; y++) for (let x = 10; x < 15; x++) set(x, y, HI);
+    popOnBg(set, get, 12, 3.2, 2.2);
   }],
-  ["峡谷", "两座山夹一条路。", (set, get) => {
-    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
-    for (let y = 7; y < 17; y++) for (let x = 0; x < 24; x++) {
-      if (x < 8 && 8 - x < (y - 5) * 0.6) set(x, y, 142);
-      if (x > 15 && x - 15 < (y - 5) * 0.6) set(x, y, 142);
-    }
-    for (let y = 12; y < 24; y++) { set(11, y, 36); set(12, y, 36); }
-    sunOnSky(set, get, 12, 3.5, 2.4);
+  ["鱼缸", "沙、鱼、水草、水。删的是气泡。", { ink: "#d7b27a", mid: "#e07a3d", hi: "#2f6a4a", bg: "#3d86b0", pop: "#e7f6fb" }, (set, get) => {
+    for (let y = 18; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, INK);
+    for (let y = 10; y < 20; y++) for (let x = 3; x < 7; x++) if ((y + x) % 3 !== 0) set(x, y, HI);
+    blob(set, 14, 12, 3.4, MID);
+    set(17, 12, MID); set(18, 11, MID);
+    popOnBg(set, get, 16, 6, 1.3);
+    popOnBg(set, get, 18, 9, 1.1);
   }],
-  ["湖", "地只在下方一条，山在左侧。", (set, get) => {
-    for (let y = 18; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
-    for (let y = 10; y < 19; y++) for (let x = 0; x < 10; x++) if (x < (y - 8)) set(x, y, 142);
-    for (let x = 4; x < 16; x++) set(x, 18, 36);
-    sunOnSky(set, get, 18, 5, 3);
+  ["蛋糕", "盘、蛋糕、奶油、墙。删的是蜡烛火苗。", { ink: "#6d5344", mid: "#f0c4a0", hi: "#fff6ea", bg: "#f3e2cf", pop: "#ff8a3d" }, (set, get) => {
+    for (let y = 16; y < 20; y++) for (let x = 4; x < 20; x++) set(x, y, INK);
+    for (let y = 12; y < 16; y++) for (let x = 6; x < 18; x++) set(x, y, MID);
+    for (let y = 10; y < 13; y++) for (let x = 6; x < 18; x++) set(x, y, HI);
+    for (let y = 6; y < 11; y++) set(12, y, INK);
+    popOnBg(set, get, 12, 4.2, 1.6);
   }],
-  ["塔", "山是一根窄塔，路在塔脚。", (set, get) => {
-    for (let y = 17; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
-    for (let y = 4; y < 18; y++) for (let x = 10; x <= 13; x++) set(x, y, 142);
-    for (let x = 8; x <= 15; x++) set(x, 4, 142);
-    for (let y = 17; y < 24; y++) set(16, y, 36);
-    sunOnSky(set, get, 5, 5, 2.8);
+  ["营火", "夜空、地、柴、火。删的是火星。", { ink: "#241910", mid: "#6a4030", hi: "#e25822", bg: "#141a2e", pop: "#ffd27a" }, (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, INK);
+    for (let x = 8; x < 16; x++) { set(x, 15, MID); set(x, 16, MID); }
+    for (let y = 9; y < 15; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 12) < (15 - y) * 0.7) set(x, y, HI);
+    popOnBg(set, get, 8, 6, 1.1);
+    popOnBg(set, get, 15, 5, 1.2);
   }],
-  ["晨", "太阳贴着地平线，下沿被地挡住。", (set, get) => {
-    for (let y = 15; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
-    for (let y = 9; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 7) < (y - 7) * 0.8) set(x, y, 142);
-    for (let y = 14; y < 24; y++) set(14, y, 36);
-    sunOnSky(set, get, 18, 12.2, 3.2);
+  ["纸船", "海、船、帆、天。删的是太阳。", { ink: "#f7f1e4", mid: "#1f6f92", hi: "#c4543a", bg: "#8ec8ea", pop: "#ffe07a" }, (set, get) => {
+    for (let y = 14; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
+    for (let y = 12; y < 16; y++) for (let x = 6; x < 18; x++) set(x, y, INK);
+    for (let y = 6; y < 13; y++) for (let x = 10; x < 13; x++) set(x, y, HI);
+    popOnBg(set, get, 19, 4, 2.6);
   }],
 ];
-function paintLand(g, dropSun) {
-  const map = { 36: LAND.path, 88: LAND.ground, 142: LAND.mountain, 210: LAND.sky, 248: LAND.sun };
-  return g.map((row) => row.map((v) => (dropSun && v === 248 ? LAND.sky : map[v])));
-}
-scenes89.forEach(([name, why, draw], i) => {
+scenes89.forEach(([name, why, pal, draw], i) => {
   const g = land(draw);
   card(document.getElementById("l89"), `${i + 1} · ${name}`, why, [
-    ["第 8 关彩色", paintLand(g, false), 160],
+    ["第 8 关彩色", paint8(g, pal, false), 160],
     ["灰度", g.map((row) => row.map(grayHex)), 160],
-    ["第 9 关无太阳", paintLand(g, true), 160],
+    ["第 9 关删掉最亮", paint8(g, pal, true), 160],
   ]);
 });
 
@@ -236,11 +229,16 @@ function ell64(g, cx, cy, rx, ry, v) {
   for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++)
     if ((x - cx) ** 2 / (rx * rx) + (y - cy) ** 2 / (ry * ry) <= 1) g[y][x] = v;
 }
+function fadeHex(hex) {
+  const ch = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return "#" + ch.map((c) => Math.round(c * 0.22 + 216 * 0.78).toString(16).padStart(2, "0")).join("");
+}
 function paint13(roles, pal) {
   return roles.map((row) => row.map((r) => pal[r]));
 }
+const GRAY13 = { ground: 40, person: 90, wall: 140, sky: 190, collar: 230 };
 const portraits = [
-  ["窗边", "现在这一张：左墙两扇窗，人靠右。", () => {
+  ["窗边", "现在这一张的颜色：墙、人、地、天、领。", { sky: "#7eafd2", ground: "#c17a4a", wall: "#c4a078", person: "#b84332", collar: "#efe6d0" }, () => {
     const g = grid64("sky");
     for (let y = 10; y < 50; y++) for (let x = 0; x < 30; x++) g[y][x] = "wall";
     rect64(g, 4, 16, 10, 22, "sky");
@@ -255,90 +253,97 @@ const portraits = [
     [[45, 36], [46, 36], [47, 36], [46, 37]].forEach(([x, y]) => { g[y][x] = "collar"; });
     return g;
   }],
-  ["门洞", "人站在门里，领子在胸口。", () => {
+  ["黑猫", "夜窗、蓝垫、黑猫、月色高光。", { sky: "#1c2744", ground: "#3d4e78", wall: "#141820", person: "#2a211c", collar: "#f2e7c4" }, () => {
     const g = grid64("wall");
-    rect64(g, 18, 8, 28, 42, "sky");
-    for (let y = 46; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
-    ell64(g, 32, 22, 8, 9, "person");
-    rect64(g, 24, 30, 16, 22, "person");
-    g[34][30] = g[34][31] = g[34][32] = g[35][31] = "collar";
-    return g;
-  }],
-  ["坐着", "半身更低，窗在头顶一条。", () => {
-    const g = grid64("wall");
-    rect64(g, 8, 4, 48, 14, "sky");
-    for (let y = 40; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
-    ell64(g, 32, 28, 10, 8, "person");
-    ell64(g, 32, 48, 18, 14, "person");
-    g[36][30] = g[36][31] = g[36][32] = g[37][31] = "collar";
-    return g;
-  }],
-  ["侧脸", "人偏左，窗在右。", () => {
-    const g = grid64("sky");
-    rect64(g, 34, 6, 24, 40, "wall");
-    rect64(g, 40, 12, 12, 16, "sky");
-    for (let y = 48; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
-    ell64(g, 22, 24, 9, 10, "person");
-    rect64(g, 14, 32, 16, 20, "person");
-    g[36][20] = g[36][21] = g[36][22] = "collar";
-    return g;
-  }],
-  ["双窗", "墙在中间，左右都是天。", () => {
-    const g = grid64("sky");
-    rect64(g, 22, 0, 20, 48, "wall");
-    for (let y = 48; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
-    ell64(g, 32, 22, 8, 9, "person");
-    rect64(g, 24, 30, 16, 24, "person");
-    g[34][31] = g[34][32] = g[34][33] = "collar";
-    return g;
-  }],
-  ["近景", "脸很大，墙只剩一条。", () => {
-    const g = grid64("sky");
-    rect64(g, 0, 0, 16, 64, "wall");
-    for (let y = 52; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
-    ell64(g, 40, 26, 14, 16, "person");
-    ell64(g, 40, 52, 20, 16, "person");
-    g[40][36] = g[40][37] = g[40][38] = g[41][37] = "collar";
-    return g;
-  }],
-  ["远一点", "人小，天多。", () => {
-    const g = grid64("sky");
-    rect64(g, 0, 20, 64, 16, "wall");
+    rect64(g, 8, 6, 48, 36, "sky");
     for (let y = 44; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
-    ell64(g, 34, 30, 6, 7, "person");
-    rect64(g, 28, 36, 12, 16, "person");
-    g[38][33] = g[38][34] = g[38][35] = "collar";
+    ell64(g, 34, 40, 16, 10, "person");
+    ell64(g, 24, 30, 5, 6, "person");
+    ell64(g, 44, 30, 5, 6, "person");
+    g[36][33] = g[36][34] = g[37][34] = "collar";
     return g;
   }],
-  ["廊", "墙是几根柱，人在柱间。", () => {
+  ["静物", "青壁、木桌、红苹果、白高光。", { sky: "#7f9a86", ground: "#8a5a3c", wall: "#d8c4a4", person: "#c4382f", collar: "#fff6ea" }, () => {
     const g = grid64("sky");
-    for (let x = 4; x < 64; x += 14) rect64(g, x, 0, 4, 50, "wall");
-    for (let y = 50; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
-    ell64(g, 30, 28, 7, 8, "person");
-    rect64(g, 23, 35, 14, 18, "person");
-    g[38][29] = g[38][30] = g[38][31] = "collar";
+    rect64(g, 0, 36, 64, 28, "ground");
+    rect64(g, 10, 28, 44, 12, "wall");
+    ell64(g, 32, 30, 10, 9, "person");
+    g[24][30] = g[24][31] = g[25][31] = "collar";
     return g;
   }],
-  ["桌边", "地抬高一块当桌，人坐在后面。", () => {
-    const g = grid64("wall");
-    rect64(g, 6, 6, 52, 18, "sky");
+  ["船头", "海、木船、白帆、红旗尖。", { sky: "#8ec4e0", ground: "#2a6d8c", wall: "#f4efe4", person: "#6b4632", collar: "#d64545" }, () => {
+    const g = grid64("sky");
+    for (let y = 40; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    for (let y = 36; y < 48; y++) for (let x = 12; x < 52; x++) g[y][x] = "person";
+    rect64(g, 30, 14, 6, 24, "wall");
+    rect64(g, 36, 16, 16, 18, "wall");
+    g[16][52] = g[16][53] = g[17][52] = "collar";
+    return g;
+  }],
+  ["街灯", "夜空、楼、路、黄灯。", { sky: "#243456", ground: "#3a332c", wall: "#5c5348", person: "#c9a27a", collar: "#ffd27a" }, () => {
+    const g = grid64("sky");
+    rect64(g, 0, 18, 22, 28, "wall");
+    rect64(g, 40, 10, 24, 36, "wall");
     for (let y = 46; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
-    rect64(g, 8, 40, 48, 8, "ground");
-    ell64(g, 32, 24, 9, 8, "person");
-    rect64(g, 22, 31, 20, 12, "person");
-    g[33][30] = g[33][31] = g[33][32] = "collar";
+    rect64(g, 28, 22, 6, 26, "person");
+    ell64(g, 31, 16, 4, 3, "collar");
     return g;
   }],
-  ["背光", "人在窗前，几乎剪影，领子仍分开。", () => {
+  ["花", "灰墙、陶盆、叶绿、粉瓣、黄芯。", { sky: "#d9d3c8", ground: "#a86b45", wall: "#3e8f55", person: "#e7a0b4", collar: "#f6e27a" }, () => {
+    const g = grid64("sky");
+    for (let y = 46; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    rect64(g, 24, 34, 16, 16, "ground");
+    for (let y = 20; y < 40; y++) { g[y][31] = g[y][32] = "wall"; }
+    ell64(g, 32, 18, 12, 10, "person");
+    ell64(g, 32, 18, 3, 3, "collar");
+    return g;
+  }],
+  ["鸟", "天、枝、绿叶、鸟、黄喙。", { sky: "#8eb8d8", ground: "#6b4632", wall: "#2f7a45", person: "#3d4258", collar: "#f0c14a" }, () => {
+    const g = grid64("sky");
+    for (let x = 0; x < 64; x++) { const y = 28 + ((x * 3) % 5); g[y][x] = g[y + 1][x] = "ground"; }
+    ell64(g, 16, 20, 8, 5, "wall");
+    ell64(g, 48, 16, 7, 4, "wall");
+    ell64(g, 34, 30, 10, 6, "person");
+    g[28][44] = g[28][45] = g[29][45] = "collar";
+    return g;
+  }],
+  ["车厢", "窗外暮色、座椅、大衣、围巾。", { sky: "#d4895a", ground: "#4a342c", wall: "#6d5438", person: "#2c3a55", collar: "#e8dcc4" }, () => {
     const g = grid64("wall");
-    rect64(g, 14, 4, 36, 40, "sky");
-    for (let y = 48; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
-    ell64(g, 32, 22, 8, 9, "person");
-    rect64(g, 24, 30, 16, 22, "person");
-    g[34][31] = g[34][32] = g[35][32] = "collar";
+    rect64(g, 6, 8, 28, 36, "sky");
+    for (let y = 46; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 42, 28, 8, 9, "person");
+    rect64(g, 34, 36, 16, 16, "person");
+    g[38][40] = g[38][41] = g[38][42] = g[39][41] = "collar";
+    return g;
+  }],
+  ["台灯", "墙、桌、灯罩、灯座、灯泡。", { sky: "#e4d8c4", ground: "#6b5344", wall: "#f2efe6", person: "#c4a078", collar: "#fff4c4" }, () => {
+    const g = grid64("sky");
+    for (let y = 44; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    rect64(g, 28, 20, 4, 24, "person");
+    ell64(g, 30, 18, 12, 8, "wall");
+    ell64(g, 30, 16, 4, 3, "collar");
+    return g;
+  }],
+  ["雨", "灰天、湿路、深伞、黄反光。", { sky: "#8d97a3", ground: "#3e4650", wall: "#1e2430", person: "#6a5348", collar: "#e6c56a" }, () => {
+    const g = grid64("sky");
+    for (let y = 46; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 32, 22, 16, 8, "wall");
+    rect64(g, 30, 28, 4, 20, "person");
+    ell64(g, 32, 48, 6, 2, "collar");
     return g;
   }],
 ];
+portraits.forEach(([name, why, vivid, make], i) => {
+  const roles = make();
+  const fade = {};
+  Object.keys(vivid).forEach((k) => { fade[k] = fadeHex(vivid[k]); });
+  card(document.getElementById("l13"), `${i + 1} · ${name}`, why, [
+    ["开局淡彩", paint13(roles, fade), 160],
+    ["灰度", roles.map((row) => row.map((r) => grayHex(GRAY13[r]))), 160],
+    ["做对后的浓彩", paint13(roles, vivid), 160],
+  ]);
+});
+
 const problems = [];
 L2.forEach(([name, , spec]) => {
   const g = rows(spec);
@@ -346,27 +351,22 @@ L2.forEach(([name, , spec]) => {
   const tones = new Set(g.flat());
   if (![BG, A, B].every((v) => tones.has(v))) problems.push("L2 tones " + name);
 });
-scenes89.forEach(([name, , draw]) => {
+scenes89.forEach(([name, , , draw]) => {
   const g = land(draw);
   const tones = new Set(g.flat());
-  [36, 88, 142, 210, 248].forEach((v) => { if (!tones.has(v)) problems.push("L89 missing " + v + " " + name); });
-  g.forEach((row) => row.forEach((v) => { if (![36, 88, 142, 210, 248].includes(v)) problems.push("L89 stray " + name); }));
+  [INK, MID, HI, BG8, POP].forEach((v) => { if (!tones.has(v)) problems.push("L89 missing " + v + " " + name); });
+  let popOnOther = 0;
+  // pop is only written onto former bg; after draw, pop cells are pop. Can't recheck history.
+  g.flat().forEach((v) => { if (![INK, MID, HI, BG8, POP].includes(v)) popOnOther++; });
+  if (popOnOther) problems.push("L89 stray " + name);
 });
-portraits.forEach(([name, , make]) => {
+portraits.forEach(([name, , vivid, make]) => {
   const g = make();
-  const tones = new Set(g.flat());
-  ["ground", "person", "wall", "sky", "collar"].forEach((r) => { if (!tones.has(r)) problems.push("L13 missing " + r + " " + name); });
+  ["ground", "person", "wall", "sky", "collar"].forEach((r) => { if (!g.flat().includes(r)) problems.push("L13 missing " + r + " " + name); });
+  const cols = new Set(Object.values(vivid));
+  if (cols.size < 5) problems.push("L13 colors " + name);
 });
 if (problems.length) document.title = "BAD " + problems.join(" | ");
-
-portraits.forEach(([name, why, make], i) => {
-  const roles = make();
-  card(document.getElementById("l13"), `${i + 1} · ${name}`, why, [
-    ["开局淡彩", paint13(roles, FADE), 160],
-    ["灰度", roles.map((row) => row.map((r) => grayHex(GRAY13[r]))), 160],
-    ["做对后的浓彩", paint13(roles, C), 160],
-  ]);
-});
 </script>
 </body>
 </html>
