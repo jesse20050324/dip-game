@@ -387,34 +387,6 @@ canvas {
   display: none;
 }
 
-.moon-tint {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex: 0 0 auto;
-  min-height: 44px;
-  padding: 0 10px 0 12px;
-  border-radius: 14px;
-  background: var(--paper-deep);
-  color: var(--ink);
-  font-size: 0.85rem;
-  font-weight: 700;
-  box-shadow: 0 3px 0 #cbb89a;
-}
-
-.moon-tint[hidden] {
-  display: none !important;
-}
-
-.moon-tint input {
-  width: 42px;
-  height: 32px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
 .icon-btn {
   flex: 0 0 auto;
   display: grid;

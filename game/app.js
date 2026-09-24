@@ -14,7 +14,7 @@
     mountain: "#6b8f71",
     sky: "#7ba7c9",
     sun: "#e8b84a",
-    moon: "#ffe16a",
+    moon: "#f4eb5c",
     dark: "#2b241c",
   };
 
@@ -1264,38 +1264,8 @@
     dragging = false;
     axisMarker.hidden = true;
     levelLabel.textContent = `${i + 1} / ${LEVELS.length}`;
-    moonTint.hidden = i !== 5;
     renderAll();
   }
-
-  const MOON_TINT_KEY = "dip-moon-tint";
-  const moonTint = document.getElementById("moonTint");
-  const moonTintInput = document.getElementById("moonTintInput");
-  const moonTintHex = document.getElementById("moonTintHex");
-
-  function applyMoonTint(hex) {
-    const prev = PAL.moon;
-    if (prev === hex) return;
-    PAL.moon = hex;
-    const moonLevel = LEVELS[5];
-    moonLevel.prefill = moonLevel.prefill.map(([region, color]) => [
-      region,
-      color === prev ? hex : color,
-    ]);
-    moonLevel.target = moonLevel.target.map((row) =>
-      row.map((color) => (color === prev ? hex : color))
-    );
-    if (levelIndex === 5) {
-      regionColors = regionColors.map((color) => (color === prev ? hex : color));
-      renderAll();
-    }
-    localStorage.setItem(MOON_TINT_KEY, hex);
-    moonTintInput.value = hex;
-  }
-
-  const savedMoon = localStorage.getItem(MOON_TINT_KEY);
-  if (savedMoon && /^#[0-9a-fA-F]{6}$/.test(savedMoon)) applyMoonTint(savedMoon);
-  moonTintInput.addEventListener("input", () => applyMoonTint(moonTintInput.value));
 
   syncMuteUi();
   renderMenu();
