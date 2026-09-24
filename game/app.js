@@ -9,11 +9,11 @@
     blue: "#3d5a99",
     yellow: "#e8b84a",
     white: "#f4efe4",
-    path: "#eddfc6",
-    ground: "#c4785a",
-    mountain: "#6b8f71",
-    sky: "#7ba7c9",
-    sun: "#e8b84a",
+    path: "#e7c890",
+    ground: "#c46a46",
+    mountain: "#477d5b",
+    sky: "#5a94c4",
+    sun: "#edb432",
     moon: "#f4eb5c",
     dark: "#2b241c",
   };
@@ -294,17 +294,27 @@
 
   function landscapeGray() {
     const n = 24;
-    const g = makeGrid(n, 0);
-    for (let y = 0; y < n; y++) {
+    const g = makeGrid(n, 210);
+    for (let y = 15; y < n; y++) for (let x = 0; x < n; x++) g[y][x] = 88;
+    for (let y = 8; y < 16; y++) {
       for (let x = 0; x < n; x++) {
-        let tone = 210; // 天
-        const m1 = y > 8 && y < 17 && Math.abs(x - 10) < (y - 6) * 0.95;
-        const m2 = y > 10 && y < 17 && Math.abs(x - 16) < (y - 8) * 0.85;
-        if (y >= 16) tone = 88; // 地
-        if (m1 || m2) tone = 142; // 山
-        if (Math.abs(x - 12) <= 1 && y >= 14) tone = 36; // 路
-        if ((x - 18.5) ** 2 + (y - 4.5) ** 2 <= 3.4 ** 2) tone = 248; // 日
-        g[y][x] = tone;
+        if (Math.abs(x - 7) < (y - 6) * 0.8) g[y][x] = 142;
+        if (Math.abs(x - 17) < (y - 7) * 0.7) g[y][x] = 142;
+      }
+    }
+    for (let y = 12; y < n; y++) {
+      const cx = Math.round(12 + Math.sin((y - 12) / 1.6) * 4);
+      const extra = y > 19 ? 1 : 0;
+      for (let x = cx - extra; x <= cx + 1; x++) if (x >= 0 && x < n) g[y][x] = 36;
+    }
+    const sx = 19;
+    const sy = 4;
+    const sr = 2.6;
+    for (let y = Math.floor(sy - sr); y <= sy + sr; y++) {
+      for (let x = Math.floor(sx - sr); x <= sx + sr; x++) {
+        if (y >= 0 && y < n && x >= 0 && x < n && (x - sx) ** 2 + (y - sy) ** 2 <= sr * sr && g[y][x] === 210) {
+          g[y][x] = 248;
+        }
       }
     }
     return g;
@@ -562,13 +572,6 @@
     no: "audio/no.wav",
     reset: "audio/reset.wav",
   };
-  const SFX_LABEL = {
-    tap: "点按",
-    chip: "落色",
-    ok: "过关",
-    no: "错误",
-    reset: "返回",
-  };
   const sfxVol = { tap: 1.0, chip: 0.11, ok: 0.09, no: 0.07, reset: 0.04 };
   const sfxNodes = {};
   let muted = localStorage.getItem(MUTE_KEY) === "1";
@@ -601,51 +604,6 @@
     const vol = sfxVol[name];
     node.volume = vol == null ? 0.38 : vol;
     node.play().catch(() => {});
-  }
-  function mixLine() {
-    return Object.keys(SFX)
-      .map((name) => `${name} ${sfxVol[name].toFixed(2)}`)
-      .join("  ");
-  }
-  function mountMix() {
-    const rows = document.getElementById("mixRows");
-    const out = document.getElementById("mixOut");
-    if (!rows || !out) return;
-    Object.keys(SFX).forEach((name) => {
-      const row = document.createElement("div");
-      row.className = "mix-row";
-      const label = document.createElement("span");
-      label.textContent = SFX_LABEL[name];
-      const slider = document.createElement("input");
-      slider.type = "range";
-      slider.min = "0";
-      slider.max = "1";
-      slider.step = "0.01";
-      slider.value = String(sfxVol[name]);
-      const num = document.createElement("span");
-      num.className = "mix-num";
-      num.textContent = sfxVol[name].toFixed(2);
-      const play = document.createElement("button");
-      play.type = "button";
-      play.className = "mix-play";
-      play.textContent = "▶";
-      play.setAttribute("aria-label", "试听" + SFX_LABEL[name]);
-      slider.addEventListener("input", () => {
-        sfxVol[name] = Number(slider.value);
-        num.textContent = sfxVol[name].toFixed(2);
-        out.textContent = mixLine();
-      });
-      play.addEventListener("click", () => {
-        primeAudio();
-        const was = muted;
-        muted = false;
-        playSfx(name);
-        muted = was;
-      });
-      row.append(label, slider, num, play);
-      rows.appendChild(row);
-    });
-    out.textContent = mixLine();
   }
   function syncMuteUi() {
     muteButtons.forEach((btn) => {
@@ -1321,7 +1279,6 @@
     renderAll();
   }
 
-  mountMix();
   syncMuteUi();
   renderMenu();
 })();

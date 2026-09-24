@@ -455,7 +455,7 @@ canvas {
 
 .home-card {
   width: min(440px, 100%);
-  padding: 28px 22px 22px;
+  padding: 44px 28px 32px;
   background: var(--card);
   border: 1px solid #eadcc4;
   border-radius: 28px;
@@ -547,65 +547,6 @@ canvas {
   color: var(--muted);
   font-size: 0.92rem;
   letter-spacing: 0.06em;
-}
-
-.mix {
-  margin: 0 0 16px;
-  text-align: left;
-}
-
-.mix-title {
-  margin: 0 0 10px;
-  font-size: 0.95rem;
-  font-weight: 700;
-}
-
-.mix-row {
-  display: grid;
-  grid-template-columns: 3.2em 1fr 3.2em 44px;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.mix-row span,
-.mix-num {
-  font-size: 0.85rem;
-  color: var(--ink);
-}
-
-.mix-num {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-.mix-row input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent);
-}
-
-.mix-play {
-  height: 36px;
-  border: 0;
-  border-radius: 12px;
-  background: var(--accent);
-  color: #fff;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 2px 0 var(--accent-deep);
-}
-
-.mix-out {
-  margin: 8px 0 0;
-  padding: 8px 10px;
-  border-radius: 12px;
-  background: #f6f0e6;
-  color: var(--ink);
-  font-size: 0.82rem;
-  line-height: 1.45;
-  word-break: break-all;
-  user-select: all;
 }
 
 .menu-top {
