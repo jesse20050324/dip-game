@@ -20,3 +20,7 @@
 
 	Follow on Twitter for updates:
 	http://twitter.com/KenneyNL
+
+	UI Audio (Kenney UI SFX Set, www.kenney.nl) is the same
+	Creative Commons Zero (CC0) license. Short clicks from that
+	pack are in candidates/tap/ with a ui_ prefix.

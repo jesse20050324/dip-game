@@ -569,7 +569,7 @@
     no: "错误",
     reset: "返回",
   };
-  const sfxVol = { tap: 0.28, chip: 0.34, ok: 0.42, no: 0.34, reset: 0.32 };
+  const sfxVol = { tap: 1.0, chip: 0.11, ok: 0.09, no: 0.07, reset: 0.04 };
   const sfxNodes = {};
   let muted = localStorage.getItem(MUTE_KEY) === "1";
 
