@@ -31,7 +31,7 @@
   <div class="grid" id="l89"></div>
 
   <h2>第 8 / 9 关 · 山水再十张</h2>
-  <p class="brief">还是天、山、地、太阳。颜色比现在的正式关更浓。原来那条竖着的路不好认，这里有的改成能看出来的沙路，有的换成河、屋、树、石头。</p>
+  <p class="brief">还是天、山、地、太阳。路都做成弯的，像上一版里那条河。颜色取在原来偏淡和刚才偏浓的中间。</p>
   <div class="grid" id="l89b"></div>
 
   <h2>第 13 关 · 褪色老照片 · 十张</h2>
@@ -224,90 +224,87 @@ scenes89.forEach(([name, why, pal, draw], i) => {
   ]);
 });
 
-const RICH = { mid: "#c45c32", hi: "#246b45", bg: "#3a82c0", pop: "#f2b01a" };
+const MIDPAL = { ink: "#e7c890", mid: "#c46a46", hi: "#477d5b", bg: "#5a94c4", pop: "#edb432" };
+function trail(set, y0, fn) {
+  for (let y = y0; y < 24; y++) {
+    const cx = Math.round(fn(y));
+    const extra = y > 19 ? 1 : 0;
+    for (let x = cx - extra; x <= cx + 1; x++) set(x, y, INK);
+  }
+}
 const scenes89b = [
-  ["沙路", "路在近处变宽，能看出是一条路。", { ...RICH, ink: "#e2b15a" }, (set, get) => {
+  ["缓弯", "两座山，路轻轻左右弯。", MIDPAL, (set, get) => {
     for (let y = 15; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
-    for (let y = 7; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 8) < (y - 5) * 0.85) set(x, y, HI);
-    for (let y = 7; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 17) < (y - 6) * 0.7) set(x, y, HI);
-    for (let y = 14; y < 24; y++) {
-      const half = 1 + Math.floor((y - 14) * 0.7);
-      for (let x = 12 - half; x <= 12 + half; x++) set(x, y, INK);
+    for (let y = 8; y < 16; y++) for (let x = 0; x < 24; x++) {
+      if (Math.abs(x - 7) < (y - 6) * 0.8) set(x, y, HI);
+      if (Math.abs(x - 17) < (y - 7) * 0.7) set(x, y, HI);
     }
-    popOnBg(set, get, 19, 4, 2.8);
+    trail(set, 13, (y) => 11 + Math.sin(y / 2.2) * 2.2);
+    popOnBg(set, get, 19, 4, 2.6);
   }],
-  ["河", "陆地中间一条河，不是竖线。", { ...RICH, ink: "#2f6f96" }, (set, get) => {
+  ["S弯", "路先向左再向右，近处稍宽。", MIDPAL, (set, get) => {
     for (let y = 15; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
-    for (let y = 8; y < 16; y++) for (let x = 0; x < 24; x++) if (x < 6 + (y - 8) * 0.4 || x > 16) set(x, y, HI);
-    for (let y = 14; y < 24; y++) {
-      const cx = 10 + Math.round(Math.sin(y / 2) * 2);
-      for (let x = cx; x < cx + 4; x++) set(x, y, INK);
-    }
-    popOnBg(set, get, 12, 3.5, 2.4);
+    for (let y = 7; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 12) > 6 && y < 14 + (Math.abs(x - 12) - 6)) set(x, y, HI);
+    trail(set, 12, (y) => 12 + Math.sin((y - 12) / 1.6) * 4);
+    popOnBg(set, get, 5, 4, 2.4);
   }],
-  ["小屋", "山前一座小屋，没有那条路。", { ...RICH, ink: "#6b3a28" }, (set, get) => {
+  ["绕山", "路从左山脚绕到右。", MIDPAL, (set, get) => {
     for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
-    for (let y = 8; y < 17; y++) for (let x = 0; x < 14; x++) if (x < (y - 6) * 0.9) set(x, y, HI);
-    for (let y = 14; y < 19; y++) for (let x = 14; x < 20; x++) set(x, y, INK);
-    for (let x = 13; x < 21; x++) if (Math.abs(x - 17) >= (x < 17 ? 17 - x : x - 17) - 4) set(x, 13, INK);
-    for (let x = 13; x <= 21; x++) if (Math.abs(x - 17) < 4) set(x, 12, INK);
-    popOnBg(set, get, 20, 4, 2.6);
+    for (let y = 6; y < 17; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 8) < (y - 4) * 0.55) set(x, y, HI);
+    trail(set, 11, (y) => 6 + (y - 11) * 0.7 + Math.sin(y / 2) * 1.4);
+    popOnBg(set, get, 18, 3.6, 2.5);
   }],
-  ["松", "坡上一棵松，地是一整片。", { ...RICH, ink: "#1c3d2e" }, (set, get) => {
-    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
-    for (let y = 9; y < 17; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 16) < (y - 7) * 0.8) set(x, y, HI);
-    for (let y = 6; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 7) < (16 - y) * 0.45 + 1) set(x, y, INK);
-    for (let y = 15; y < 20; y++) set(7, y, INK);
-    popOnBg(set, get, 18, 4, 2.5);
-  }],
-  ["石滩", "近处几块石头，代替那条路。", { ...RICH, ink: "#5c564e" }, (set, get) => {
-    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
-    for (let y = 7; y < 17; y++) for (let x = 0; x < 24; x++) {
-      if (Math.abs(x - 6) < (y - 5) * 0.55) set(x, y, HI);
-      if (Math.abs(x - 16) < (y - 8) * 0.7) set(x, y, HI);
-    }
-    blob(set, 6, 19, 2.2, INK);
-    blob(set, 12, 20, 1.8, INK);
-    blob(set, 18, 18, 2.4, INK);
-    popOnBg(set, get, 19, 3.6, 2.4);
-  }],
-  ["田", "山脚下横着的田，不是一条竖线。", { ...RICH, ink: "#d8a04a" }, (set, get) => {
-    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
-    for (let y = 8; y < 16; y++) for (let x = 0; x < 24; x++) if (12 + Math.round(Math.sin(x / 3) * 2) < y) set(x, y, HI);
-    for (let y = 17; y < 23; y += 2) for (let x = 2; x < 22; x++) set(x, y, INK);
-    popOnBg(set, get, 18, 4, 2.6);
-  }],
-  ["桥", "桥是横的，架在两山之间。", { ...RICH, ink: "#8d5a32" }, (set, get) => {
-    for (let y = 17; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
-    for (let y = 8; y < 18; y++) for (let x = 0; x < 8; x++) if (8 - x < (y - 6) * 0.55) set(x, y, HI);
-    for (let y = 8; y < 18; y++) for (let x = 16; x < 24; x++) if (x - 15 < (y - 6) * 0.55) set(x, y, HI);
-    for (let x = 5; x < 19; x++) { set(x, 14, INK); set(x, 15, INK); }
-    popOnBg(set, get, 12, 3.4, 2.3);
-  }],
-  ["湖岸", "地只在近处，前面是湖。", { ...RICH, ink: "#2d6e96" }, (set, get) => {
-    for (let y = 18; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
-    for (let y = 9; y < 18; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 7) < (y - 7) * 0.7) set(x, y, HI);
-    for (let y = 15; y < 19; y++) for (let x = 8; x < 24; x++) set(x, y, INK);
-    popOnBg(set, get, 18, 4, 2.7);
-  }],
-  ["坡路", "路顺着坡走，近处更宽。", { ...RICH, ink: "#e6c27a" }, (set, get) => {
+  ["双折", "路折两次，仍是一条小路。", MIDPAL, (set, get) => {
     for (let y = 15; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
-    for (let y = 6; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 15) < (y - 4) * 0.75) set(x, y, HI);
-    for (let y = 12; y < 24; y++) {
-      const cx = 6 + Math.round((y - 12) * 0.45);
-      const half = y > 18 ? 2 : 1;
-      for (let x = cx - half; x <= cx + half; x++) set(x, y, INK);
-    }
-    popOnBg(set, get, 5, 4, 2.5);
+    for (let y = 8; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 6) < (y - 6) * 0.7 || Math.abs(x - 18) < (y - 7) * 0.65) set(x, y, HI);
+    trail(set, 13, (y) => 8 + Math.abs(((y - 13) % 6) - 3) * 1.6);
+    popOnBg(set, get, 12, 3.5, 2.3);
   }],
-  ["远山", "山更远、太阳更大，近处一条岸。", { ...RICH, ink: "#d7b56a" }, (set, get) => {
+  ["远弯", "山较远，路在近处弯得更大。", MIDPAL, (set, get) => {
     for (let y = 17; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
     for (let x = 0; x < 24; x++) {
-      const top = 11 + Math.round(Math.sin(x / 2.5) * 2);
+      const top = 12 + Math.round(Math.sin(x / 3) * 1.5);
       for (let y = top; y < 17; y++) set(x, y, HI);
     }
-    for (let x = 0; x < 24; x++) set(x, 17, INK);
-    popOnBg(set, get, 17, 5, 3.2);
+    trail(set, 14, (y) => 12 + Math.sin(y / 1.7) * 5);
+    popOnBg(set, get, 18, 4.5, 2.8);
+  }],
+  ["左入", "路从左边山沟弯下来。", MIDPAL, (set, get) => {
+    for (let y = 15; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
+    for (let y = 7; y < 16; y++) for (let x = 0; x < 24; x++) if (x < 10 && 10 - x < (y - 5) * 0.8) set(x, y, HI);
+    for (let y = 10; y < 16; y++) for (let x = 14; x < 24; x++) if (x - 14 < (y - 8) * 0.6) set(x, y, HI);
+    trail(set, 12, (y) => 4 + Math.sin(y / 2.4) * 2 + (y - 12) * 0.55);
+    popOnBg(set, get, 19, 4, 2.4);
+  }],
+  ["右入", "路从右边弯进画面。", MIDPAL, (set, get) => {
+    for (let y = 15; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
+    for (let y = 8; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 15) < (y - 6) * 0.85) set(x, y, HI);
+    trail(set, 12, (y) => 18 - (y - 12) * 0.45 + Math.sin(y / 1.8) * 2);
+    popOnBg(set, get, 5, 4, 2.5);
+  }],
+  ["谷中", "两山夹着一条弯路。", MIDPAL, (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
+    for (let y = 7; y < 17; y++) for (let x = 0; x < 24; x++) {
+      if (x < 8 && 8 - x < (y - 5) * 0.5) set(x, y, HI);
+      if (x > 15 && x - 15 < (y - 5) * 0.5) set(x, y, HI);
+    }
+    trail(set, 11, (y) => 12 + Math.sin(y / 1.5) * 2.4);
+    popOnBg(set, get, 12, 3.2, 2.2);
+  }],
+  ["大弯", "弯度最大的一条。", MIDPAL, (set, get) => {
+    for (let y = 15; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
+    for (let y = 8; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 5) < (y - 6) * 0.6 || Math.abs(x - 18) < (y - 7) * 0.55) set(x, y, HI);
+    trail(set, 13, (y) => 12 + Math.sin((y - 13) / 1.35) * 6);
+    popOnBg(set, get, 19, 3.8, 2.6);
+  }],
+  ["缓坡", "山矮，路慢慢摆向近处。", MIDPAL, (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
+    for (let x = 0; x < 24; x++) {
+      const top = 12 + Math.round(Math.sin(x / 4) * 1.2);
+      for (let y = top; y < 16; y++) set(x, y, HI);
+    }
+    trail(set, 13, (y) => 9 + Math.sin(y / 2.6) * 3 + (y - 13) * 0.25);
+    popOnBg(set, get, 17, 4.2, 2.7);
   }],
 ];
 scenes89b.forEach(([name, why, pal, draw], i) => {
