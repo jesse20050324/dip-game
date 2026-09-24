@@ -562,6 +562,14 @@
     no: "audio/no.wav",
     reset: "audio/reset.wav",
   };
+  const SFX_LABEL = {
+    tap: "点按",
+    chip: "落色",
+    ok: "过关",
+    no: "错误",
+    reset: "返回",
+  };
+  const sfxVol = { tap: 0.28, chip: 0.34, ok: 0.42, no: 0.34, reset: 0.32 };
   const sfxNodes = {};
   let muted = localStorage.getItem(MUTE_KEY) === "1";
 
@@ -585,13 +593,59 @@
       sfxNodes[name] = a;
     });
   }
-  function playSfx(name, vol = 0.38) {
+  function playSfx(name) {
     if (muted) return;
     const src = sfxNodes[name];
     if (!src) return;
     const node = src.cloneNode();
-    node.volume = vol;
+    const vol = sfxVol[name];
+    node.volume = vol == null ? 0.38 : vol;
     node.play().catch(() => {});
+  }
+  function mixLine() {
+    return Object.keys(SFX)
+      .map((name) => `${name} ${sfxVol[name].toFixed(2)}`)
+      .join("  ");
+  }
+  function mountMix() {
+    const rows = document.getElementById("mixRows");
+    const out = document.getElementById("mixOut");
+    if (!rows || !out) return;
+    Object.keys(SFX).forEach((name) => {
+      const row = document.createElement("div");
+      row.className = "mix-row";
+      const label = document.createElement("span");
+      label.textContent = SFX_LABEL[name];
+      const slider = document.createElement("input");
+      slider.type = "range";
+      slider.min = "0";
+      slider.max = "1";
+      slider.step = "0.01";
+      slider.value = String(sfxVol[name]);
+      const num = document.createElement("span");
+      num.className = "mix-num";
+      num.textContent = sfxVol[name].toFixed(2);
+      const play = document.createElement("button");
+      play.type = "button";
+      play.className = "mix-play";
+      play.textContent = "▶";
+      play.setAttribute("aria-label", "试听" + SFX_LABEL[name]);
+      slider.addEventListener("input", () => {
+        sfxVol[name] = Number(slider.value);
+        num.textContent = sfxVol[name].toFixed(2);
+        out.textContent = mixLine();
+      });
+      play.addEventListener("click", () => {
+        primeAudio();
+        const was = muted;
+        muted = false;
+        playSfx(name);
+        muted = was;
+      });
+      row.append(label, slider, num, play);
+      rows.appendChild(row);
+    });
+    out.textContent = mixLine();
   }
   function syncMuteUi() {
     muteButtons.forEach((btn) => {
@@ -1267,6 +1321,7 @@
     renderAll();
   }
 
+  mountMix();
   syncMuteUi();
   renderMenu();
 })();
