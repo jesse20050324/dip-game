@@ -390,11 +390,16 @@ canvas {
 .moon-tint {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-  color: var(--muted);
+  gap: 6px;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 10px 0 12px;
+  border-radius: 14px;
+  background: var(--paper-deep);
+  color: var(--ink);
   font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 3px 0 #cbb89a;
 }
 
 .moon-tint[hidden] {

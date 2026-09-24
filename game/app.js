@@ -1290,7 +1290,6 @@
       renderAll();
     }
     localStorage.setItem(MOON_TINT_KEY, hex);
-    moonTintHex.textContent = hex;
     moonTintInput.value = hex;
   }
 

@@ -39,6 +39,10 @@
           <span class="back-mark"></span>
         </button>
         <p class="level-label" id="levelLabel">1 / 13</p>
+        <label class="moon-tint" id="moonTint" hidden>
+          月色
+          <input type="color" id="moonTintInput" value="#ffe16a" />
+        </label>
         <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
       </header>
 
@@ -68,11 +72,6 @@
         <button type="button" class="reset" id="reset" aria-label="重置本关">↺</button>
         <button type="button" class="confirm" id="confirm" hidden aria-label="确定">✓</button>
       </footer>
-      <label class="moon-tint" id="moonTint" hidden>
-        月色
-        <input type="color" id="moonTintInput" value="#ffe16a" />
-        <span id="moonTintHex">#ffe16a</span>
-      </label>
     </div>
 
     <div class="screen" id="done" hidden>
@@ -89,6 +88,6 @@
     </div>
 
     <script src="photo-art.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=moon2"></script>
   </body>
 </html>
