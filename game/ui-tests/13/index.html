@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Game · 底栏</title>
+    <link rel="stylesheet" href="../shared/puzzle.css" />
+    <link rel="stylesheet" href="../shared/scheme.css" />
+    <link rel="stylesheet" href="../plain.css" />
+  </head>
+  <body data-layout="tabs">
+    <a class="index-link" href="../index.html">全部</a>
+    <main class="stage">
+      <section id="home">
+        <div class="logo-block">
+          <p class="kicker">Chapter 1</p>
+          <h1 class="logo">Game</h1>
+          <p class="sub" id="sub">第 1 关</p>
+        </div>
+        <button type="button" class="cta" data-go="primary" data-verb>开始游戏</button>
+        <div class="icon-row">
+          <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+        </div>
+      </section>
+      <section id="levels" hidden>
+        <header class="topbar"><h1 class="logo" style="font-size:1.6rem">关卡</h1></header>
+        <div id="levelList"></div>
+      </section>
+      <section id="done" hidden>
+        <div class="logo-block">
+          <h1 class="logo">Game</h1>
+          <p class="sub">两关都过了</p>
+        </div>
+        <button type="button" class="cta" data-go="home">回标题</button>
+      </section>
+    </main>
+    <nav class="tabs" aria-label="菜单">
+      <button type="button" data-tab="home" aria-current="page">标题</button>
+      <button type="button" data-tab="levels">关卡</button>
+      <button type="button" data-tab="settings">设置</button>
+    </nav>
+    <div id="playSlot"></div>
+    <div class="cover" id="pause" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">暂停</p>
+        <button type="button" class="cta" data-go="resume">继续</button>
+        <button type="button" class="cta cta-ghost" data-go="restart">重开本关</button>
+        <button type="button" class="cta cta-ghost" data-go="levels">关卡</button>
+        <button type="button" class="cta cta-ghost" data-go="home">回标题</button>
+      </div>
+    </div>
+    <div class="cover" id="settings" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">设置</p>
+        <button type="button" class="setting-row js-mute"><span>声音</span><span data-mute-label>声音开着</span></button>
+        <button type="button" class="cta cta-ghost" data-go="about">关于</button>
+        <button type="button" class="cta cta-ghost" data-go="wipe-ask">清除进度</button>
+        <button type="button" class="cta" data-go="close">好</button>
+      </div>
+    </div>
+    <div class="cover" id="wipe" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">清除进度？</p>
+        <p class="overlay-copy">两关都要重开。声音设置会留下。</p>
+        <button type="button" class="cta" data-go="wipe-no">取消</button>
+        <button type="button" class="cta cta-ghost" data-go="wipe-yes">清除</button>
+      </div>
+    </div>
+    <div class="cover" id="about" hidden>
+      <div class="cover-card">
+        <p class="overlay-kicker">关于</p>
+        <p class="credits-p">底栏三个入口：标题、关卡、设置。对局时底栏收起。</p>
+        <p class="credits-p">声音：Kenney Interface Sounds（CC0）。</p>
+        <button type="button" class="cta" data-go="settings">好</button>
+      </div>
+    </div>
+    <script src="../shared/kit.js"></script>
+    <script src="../shared/puzzle.js"></script>
+    <script src="../shared/ux.js"></script>
+    <script src="../plain.js"></script>
+  </body>
+</html>
