@@ -34,6 +34,10 @@
   <p class="brief">还是天、山、地、太阳。路都做成弯的，像上一版里那条河。颜色取在原来偏淡和刚才偏浓的中间。</p>
   <div class="grid" id="l89b"></div>
 
+  <h2>合成 · 缓弯的山 + S弯的路</h2>
+  <p class="brief">山、地、天、太阳用第一张缓弯。路的形状直接用第二张 S弯，不另画。</p>
+  <div class="grid" id="l89mix"></div>
+
   <h2>第 8 / 9 关 · 蜿蜒小路 · 十张</h2>
   <p class="brief">还是第一张：两座山、天、地、右上角太阳。路从山口出来，左右来回拐，能看出是在蜿蜒。</p>
   <div class="grid" id="l89c"></div>
@@ -319,6 +323,24 @@ scenes89b.forEach(([name, why, pal, draw], i) => {
     ["第 9 关删掉太阳", paint8(g, pal, true), 160],
   ]);
 });
+
+const mixDraw = (set, get) => {
+  for (let y = 15; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
+  for (let y = 8; y < 16; y++) for (let x = 0; x < 24; x++) {
+    if (Math.abs(x - 7) < (y - 6) * 0.8) set(x, y, HI);
+    if (Math.abs(x - 17) < (y - 7) * 0.7) set(x, y, HI);
+  }
+  trail(set, 12, (y) => 12 + Math.sin((y - 12) / 1.6) * 4);
+  popOnBg(set, get, 19, 4, 2.6);
+};
+{
+  const g = land(mixDraw);
+  card(document.getElementById("l89mix"), "缓弯的山 · S弯的路", "山、地、天、太阳是缓弯。路的公式就是 S弯那条。", [
+    ["第 8 关彩色", paint8(g, MIDPAL, false), 160],
+    ["灰度", g.map((row) => row.map(grayHex)), 160],
+    ["第 9 关删掉太阳", paint8(g, MIDPAL, true), 160],
+  ]);
+}
 
 function basePeaks(set) {
   for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, MID);
