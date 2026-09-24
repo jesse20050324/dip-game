@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>第 2 / 8·9 / 13 关 · 各十张图</title>
+  <style>
+    body { margin: 0; font-family: "Segoe UI", "PingFang SC", sans-serif; background: #221e18; color: #e8dcc8; padding: 28px 32px 80px; }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    h2 { font-size: 16px; margin: 36px 0 8px; color: #f0e6d2; }
+    .brief { color: #a89880; font-size: 13px; line-height: 1.55; max-width: 860px; margin: 0 0 8px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(520px, 1fr)); gap: 22px; }
+    article { background: #2c261e; border: 1px solid #3d3428; padding: 14px; }
+    article h3 { font-size: 14px; margin: 0 0 4px; }
+    .why { font-size: 12px; color: #9a8b74; margin: 0 0 10px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    figure { margin: 0; }
+    figcaption { font-size: 11px; color: #9a8b74; margin-top: 6px; text-align: center; }
+    canvas { display: block; background: #111; image-rendering: pixelated; box-shadow: 0 6px 0 #14110e; }
+    canvas.big { width: 160px; height: 160px; }
+    canvas.wide { width: 192px; height: 192px; }
+  </style>
+</head>
+<body>
+  <h1>只换图，不换玩法</h1>
+  <p class="brief">和第 12 关当时一样：正式关先不动。每套看三张。点进某一套之前，通关规则还是原来的。</p>
+
+  <h2>第 2 关 · 5×5 补瓦片 · 十张</h2>
+  <p class="brief">三层灰：底 230 / 主体 70 / 茎或第二色 150。坏图固定三处：主体上两格变成 235，底上有一格 40。开局仍预选第一处坏格。</p>
+  <div class="grid" id="l2"></div>
+
+  <h2>第 8 / 9 关 · 同一张 24×24 风景 · 十张</h2>
+  <p class="brief">五层灰不变：路 36 / 地 88 / 山 142 / 天 210 / 日 248。第 8 关涂出带太阳的彩色。第 9 关左图没有太阳，把日并进天才算删掉。</p>
+  <div class="grid" id="l89"></div>
+
+  <h2>第 13 关 · 64×64 上色 · 十张</h2>
+  <p class="brief">五层灰不变：地 40 / 人 90 / 墙 140 / 天 190 / 领 230。左图淡彩不判定，做对后才换成浓彩。</p>
+  <div class="grid" id="l13"></div>
+
+<script>
+const LAND = {
+  path: "#eddfc6", ground: "#c4785a", mountain: "#6b8f71", sky: "#7ba7c9", sun: "#e8b84a",
+};
+const C = {
+  sky: "#7eafd2", ground: "#c17a4a", wall: "#c4a078", person: "#b84332", collar: "#efe6d0",
+};
+const FADE = { ground: "#d5c2b0", person: "#d2b8b0", wall: "#d4c8b8", sky: "#d8e2ea", collar: "#e8e4dc" };
+const GRAY13 = { ground: 40, person: 90, wall: 140, sky: 190, collar: 230 };
+
+function grayHex(v) {
+  const h = Math.max(0, Math.min(255, v)).toString(16).padStart(2, "0");
+  return "#" + h + h + h;
+}
+function blit(canvas, cells, px) {
+  const h = cells.length, w = cells[0].length;
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  const img = ctx.createImageData(w, h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const hex = cells[y][x];
+    const i = (y * w + x) * 4;
+    img.data[i] = parseInt(hex.slice(1, 3), 16);
+    img.data[i + 1] = parseInt(hex.slice(3, 5), 16);
+    img.data[i + 2] = parseInt(hex.slice(5, 7), 16);
+    img.data[i + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  canvas.style.width = px + "px";
+  canvas.style.height = px + "px";
+}
+function card(parent, title, why, views) {
+  const el = document.createElement("article");
+  el.innerHTML = `<h3>${title}</h3><p class="why">${why}</p>`;
+  const row = document.createElement("div");
+  row.className = "row";
+  views.forEach(([cap, cells, px]) => {
+    const fig = document.createElement("figure");
+    const c = document.createElement("canvas");
+    blit(c, cells, px);
+    const lab = document.createElement("figcaption");
+    lab.textContent = cap;
+    fig.append(c, lab);
+    row.appendChild(fig);
+  });
+  el.appendChild(row);
+  parent.appendChild(el);
+}
+
+const BG = 230, A = 70, B = 150;
+function rows(spec) {
+  return spec.trim().split("\n").map((line) => [...line].map((ch) => (ch === "." ? BG : ch === "#" ? A : B)));
+}
+function breakTiles(grid) {
+  const g = grid.map((r) => r.slice());
+  const sub = [], back = [];
+  g.forEach((row, y) => row.forEach((v, x) => (v === BG ? back : sub).push([x, y])));
+  [[0, 235], [1, 235]].forEach(([i, v]) => { if (sub[i]) g[sub[i][1]][sub[i][0]] = v; });
+  if (back[0]) g[back[0][1]][back[0][0]] = 40;
+  return g;
+}
+function asGray(grid) { return grid.map((row) => row.map(grayHex)); }
+
+const L2 = [
+  ["蘑菇", "现在这一张。坏格也是现在这三处：帽上两洞，底下一颗黑点。", "..##.\n.####\n#####\n..+..\n..+.."],
+  ["树", "圆冠，一截干。", "..#..\n.###.\n#####\n..+..\n..+.."],
+  ["房子", "三角顶，方身，门是第二色。", "..#..\n.###.\n.###.\n.#+#.\n.#+#."],
+  ["船", "船体加一根桅。", ".....\n..+..\n..+..\n#####\n.###."],
+  ["杯子", "杯口比杯身宽，右边一截柄。", ".....\n#####\n.##+.\n.##+.\n.###."],
+  ["鱼", "身子加一格尾。", ".....\n.###.\n####+\n.###.\n....."],
+  ["伞", "伞面在上，柄在中。", ".....\n.###.\n#####\n..+..\n..+.."],
+  ["鸟", "头、身、一格喙。", ".....\n..##+\n.####\n..##.\n....."],
+  ["花", "四瓣围一芯。", "..#..\n.#+#.\n..#..\n..+..\n..+.."],
+  ["旗", "旗杆加一面旗。", "+###.\n+##..\n+....\n+....\n+...."],
+];
+function breakMushroom(grid) {
+  const g = grid.map((r) => r.slice());
+  g[0][2] = 235;
+  g[2][0] = 235;
+  g[3][3] = 40;
+  return g;
+}
+L2.forEach(([name, why, spec], i) => {
+  const fixed = rows(spec);
+  const broken = i === 0 ? breakMushroom(fixed) : breakTiles(fixed);
+  card(document.getElementById("l2"), `${i + 1} · ${name}`, why, [
+    ["要修成这样", asGray(fixed), 140],
+    ["开局坏三格", asGray(broken), 140],
+  ]);
+});
+
+function land(draw) {
+  const n = 24;
+  const g = Array.from({ length: n }, () => Array(n).fill(210));
+  const set = (x, y, v) => { if (x >= 0 && x < n && y >= 0 && y < n) g[y][x] = v; };
+  const get = (x, y) => (x >= 0 && x < n && y >= 0 && y < n ? g[y][x] : -1);
+  draw(set, get, n);
+  return g;
+}
+function sunOnSky(set, get, cx, cy, r) {
+  for (let y = Math.floor(cy - r); y <= cy + r; y++)
+    for (let x = Math.floor(cx - r); x <= cx + r; x++)
+      if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r && get(x, y) === 210) set(x, y, 248);
+}
+const scenes89 = [
+  ["双峰", "现在这一张：两座山、一条路、右上角太阳。", (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
+    for (let y = 0; y < 24; y++) for (let x = 0; x < 24; x++) {
+      if (y > 8 && y < 17 && Math.abs(x - 10) < (y - 6) * 0.95) set(x, y, 142);
+      if (y > 10 && y < 17 && Math.abs(x - 16) < (y - 8) * 0.85) set(x, y, 142);
+      if (Math.abs(x - 12) <= 1 && y >= 14) set(x, y, 36);
+    }
+    sunOnSky(set, get, 18.5, 4.5, 3.4);
+  }],
+  ["岛", "地是一块岛，路很短，太阳在左。", (set, get) => {
+    for (let y = 15; y < 22; y++) for (let x = 6; x < 18; x++) if ((x - 12) ** 2 / 36 + (y - 18) ** 2 / 16 <= 1) set(x, y, 88);
+    for (let y = 12; y < 18; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 12) < (y - 10) * 0.7) set(x, y, 142);
+    for (let y = 16; y < 21; y++) set(12, y, 36);
+    sunOnSky(set, get, 5, 5, 3);
+  }],
+  ["火山", "一座山，太阳坐在山顶上，只占天。", (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
+    for (let y = 6; y < 18; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 12) < (y - 4) * 0.7) set(x, y, 142);
+    for (let y = 14; y < 24; y++) { set(11, y, 36); set(12, y, 36); }
+    sunOnSky(set, get, 12, 3.2, 2.4);
+  }],
+  ["城", "山换成几块高矮房子，太阳在右。", (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
+    [[2, 10, 4, 6], [7, 8, 3, 8], [12, 12, 5, 4], [18, 9, 4, 7]].forEach(([x, y, w, h]) => {
+      for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) set(i, j, 142);
+    });
+    for (let y = 16; y < 24; y++) { set(8, y, 36); set(15, y, 36); }
+    sunOnSky(set, get, 20, 4, 2.8);
+  }],
+  ["桥", "地分成两截，路从中间接上。", (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) if (x < 7 || x > 16) set(x, y, 88);
+    for (let x = 6; x < 18; x++) { set(x, 17, 36); set(x, 18, 36); }
+    for (let y = 10; y < 17; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 4) < (y - 8) * 0.5) set(x, y, 142);
+    sunOnSky(set, get, 18, 6, 3);
+  }],
+  ["丘陵", "山很矮，铺满地平线。", (set, get) => {
+    for (let x = 0; x < 24; x++) {
+      const top = 12 + Math.round(Math.sin(x / 3) * 2);
+      for (let y = top; y < 16; y++) set(x, y, 142);
+      for (let y = 16; y < 24; y++) set(x, y, 88);
+    }
+    for (let y = 15; y < 24; y++) set(6, y, 36);
+    sunOnSky(set, get, 17, 4, 3.2);
+  }],
+  ["峡谷", "两座山夹一条路。", (set, get) => {
+    for (let y = 16; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
+    for (let y = 7; y < 17; y++) for (let x = 0; x < 24; x++) {
+      if (x < 8 && 8 - x < (y - 5) * 0.6) set(x, y, 142);
+      if (x > 15 && x - 15 < (y - 5) * 0.6) set(x, y, 142);
+    }
+    for (let y = 12; y < 24; y++) { set(11, y, 36); set(12, y, 36); }
+    sunOnSky(set, get, 12, 3.5, 2.4);
+  }],
+  ["湖", "地只在下方一条，山在左侧。", (set, get) => {
+    for (let y = 18; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
+    for (let y = 10; y < 19; y++) for (let x = 0; x < 10; x++) if (x < (y - 8)) set(x, y, 142);
+    for (let x = 4; x < 16; x++) set(x, 18, 36);
+    sunOnSky(set, get, 18, 5, 3);
+  }],
+  ["塔", "山是一根窄塔，路在塔脚。", (set, get) => {
+    for (let y = 17; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
+    for (let y = 4; y < 18; y++) for (let x = 10; x <= 13; x++) set(x, y, 142);
+    for (let x = 8; x <= 15; x++) set(x, 4, 142);
+    for (let y = 17; y < 24; y++) set(16, y, 36);
+    sunOnSky(set, get, 5, 5, 2.8);
+  }],
+  ["晨", "太阳贴着地平线，下沿被地挡住。", (set, get) => {
+    for (let y = 15; y < 24; y++) for (let x = 0; x < 24; x++) set(x, y, 88);
+    for (let y = 9; y < 16; y++) for (let x = 0; x < 24; x++) if (Math.abs(x - 7) < (y - 7) * 0.8) set(x, y, 142);
+    for (let y = 14; y < 24; y++) set(14, y, 36);
+    sunOnSky(set, get, 18, 12.2, 3.2);
+  }],
+];
+function paintLand(g, dropSun) {
+  const map = { 36: LAND.path, 88: LAND.ground, 142: LAND.mountain, 210: LAND.sky, 248: LAND.sun };
+  return g.map((row) => row.map((v) => (dropSun && v === 248 ? LAND.sky : map[v])));
+}
+scenes89.forEach(([name, why, draw], i) => {
+  const g = land(draw);
+  card(document.getElementById("l89"), `${i + 1} · ${name}`, why, [
+    ["第 8 关彩色", paintLand(g, false), 160],
+    ["灰度", g.map((row) => row.map(grayHex)), 160],
+    ["第 9 关无太阳", paintLand(g, true), 160],
+  ]);
+});
+
+function grid64(fill) { return Array.from({ length: 64 }, () => Array(64).fill(fill)); }
+function set64(g, x, y, v) { if (x >= 0 && x < 64 && y >= 0 && y < 64) g[y][x] = v; }
+function rect64(g, x, y, w, h, v) {
+  for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) set64(g, i, j, v);
+}
+function ell64(g, cx, cy, rx, ry, v) {
+  for (let y = 0; y < 64; y++) for (let x = 0; x < 64; x++)
+    if ((x - cx) ** 2 / (rx * rx) + (y - cy) ** 2 / (ry * ry) <= 1) g[y][x] = v;
+}
+function paint13(roles, pal) {
+  return roles.map((row) => row.map((r) => pal[r]));
+}
+const portraits = [
+  ["窗边", "现在这一张：左墙两扇窗，人靠右。", () => {
+    const g = grid64("sky");
+    for (let y = 10; y < 50; y++) for (let x = 0; x < 30; x++) g[y][x] = "wall";
+    rect64(g, 4, 16, 10, 22, "sky");
+    rect64(g, 16, 16, 10, 22, "sky");
+    rect64(g, 4, 26, 22, 2, "wall");
+    rect64(g, 13, 16, 3, 22, "wall");
+    for (let x = 0; x < 64; x++) for (let y = 50 + (x > 36 ? 1 : 0); y < 64; y++) g[y][x] = "ground";
+    ell64(g, 44, 20, 11, 8, "person");
+    ell64(g, 46, 24, 8, 10, "person");
+    rect64(g, 22, 32, 6, 5, "person");
+    ell64(g, 46, 50, 16, 16, "person");
+    [[45, 36], [46, 36], [47, 36], [46, 37]].forEach(([x, y]) => { g[y][x] = "collar"; });
+    return g;
+  }],
+  ["门洞", "人站在门里，领子在胸口。", () => {
+    const g = grid64("wall");
+    rect64(g, 18, 8, 28, 42, "sky");
+    for (let y = 46; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 32, 22, 8, 9, "person");
+    rect64(g, 24, 30, 16, 22, "person");
+    g[34][30] = g[34][31] = g[34][32] = g[35][31] = "collar";
+    return g;
+  }],
+  ["坐着", "半身更低，窗在头顶一条。", () => {
+    const g = grid64("wall");
+    rect64(g, 8, 4, 48, 14, "sky");
+    for (let y = 40; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 32, 28, 10, 8, "person");
+    ell64(g, 32, 48, 18, 14, "person");
+    g[36][30] = g[36][31] = g[36][32] = g[37][31] = "collar";
+    return g;
+  }],
+  ["侧脸", "人偏左，窗在右。", () => {
+    const g = grid64("sky");
+    rect64(g, 34, 6, 24, 40, "wall");
+    rect64(g, 40, 12, 12, 16, "sky");
+    for (let y = 48; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 22, 24, 9, 10, "person");
+    rect64(g, 14, 32, 16, 20, "person");
+    g[36][20] = g[36][21] = g[36][22] = "collar";
+    return g;
+  }],
+  ["双窗", "墙在中间，左右都是天。", () => {
+    const g = grid64("sky");
+    rect64(g, 22, 0, 20, 48, "wall");
+    for (let y = 48; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 32, 22, 8, 9, "person");
+    rect64(g, 24, 30, 16, 24, "person");
+    g[34][31] = g[34][32] = g[34][33] = "collar";
+    return g;
+  }],
+  ["近景", "脸很大，墙只剩一条。", () => {
+    const g = grid64("sky");
+    rect64(g, 0, 0, 16, 64, "wall");
+    for (let y = 52; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 40, 26, 14, 16, "person");
+    ell64(g, 40, 52, 20, 16, "person");
+    g[40][36] = g[40][37] = g[40][38] = g[41][37] = "collar";
+    return g;
+  }],
+  ["远一点", "人小，天多。", () => {
+    const g = grid64("sky");
+    rect64(g, 0, 20, 64, 16, "wall");
+    for (let y = 44; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 34, 30, 6, 7, "person");
+    rect64(g, 28, 36, 12, 16, "person");
+    g[38][33] = g[38][34] = g[38][35] = "collar";
+    return g;
+  }],
+  ["廊", "墙是几根柱，人在柱间。", () => {
+    const g = grid64("sky");
+    for (let x = 4; x < 64; x += 14) rect64(g, x, 0, 4, 50, "wall");
+    for (let y = 50; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 30, 28, 7, 8, "person");
+    rect64(g, 23, 35, 14, 18, "person");
+    g[38][29] = g[38][30] = g[38][31] = "collar";
+    return g;
+  }],
+  ["桌边", "地抬高一块当桌，人坐在后面。", () => {
+    const g = grid64("wall");
+    rect64(g, 6, 6, 52, 18, "sky");
+    for (let y = 46; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    rect64(g, 8, 40, 48, 8, "ground");
+    ell64(g, 32, 24, 9, 8, "person");
+    rect64(g, 22, 31, 20, 12, "person");
+    g[33][30] = g[33][31] = g[33][32] = "collar";
+    return g;
+  }],
+  ["背光", "人在窗前，几乎剪影，领子仍分开。", () => {
+    const g = grid64("wall");
+    rect64(g, 14, 4, 36, 40, "sky");
+    for (let y = 48; y < 64; y++) for (let x = 0; x < 64; x++) g[y][x] = "ground";
+    ell64(g, 32, 22, 8, 9, "person");
+    rect64(g, 24, 30, 16, 22, "person");
+    g[34][31] = g[34][32] = g[35][32] = "collar";
+    return g;
+  }],
+];
+const problems = [];
+L2.forEach(([name, , spec]) => {
+  const g = rows(spec);
+  if (g.length !== 5 || g.some((r) => r.length !== 5)) problems.push("L2 size " + name);
+  const tones = new Set(g.flat());
+  if (![BG, A, B].every((v) => tones.has(v))) problems.push("L2 tones " + name);
+});
+scenes89.forEach(([name, , draw]) => {
+  const g = land(draw);
+  const tones = new Set(g.flat());
+  [36, 88, 142, 210, 248].forEach((v) => { if (!tones.has(v)) problems.push("L89 missing " + v + " " + name); });
+  g.forEach((row) => row.forEach((v) => { if (![36, 88, 142, 210, 248].includes(v)) problems.push("L89 stray " + name); }));
+});
+portraits.forEach(([name, , make]) => {
+  const g = make();
+  const tones = new Set(g.flat());
+  ["ground", "person", "wall", "sky", "collar"].forEach((r) => { if (!tones.has(r)) problems.push("L13 missing " + r + " " + name); });
+});
+if (problems.length) document.title = "BAD " + problems.join(" | ");
+
+portraits.forEach(([name, why, make], i) => {
+  const roles = make();
+  card(document.getElementById("l13"), `${i + 1} · ${name}`, why, [
+    ["开局淡彩", paint13(roles, FADE), 160],
+    ["灰度", roles.map((row) => row.map((r) => grayHex(GRAY13[r]))), 160],
+    ["做对后的浓彩", paint13(roles, C), 160],
+  ]);
+});
+</script>
+</body>
+</html>
