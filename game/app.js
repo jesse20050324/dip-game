@@ -546,6 +546,7 @@
   const startBtn = document.getElementById("startBtn");
   const selectBtn = document.getElementById("selectBtn");
   const againBtn = document.getElementById("againBtn");
+  const doneProgress = document.getElementById("doneProgress");
   const homeBtn = document.getElementById("homeBtn");
   const levelsBack = document.getElementById("levelsBack");
   const levelGrid = document.getElementById("levelGrid");
@@ -629,6 +630,8 @@
   }
   function showDone() {
     hideScreens();
+    const total = LEVELS.length;
+    doneProgress.textContent = `${total} / ${total}`;
     doneEl.hidden = false;
   }
   function enterPlay(i) {

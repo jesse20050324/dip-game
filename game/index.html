@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Game</title>
-    <link rel="stylesheet" href="style.css?v=live2" />
+    <link rel="stylesheet" href="style.css?v=live3" />
   </head>
   <body>
     <div class="screen" id="home">
@@ -71,19 +71,17 @@
     </div>
 
     <div class="screen" id="done" hidden>
-      <div class="home-card">
+      <div class="home-card done-card">
         <p class="home-kicker">Chapter 1</p>
-        <h1 class="home-title">Game</h1>
-        <div class="home-pair" aria-hidden="true">
-          <span class="boot-tile is-match"></span>
-          <span class="boot-tile is-match"></span>
-        </div>
-        <p class="home-progress">13 / 13</p>
+        <div class="done-mark" aria-hidden="true">✓</div>
+        <h1 class="done-title">完成</h1>
+        <p class="done-line">这一章的图都修好了</p>
+        <p class="home-progress" id="doneProgress">13 / 13</p>
         <button type="button" class="cta" id="againBtn">返回主页</button>
       </div>
     </div>
 
     <script src="photo-art.js"></script>
-    <script src="app.js?v=live2"></script>
+    <script src="app.js?v=live3"></script>
   </body>
 </html>
