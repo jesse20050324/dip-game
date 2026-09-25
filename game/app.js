@@ -954,7 +954,7 @@
     const doneCount = Math.max(0, cleared + 1);
     homeProgress.textContent = `${doneCount} / ${total}`;
     startBtn.textContent =
-      cleared < 0 ? "开始游戏" : cleared >= total - 1 ? "选关" : "继续游戏";
+      cleared < 0 || cleared >= total - 1 ? "开始游戏" : "继续游戏";
 
     const next = Math.min(cleared + 1, total - 1);
     levelGrid.innerHTML = "";
@@ -1223,7 +1223,7 @@
     primeAudio();
     playSfx("tap", 0.3);
     const cleared = getCleared();
-    if (cleared >= LEVELS.length - 1) showLevels();
+    if (cleared >= LEVELS.length - 1) enterPlay(0);
     else enterPlay(cleared + 1);
   });
   selectBtn.addEventListener("click", () => {
