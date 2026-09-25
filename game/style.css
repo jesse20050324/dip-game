@@ -35,8 +35,11 @@ body {
 
 .sheet {
   width: min(1080px, calc(100% - 32px));
-  margin: 28px auto 40px;
-  padding: 24px 28px 26px;
+  height: calc(100dvh - 24px);
+  margin: 12px auto;
+  padding: 16px 22px 16px;
+  display: flex;
+  flex-direction: column;
   background: var(--card);
   border: 1px solid #eadcc4;
   border-radius: 28px;
@@ -48,7 +51,8 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
+  flex: none;
 }
 
 .level-label {
@@ -62,8 +66,9 @@ body {
 }
 
 .scene {
-  margin: 6px 0 22px;
-  padding: 8px 12px 4px;
+  margin: 0 0 10px;
+  padding: 0 12px;
+  flex: none;
   text-align: center;
   color: var(--ink);
   font-size: clamp(1.7rem, 3.4vw, 2.25rem);
@@ -77,6 +82,8 @@ body {
 }
 
 .boards {
+  flex: 1 1 auto;
+  min-height: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 18px;
@@ -85,6 +92,11 @@ body {
 .board {
   margin: 0;
   padding: 14px;
+  min-width: 0;
+  min-height: 0;
+  container-type: size;
+  display: grid;
+  place-items: center;
   background: #f7efe1;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -107,13 +119,21 @@ canvas {
   background: var(--paper-deep);
 }
 
+.board canvas {
+  width: min(100cqw, 100cqh);
+  height: min(100cqw, 100cqh);
+  max-width: 100%;
+  max-height: 100%;
+}
+
 #workCanvas {
   cursor: pointer;
 }
 
 .axis-card {
-  margin-top: 18px;
-  padding: 18px;
+  flex: none;
+  margin-top: 12px;
+  padding: 14px 16px;
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -321,8 +341,9 @@ canvas {
   justify-content: center;
   align-items: center;
   gap: 12px;
-  margin-top: 18px;
+  margin-top: 12px;
   min-height: 52px;
+  flex: none;
 }
 
 .reset,
