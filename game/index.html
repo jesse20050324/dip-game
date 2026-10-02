@@ -3,23 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Game</title>
-    <link rel="stylesheet" href="style.css?v=live3" />
+    <title>像素修理铺 · PIXEL MEND</title>
+    <link rel="stylesheet" href="style.css?v=b1" />
+    <link rel="stylesheet" href="skin.css?v=b1" />
   </head>
-  <body>
+  <body data-scheme="b">
+    <div class="stars" aria-hidden="true"></div>
+
     <div class="screen" id="home">
+      <button type="button" class="icon-btn corner-gear" id="gearBtn" aria-label="设置">⚙</button>
       <button type="button" class="icon-btn speaker js-mute corner-mute" aria-label="声音"></button>
       <div class="home-card">
-        <p class="home-kicker">Chapter 1</p>
-        <h1 class="home-title">Game</h1>
+        <p class="home-kicker">PIXEL MEND · STAGE 1</p>
+        <h1 class="home-title">像素修理铺</h1>
         <div class="home-pair" aria-hidden="true">
           <span class="boot-tile is-dark"></span>
+          <span class="boot-tile is-match"></span>
           <span class="boot-tile is-light"></span>
         </div>
         <button type="button" class="cta" id="startBtn">开始游戏</button>
         <button type="button" class="cta cta-ghost" id="selectBtn">选关</button>
         <p class="home-progress" id="homeProgress">0 / 13</p>
+        <div class="dots" id="homeDots"></div>
       </div>
+      <p class="ver">v0.6 · ui lab B</p>
     </div>
 
     <div class="screen" id="levels" hidden>
@@ -35,8 +42,8 @@
 
     <div class="sheet" id="playSheet" hidden>
       <header class="top">
-        <button type="button" class="icon-btn" id="homeBtn" aria-label="返回选关">
-          <span class="back-mark"></span>
+        <button type="button" class="icon-btn" id="homeBtn" aria-label="暂停">
+          <span class="pause-mark"></span>
         </button>
         <p class="level-label" id="levelLabel">1 / 13</p>
         <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
@@ -72,16 +79,53 @@
 
     <div class="screen" id="done" hidden>
       <div class="home-card done-card">
-        <p class="home-kicker">Chapter 1</p>
+        <p class="home-kicker">PIXEL MEND · STAGE 1</p>
         <div class="done-mark" aria-hidden="true">✓</div>
-        <h1 class="done-title">完成</h1>
+        <h1 class="done-title">全部修好</h1>
         <p class="done-line">这一章的图都修好了</p>
         <p class="home-progress" id="doneProgress">13 / 13</p>
         <button type="button" class="cta" id="againBtn">返回主页</button>
+        <p class="credits">声音：Kenney Interface Sounds（CC0）</p>
       </div>
     </div>
 
-    <script src="photo-art.js"></script>
-    <script src="app.js?v=live3"></script>
+    <div class="ov" id="pauseOv" hidden>
+      <div class="ov-card">
+        <p class="ov-kicker">暂停</p>
+        <button type="button" class="cta" id="pauseResume">继续</button>
+        <button type="button" class="cta cta-ghost" id="pauseRestart">重开本关</button>
+        <button type="button" class="cta cta-ghost" id="pauseLevels">选关</button>
+        <button type="button" class="cta cta-ghost" id="pauseHome">回主页</button>
+      </div>
+    </div>
+
+    <div class="ov" id="settingsOv" hidden>
+      <div class="ov-card">
+        <p class="ov-kicker">设置</p>
+        <button type="button" class="setting-row js-mute"><span>声音</span><span data-mute-label>开着</span></button>
+        <button type="button" class="cta cta-ghost" id="wipeAsk">清除进度</button>
+        <p class="ov-copy">一个把灰度修成颜色的小游戏<br />声音：Kenney Interface Sounds（CC0）</p>
+        <button type="button" class="cta" id="settingsClose">好</button>
+      </div>
+    </div>
+
+    <div class="ov" id="wipeOv" hidden>
+      <div class="ov-card">
+        <p class="ov-kicker">真的清除？</p>
+        <p class="ov-copy">13 关的进度会回到零。声音设置会留下。</p>
+        <button type="button" class="cta" id="wipeNo">取消</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">清除</button>
+      </div>
+    </div>
+
+    <div class="ov" id="winOv" hidden>
+      <div class="ov-card">
+        <p class="ov-kicker">✓ 修好了！</p>
+        <button type="button" class="cta" id="winNext">下一关</button>
+      </div>
+    </div>
+
+    <script src="photo-art.js?v=b1"></script>
+    <script src="app.js?v=b1"></script>
   </body>
 </html>

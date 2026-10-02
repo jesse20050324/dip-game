@@ -1,0 +1,278 @@
+/* ============================================================
+   方案 B · 像素机台 PIXEL MEND
+   深靛机台 + 奶油面板 + 粉/黄/青饱和色。硬边、硬阴影、小圆角。
+   ============================================================ */
+
+:root {
+  --paper: #23265a;
+  --paper-deep: #e8d9b8;
+  --card: #f7edd4;
+  --ink: #262a4a;
+  --muted: #7a7159;
+  --line: #d7c4a6;
+  --accent: #ff5d8f;
+  --accent-deep: #c23a68;
+  --cyan: #38b6d8;
+  --yel: #ffd23f;
+  --good: #3d9e6b;
+  --bad: #e0503c;
+  --shadow: 0 8px 0 rgba(18, 19, 44, 0.4);
+  --radius: 10px;
+}
+
+body {
+  font-family: "Arial Black", "Segoe UI", "PingFang SC", "Microsoft YaHei",
+    sans-serif;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(#262a5e, #1c1f47);
+  background-size: 28px 28px, 28px 28px, 100% 100%;
+}
+
+/* 像素星星 */
+.stars {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+.stars::before,
+.stars::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--yel);
+}
+.stars::before {
+  top: 12%;
+  left: 10%;
+  box-shadow:
+    60vw 6vh 0 var(--cyan),
+    78vw 64vh 0 var(--accent),
+    8vw 72vh 0 var(--cyan),
+    34vw 22vh 0 var(--yel),
+    88vw 30vh 0 var(--yel);
+  animation: star-blink 2.6s steps(2) infinite;
+}
+.stars::after {
+  top: 40%;
+  left: 22%;
+  background: var(--accent);
+  box-shadow:
+    52vw 40vh 0 var(--yel),
+    22vw -18vh 0 var(--cyan),
+    66vw -6vh 0 var(--accent);
+  animation: star-blink 3.4s steps(2) infinite;
+}
+@keyframes star-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+.screen,
+.sheet {
+  position: relative;
+  z-index: 2;
+}
+
+/* 标题 */
+.home-title {
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-shadow: 4px 4px 0 rgba(38, 42, 74, 0.18);
+}
+.home-kicker,
+.ov-kicker {
+  color: var(--accent-deep);
+}
+.menu-title,
+.level-label,
+.scene {
+  font-weight: 900;
+}
+
+/* 面板：粗描边 + 硬阴影 */
+.home-card,
+.sheet,
+.ov-card {
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.board {
+  background: #efe2c2;
+  border: 3px solid var(--ink);
+  border-radius: var(--radius);
+}
+.axis-card {
+  background: #fffdf4;
+  border: 3px solid var(--ink);
+  border-radius: var(--radius);
+}
+canvas,
+.level-card canvas {
+  border-radius: 4px;
+  background: #e4d5b8;
+}
+
+/* 轴与色块 */
+.gray-bar,
+.map-bar {
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+}
+.seg.hatched {
+  background: repeating-linear-gradient(
+    135deg,
+    #f3ead8,
+    #f3ead8 6px,
+    #dcc9a5 6px,
+    #dcc9a5 12px
+  );
+}
+.chip {
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: 0 4px 0 rgba(38, 42, 74, 0.35);
+}
+.chip.selected {
+  box-shadow: 0 0 0 4px var(--yel);
+}
+.shandle span,
+.bhandle span {
+  border-radius: 3px;
+  box-shadow: 0 3px 0 var(--accent);
+}
+
+/* 按钮：厚底硬影 */
+.cta {
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 0 5px 0 var(--accent-deep);
+}
+.cta:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 var(--accent-deep);
+}
+.cta-ghost {
+  background: var(--paper-deep);
+  box-shadow: 0 5px 0 #b8a67f;
+}
+.cta-ghost:hover {
+  background: #e2d0a8;
+}
+.cta-ghost:active {
+  box-shadow: 0 2px 0 #b8a67f;
+}
+.reset,
+.icon-btn,
+.setting-row {
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  background: var(--paper-deep);
+  box-shadow: 0 5px 0 #b8a67f;
+}
+.reset:hover,
+.icon-btn:hover {
+  background: #e2d0a8;
+  filter: none;
+}
+.reset:active,
+.icon-btn:active,
+.setting-row:active {
+  box-shadow: 0 2px 0 #b8a67f;
+}
+.setting-row {
+  box-shadow: 0 5px 0 #b8a67f;
+}
+.confirm {
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 0 5px 0 var(--accent-deep);
+}
+.confirm:active {
+  box-shadow: 0 2px 0 var(--accent-deep);
+}
+.reset.armed {
+  background: var(--bad);
+  box-shadow: 0 5px 0 #8f2b1d;
+}
+
+/* 主页三块像素砖 */
+.boot-tile {
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 0 5px 0 rgba(38, 42, 74, 0.35);
+}
+.boot-tile.is-dark {
+  background: #262a4a;
+}
+.boot-tile.is-match {
+  background: var(--accent);
+}
+.boot-tile.is-light {
+  background: #f7edd4;
+}
+
+/* 进度点：像素方块 */
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 2px solid var(--ink);
+  background: #efe2c2;
+}
+.dot.done {
+  background: var(--cyan);
+  border-color: var(--ink);
+}
+.dot.next {
+  background: var(--accent);
+  border-color: var(--ink);
+}
+
+/* 关卡卡 */
+.level-card {
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: 0 5px 0 #b8a67f;
+}
+.level-card.is-next {
+  border-color: var(--accent);
+  box-shadow: 0 5px 0 var(--accent-deep);
+}
+.level-card.is-done .level-num::after {
+  color: var(--good);
+}
+.level-card.is-locked::after {
+  border-color: var(--muted);
+}
+
+/* 覆盖层 */
+.ov {
+  background: rgba(20, 22, 52, 0.55);
+}
+#winOv {
+  background: none;
+}
+#winOv .ov-kicker {
+  color: var(--good);
+}
+
+/* 完成页 */
+.done-mark {
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  background: var(--yel);
+  color: var(--ink);
+  box-shadow: 0 5px 0 #b89b1c;
+}
+.credits {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-family: "Segoe UI", "PingFang SC", sans-serif;
+}

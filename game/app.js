@@ -1,4 +1,5 @@
-// 正式游戏快照。改关卡先在 prototype/chapter1 试，同意后再把那边的关卡数据迁过来。
+// UI 实验版引擎：基于正式游戏 app.js，叠加壳层功能（暂停/设置/过关节拍/两步重置/过场/震动）。
+// 关卡数据与判定逻辑与正式版完全一致；存档按方案隔离（body[data-scheme]）。
 (() => {
   const MIN_GAP = 10;
   const DARK = "#2b241c";
@@ -553,6 +554,14 @@
   const homeProgress = document.getElementById("homeProgress");
   const levelLabel = document.getElementById("levelLabel");
   const muteButtons = Array.from(document.querySelectorAll(".js-mute"));
+  const gearBtn = document.getElementById("gearBtn");
+  const homeDots = document.getElementById("homeDots");
+  const pauseOv = document.getElementById("pauseOv");
+  const settingsOv = document.getElementById("settingsOv");
+  const wipeOv = document.getElementById("wipeOv");
+  const winOv = document.getElementById("winOv");
+  const winNext = document.getElementById("winNext");
+  const muteLabels = Array.from(document.querySelectorAll("[data-mute-label]"));
 
   const SPEAKER_SVG = `<svg class="speaker-svg" viewBox="0 0 24 24" aria-hidden="true">
     <path d="M3.6 9.2h3.4l4.6-3.7v13L7 14.8H3.6z"/>
@@ -564,7 +573,8 @@
     btn.innerHTML = SPEAKER_SVG;
   });
 
-  const SAVE_KEY = "dip-ch1-cleared";
+  const SCHEME = document.body.dataset.scheme || "x";
+  const SAVE_KEY = `dip-lab-${SCHEME}-cleared`;
   const MUTE_KEY = "dip-muted";
   const SFX = {
     tap: "audio/tap.wav",
@@ -611,21 +621,50 @@
       btn.classList.toggle("is-muted", muted);
       btn.setAttribute("aria-pressed", muted ? "true" : "false");
     });
+    muteLabels.forEach((el) => {
+      el.textContent = muted ? "关着" : "开着";
+    });
+  }
+  function vibrate(pattern) {
+    if (navigator.vibrate) navigator.vibrate(pattern);
+  }
+  // 覆盖层：打开/全部关闭（切换屏幕时必须收干净）
+  function openOv(ov) {
+    if (!ov) return;
+    ov.hidden = false;
+    ov.classList.remove("ov-in");
+    void ov.offsetWidth;
+    ov.classList.add("ov-in");
+  }
+  function closeOv(ov) {
+    if (ov) ov.hidden = true;
+  }
+  function hideOverlays() {
+    [pauseOv, settingsOv, wipeOv, winOv].forEach(closeOv);
+  }
+  // 屏显过场：fade+rise 一瞬，代替 hidden 硬切
+  function animIn(el) {
+    el.classList.remove("anim-in");
+    void el.offsetWidth;
+    el.classList.add("anim-in");
   }
   function hideScreens() {
     homeEl.hidden = true;
     levelsEl.hidden = true;
     doneEl.hidden = true;
     playSheet.hidden = true;
+    hideOverlays();
   }
   function showHome() {
     hideScreens();
     homeEl.hidden = false;
+    animIn(homeEl);
     renderMenu();
   }
   function showLevels() {
     hideScreens();
     levelsEl.hidden = false;
+    animIn(levelsEl);
     renderMenu();
   }
   function showDone() {
@@ -633,12 +672,14 @@
     const total = LEVELS.length;
     doneProgress.textContent = `${total} / ${total}`;
     doneEl.hidden = false;
+    animIn(doneEl);
   }
   function enterPlay(i) {
     if (!isOpen(i)) return;
     primeAudio();
     hideScreens();
     playSheet.hidden = false;
+    animIn(playSheet);
     loadLevel(i);
   }
 
@@ -957,7 +998,16 @@
     const doneCount = Math.max(0, cleared + 1);
     homeProgress.textContent = `${doneCount} / ${total}`;
     startBtn.textContent =
-      cleared < 0 || cleared >= total - 1 ? "开始游戏" : "继续游戏";
+      cleared < 0 ? "开始游戏" : cleared >= total - 1 ? "再玩一遍" : "继续游戏";
+    if (homeDots) {
+      homeDots.innerHTML = "";
+      for (let i = 0; i < total; i++) {
+        const d = document.createElement("span");
+        d.className =
+          "dot" + (i <= cleared ? " done" : i === cleared + 1 ? " next" : "");
+        homeDots.appendChild(d);
+      }
+    }
 
     const next = Math.min(cleared + 1, total - 1);
     levelGrid.innerHTML = "";
@@ -1191,23 +1241,33 @@
     setTimeout(() => workBoard.classList.remove("good", "bad"), 650);
   }
 
+  // 过关节拍：先让玩家看清修好的图（含左图揭晓答案），再浮出「下一关」卡片
+  function showWin() {
+    if (!winOv) {
+      if (levelIndex < LEVELS.length - 1) enterPlay(levelIndex + 1);
+      else showDone();
+      return;
+    }
+    const last = levelIndex >= LEVELS.length - 1;
+    winNext.textContent = last ? "完成本章" : "下一关";
+    openOv(winOv);
+  }
+
   function judgeNow() {
     if (checkWin()) {
       markCleared(levelIndex);
       playSfx("ok", 0.42);
+      vibrate(30);
       if (level.leftDisplay && !answerRevealed) {
         answerRevealed = true;
         renderBoards();
       }
       flash(true);
-      const wait = level.leftDisplay ? 1400 : 700;
-      if (levelIndex < LEVELS.length - 1) {
-        setTimeout(() => enterPlay(levelIndex + 1), wait);
-      } else {
-        setTimeout(showDone, wait);
-      }
+      const wait = level.leftDisplay ? 1400 : 800;
+      setTimeout(showWin, wait);
     } else {
       playSfx("no", 0.34);
+      vibrate([40, 40, 40]);
       flash(false);
       if (level.judge === "release") {
         grays = level.source.map((r) => r.slice());
@@ -1218,7 +1278,24 @@
   }
 
   confirmBtn.addEventListener("click", judgeNow);
+
+  // 两步重置：第一下进入待确认态（1.6s），第二下才真的清空本关
+  let resetArmed = false;
+  let resetTimer = null;
+  function disarmReset() {
+    resetArmed = false;
+    clearTimeout(resetTimer);
+    resetBtn.classList.remove("armed");
+  }
   resetBtn.addEventListener("click", () => {
+    if (!resetArmed) {
+      resetArmed = true;
+      resetBtn.classList.add("armed");
+      playSfx("tap", 0.28);
+      resetTimer = setTimeout(disarmReset, 1600);
+      return;
+    }
+    disarmReset();
     playSfx("reset", 0.32);
     loadLevel(levelIndex);
   });
@@ -1236,7 +1313,7 @@
   });
   homeBtn.addEventListener("click", () => {
     playSfx("tap", 0.28);
-    showLevels();
+    openOv(pauseOv);
   });
   levelsBack.addEventListener("click", () => {
     playSfx("tap", 0.28);
@@ -1255,9 +1332,58 @@
     });
   });
 
+  // ---------- 壳层：暂停 / 设置 / 清进度 / 过关 ----------
+
+  function bindOv(id, fn) {
+    const el = document.getElementById(id);
+    if (el)
+      el.addEventListener("click", () => {
+        playSfx("tap", 0.28);
+        fn();
+      });
+  }
+  bindOv("pauseResume", () => closeOv(pauseOv));
+  bindOv("pauseRestart", () => {
+    closeOv(pauseOv);
+    loadLevel(levelIndex);
+  });
+  bindOv("pauseLevels", showLevels);
+  bindOv("pauseHome", showHome);
+  bindOv("winNext", () => {
+    closeOv(winOv);
+    if (levelIndex >= LEVELS.length - 1) showDone();
+    else enterPlay(levelIndex + 1);
+  });
+  window.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" && winOv && !winOv.hidden) {
+      ev.preventDefault();
+      winNext.click();
+    }
+  });
+
+  if (gearBtn)
+    gearBtn.addEventListener("click", () => {
+      playSfx("tap", 0.28);
+      openOv(settingsOv);
+    });
+  bindOv("settingsClose", () => closeOv(settingsOv));
+  bindOv("wipeAsk", () => openOv(wipeOv));
+  bindOv("wipeNo", () => closeOv(wipeOv));
+  const wipeYes = document.getElementById("wipeYes");
+  if (wipeYes)
+    wipeYes.addEventListener("click", () => {
+      playSfx("reset", 0.32);
+      localStorage.removeItem(SAVE_KEY);
+      closeOv(wipeOv);
+      closeOv(settingsOv);
+      renderMenu();
+    });
+
   // ---------- 关卡装载 ----------
 
   function loadLevel(i) {
+    disarmReset();
+    closeOv(winOv);
     levelIndex = i;
     level = LEVELS[i];
     grays = level.source.map((r) => r.slice());
