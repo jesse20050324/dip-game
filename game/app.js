@@ -576,12 +576,16 @@
   const SCHEME = document.body.dataset.scheme || "x";
   const SAVE_KEY = `dip-lab-${SCHEME}-cleared`;
   const MUTE_KEY = "dip-muted";
+  const audioDir = new URL(
+    "audio/",
+    (document.currentScript && document.currentScript.src) || document.baseURI
+  );
   const SFX = {
-    tap: "audio/tap.wav",
-    chip: "audio/chip.wav",
-    ok: "audio/ok.wav",
-    no: "audio/no.wav",
-    reset: "audio/reset.wav",
+    tap: new URL("tap.wav", audioDir).href,
+    chip: new URL("chip.wav", audioDir).href,
+    ok: new URL("ok.wav", audioDir).href,
+    no: new URL("no.wav", audioDir).href,
+    reset: new URL("reset.wav", audioDir).href,
   };
   const sfxVol = { tap: 1.0, chip: 0.11, ok: 0.09, no: 0.07, reset: 0.04 };
   const sfxNodes = {};

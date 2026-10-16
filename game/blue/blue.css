@@ -112,6 +112,14 @@ body {
   filter: none;
 }
 
+.reset.armed,
+.reset.armed:hover,
+.reset.armed:active {
+  background: var(--accent);
+  color: var(--ink);
+  box-shadow: none;
+}
+
 .axis-marker {
   border-color: var(--card);
 }
