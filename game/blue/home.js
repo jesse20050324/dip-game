@@ -1,24 +1,33 @@
-/* 主页只有一条滑块。拖动时整页从马赛克收到清晰，拖过 0.9 松手才进游戏。 */
+/* 主页底图是整屏海滩。拖动时马赛克收到清晰，拖过 0.9 松手才进游戏。滑条本身一直清楚。 */
 (function () {
   var cv = PixelMask.cssVar;
   var stage = document.getElementById("boStage");
   var track = document.getElementById("boTrack");
   var fill = document.getElementById("boFill");
   var knob = document.getElementById("boKnob");
-  var hint = document.getElementById("boHint");
-  var dotsEl = document.getElementById("boDots");
   var ctaEl = document.getElementById("boCta");
   var subEl = document.getElementById("boSub");
   var startBtn = document.getElementById("startBtn");
   var selectBtn = document.getElementById("selectBtn");
   var progEl = document.getElementById("homeProgress");
+  var muteBtn = document.querySelector("#home .js-mute");
 
   var ART = PhotoArt.landscapeTarget();
-  var artCv = document.getElementById("boArt");
+  var bgCv = document.getElementById("boBg");
+  var bgOff = document.createElement("canvas");
+  bgOff.width = 512;
+  bgOff.height = 512;
   var titleCv = document.getElementById("boTitle");
   var ctaCv = document.getElementById("boCtaCv");
   var subCv = document.getElementById("boSubCv");
   var progCv = document.getElementById("boProgCv");
+  var dotsCv = document.getElementById("boDotsCv");
+  var gearCv = document.getElementById("boGear");
+  var muteCv = document.getElementById("boMute");
+  var dotsSrc = document.createElement("canvas");
+  dotsSrc.width = 220;
+  dotsSrc.height = 28;
+  var iconCache = {};
 
   var TITLE_G = PixelMask.textToGrid("像素修理铺", 336, 84);
   var SUB_G = PixelMask.textToGrid("选关", 132, 52);
@@ -30,17 +39,141 @@
     return G_CACHE[k];
   }
 
-  var DOTS = [];
-  for (var di = 0; di < 13; di++) {
-    var dot = document.createElement("i");
-    dotsEl.appendChild(dot);
-    DOTS.push(dot);
+  function hexByte(n) {
+    var s = n.toString(16);
+    return s.length < 2 ? "0" + s : s;
+  }
+
+  function canvasToGrid(cv) {
+    var w = cv.width;
+    var h = cv.height;
+    var data = cv.getContext("2d").getImageData(0, 0, w, h).data;
+    var grid = [];
+    for (var y = 0; y < h; y++) {
+      var row = [];
+      for (var x = 0; x < w; x++) {
+        var i = (y * w + x) * 4;
+        if (data[i + 3] < 20) row.push(null);
+        else row.push("#" + hexByte(data[i]) + hexByte(data[i + 1]) + hexByte(data[i + 2]));
+      }
+      grid.push(row);
+    }
+    return grid;
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function buttonFace(ctx) {
+    ctx.clearRect(0, 0, 104, 104);
+    ctx.fillStyle = "#e1edf6";
+    roundRect(ctx, 2, 2, 100, 100, 28);
+    ctx.fill();
+  }
+
+  function drawGear(ctx) {
+    buttonFace(ctx);
+    ctx.fillStyle = "#122133";
+    ctx.font = "64px 'Segoe UI Symbol', 'Segoe UI', sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("\u2699", 52, 56);
+  }
+
+  function drawSpeaker(ctx, muted) {
+    buttonFace(ctx);
+    ctx.save();
+    var s = 2.15;
+    ctx.translate((104 - 24 * s) / 2, (104 - 24 * s) / 2);
+    ctx.scale(s, s);
+    ctx.fillStyle = "#122133";
+    ctx.strokeStyle = "#122133";
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(3.6, 9.2);
+    ctx.lineTo(7, 9.2);
+    ctx.lineTo(11.6, 5.5);
+    ctx.lineTo(11.6, 18.5);
+    ctx.lineTo(7, 14.8);
+    ctx.lineTo(3.6, 14.8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    if (muted) {
+      ctx.moveTo(5, 5);
+      ctx.lineTo(19, 19);
+    } else {
+      ctx.moveTo(15.6, 8.4);
+      ctx.bezierCurveTo(17.1, 9.7, 17.1, 14.4, 15.6, 15.7);
+      ctx.moveTo(18.3, 6.2);
+      ctx.bezierCurveTo(20.9, 8.5, 20.9, 15.5, 18.3, 17.8);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function iconGrid(kind) {
+    if (iconCache[kind]) return iconCache[kind];
+    var c = document.createElement("canvas");
+    c.width = 104;
+    c.height = 104;
+    var x = c.getContext("2d");
+    if (kind === "gear") drawGear(x);
+    else drawSpeaker(x, kind === "mute");
+    iconCache[kind] = canvasToGrid(c);
+    return iconCache[kind];
+  }
+
+  function dotsGrid(t) {
+    var ctx = dotsSrc.getContext("2d");
+    ctx.clearRect(0, 0, dotsSrc.width, dotsSrc.height);
+    var on = Math.round(Math.max(0, Math.min(1, t)) * 13);
+    for (var i = 0; i < 13; i++) {
+      ctx.fillStyle = i < on ? "#449df0" : "#5c6b7a";
+      ctx.beginPath();
+      ctx.arc(12 + i * 16, 14, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    return canvasToGrid(dotsSrc);
+  }
+
+  function paintBg(t) {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = Math.max(1, Math.round(window.innerWidth * dpr));
+    var h = Math.max(1, Math.round(window.innerHeight * dpr));
+    if (bgCv.width !== w || bgCv.height !== h) {
+      bgCv.width = w;
+      bgCv.height = h;
+    }
+    SliderBoot.renderMosaic(bgOff, ART, t, { maxBlock: 32, ease: "out" });
+    var ctx = bgCv.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = "#cde8fa";
+    ctx.fillRect(0, 0, w, h);
+    var sw = bgOff.width;
+    var sh = bgOff.height;
+    var scale = Math.max(w / sw, h / sh);
+    var dw = sw * scale;
+    var dh = sh * scale;
+    // 灯塔在画面偏右，铺满时把这一侧留在屏幕里
+    var dx = Math.min(0, Math.max(w - dw, w * 0.62 - dw * (48 / 64)));
+    var dy = Math.min(0, Math.max(h - dh, h * 0.42 - dh * (28 / 64)));
+    ctx.drawImage(bgOff, dx, dy, dw, dh);
   }
 
   var lastT = 0;
   function paint(t) {
     lastT = t;
-    SliderBoot.renderMosaic(artCv, ART, t, { maxBlock: 34, ease: "out" });
+    paintBg(t);
     PixelMask.renderMaskCanvas(titleCv, TITLE_G, t, cv("--c-ink"), null, 12);
     PixelMask.renderMaskCanvas(
       ctaCv,
@@ -59,8 +192,10 @@
       null,
       5
     );
-    var k = Math.round(t * DOTS.length);
-    for (var i = 0; i < DOTS.length; i++) DOTS[i].classList.toggle("on", i < k);
+    SliderBoot.renderMosaic(dotsCv, dotsGrid(t), t, { maxBlock: 10, ease: "out" });
+    var muted = muteBtn && muteBtn.classList.contains("is-muted");
+    SliderBoot.renderMosaic(gearCv, iconGrid("gear"), t, { maxBlock: 36, ease: "out" });
+    SliderBoot.renderMosaic(muteCv, iconGrid(muted ? "mute" : "sound"), t, { maxBlock: 36, ease: "out" });
   }
 
   function pctFromX(clientX) {
@@ -198,7 +333,6 @@
     if (UNLOCKED) return;
     stage.classList.remove("boot-idle");
     stage.classList.add("dragging");
-    hint.classList.add("show");
   }
 
   function onRelease() {
@@ -213,9 +347,6 @@
   }
 
   stage.classList.add("boot-idle");
-  setTimeout(function () {
-    if (!UNLOCKED && boot.value <= 0.05) hint.classList.add("show");
-  }, 5000);
 
   ctaEl.addEventListener("click", function () {
     if (UNLOCKED) startBtn.click();
@@ -229,6 +360,10 @@
   });
   mo.observe(startBtn, { childList: true, characterData: true, subtree: true });
   mo.observe(progEl, { childList: true, characterData: true, subtree: true });
+  if (muteBtn) mo.observe(muteBtn, { attributes: true, attributeFilter: ["class"] });
+  window.addEventListener("resize", function () {
+    paint(lastT);
+  });
 
   function firstPaint() {
     setVisual(0);
@@ -238,6 +373,7 @@
 
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () {
+      iconCache = {};
       paint(lastT);
     });
   }
