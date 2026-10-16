@@ -301,7 +301,6 @@
     SliderBoot.renderMosaic(muteCv, iconGrid(muted ? "mute" : "sound"), t, { maxBlock: 36, ease: "out" });
   }
 
-  var hint = document.getElementById("boHint");
   var GEO = null;
   function geom() {
     if (GEO) return GEO;
@@ -404,7 +403,6 @@
     if (UNLOCKED) return;
     stage.classList.remove("boot-idle");
     stage.classList.add("dragging");
-    hint.classList.add("show");
   }
 
   function onRelease() {
@@ -419,9 +417,6 @@
   }
 
   stage.classList.add("boot-idle");
-  setTimeout(function () {
-    if (!UNLOCKED && boot.value <= 0.05) hint.classList.add("show");
-  }, 5000);
 
   ctaEl.addEventListener("click", function () {
     if (UNLOCKED) startBtn.click();
