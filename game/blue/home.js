@@ -32,15 +32,8 @@
   dotsSrc.height = 28;
   var iconCache = {};
 
-  var TITLE_G = PixelMask.textToGrid("像素修理铺", 336, 84);
-  var SUB_G = PixelMask.textToGrid("选关", 132, 52);
-  var G_CACHE = {};
-
-  function gridOf(text, w, h) {
-    var k = text + "|" + w + "x" + h;
-    if (!G_CACHE[k]) G_CACHE[k] = PixelMask.textToGrid(text, w, h);
-    return G_CACHE[k];
-  }
+  var styleCache = {};
+  var LOGO = "'ZCOOL KuaiLe', 'Yuanti SC', 'YouYuan', sans-serif";
 
   function hexByte(n) {
     var s = n.toString(16);
@@ -72,6 +65,79 @@
     ctx.arcTo(x, y + h, x, y, r);
     ctx.arcTo(x, y, x + w, y, r);
     ctx.closePath();
+  }
+
+  function logoFont(size) {
+    return size + "px " + LOGO;
+  }
+
+  function strokeFillText(ctx, text, x, y, size, fill, ratio) {
+    ctx.font = logoFont(size);
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = Math.max(4, Math.round(size * (ratio || 0.2)));
+    ctx.strokeText(text, x, y);
+    ctx.fillStyle = fill || "#243448";
+    ctx.fillText(text, x, y);
+  }
+
+  function drawLogo(ctx) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    strokeFillText(ctx, "像素修理铺", 36, ctx.canvas.height / 2 + 4, 104, "#243448");
+  }
+
+  function drawGameButton(ctx, text, fill) {
+    var w = ctx.canvas.width;
+    var h = ctx.canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = fill;
+    ctx.strokeStyle = "#122133";
+    ctx.lineWidth = 8;
+    ctx.lineJoin = "round";
+    roundRect(ctx, 6, 6, w - 12, h - 12, 26);
+    ctx.fill();
+    ctx.stroke();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = logoFont(text.length > 4 ? 42 : 40);
+    ctx.fillStyle = "#122133";
+    ctx.fillText(text, w / 2, h / 2 + 2);
+  }
+
+  function drawProgress(ctx, text) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.letterSpacing = "2px";
+    strokeFillText(ctx, text, 14, ctx.canvas.height / 2, 40, "#243448", 0.1);
+  }
+
+  function styledGrid(kind, text) {
+    var key = kind + "|" + (text || "");
+    if (styleCache[key]) return styleCache[key];
+    var c = document.createElement("canvas");
+    if (kind === "title") {
+      c.width = 760;
+      c.height = 188;
+      drawLogo(c.getContext("2d"));
+    } else if (kind === "cta") {
+      c.width = 520;
+      c.height = 112;
+      drawGameButton(c.getContext("2d"), text || "开始游戏", "#449df0");
+    } else if (kind === "sub") {
+      c.width = 280;
+      c.height = 92;
+      drawGameButton(c.getContext("2d"), "选关", "#f7fbff");
+    } else {
+      c.width = 280;
+      c.height = 72;
+      drawProgress(c.getContext("2d"), text || "0 / 13");
+    }
+    styleCache[key] = canvasToGrid(c);
+    return styleCache[key];
   }
 
   function buttonFace(ctx) {
@@ -176,7 +242,7 @@
       cols = 64;
       rows = Math.max(64, Math.round(64 / aspect));
     }
-    var ox = Math.floor((cols - 64) / 2);
+    var ox = cols <= 64 ? 0 : Math.round((cols - 64) * 0.78);
     var oy = Math.floor((rows - 64) / 2);
     var grid = [];
     for (var y = 0; y < rows; y++) {
@@ -212,23 +278,19 @@
   function paint(t) {
     lastT = t;
     paintBg(t);
-    PixelMask.renderMaskCanvas(titleCv, TITLE_G, t, cv("--c-ink"), null, 12);
-    PixelMask.renderMaskCanvas(
+    SliderBoot.renderMosaic(titleCv, styledGrid("title"), t, { maxBlock: 28, ease: "out" });
+    SliderBoot.renderMosaic(
       ctaCv,
-      gridOf((startBtn.textContent || "开始游戏").trim(), 300, 76),
+      styledGrid("cta", (startBtn.textContent || "开始游戏").trim()),
       t,
-      cv("--c-on-pop"),
-      cv("--c-accent"),
-      13
+      { maxBlock: 26, ease: "out" }
     );
-    PixelMask.renderMaskCanvas(subCv, SUB_G, t, cv("--c-ink"), null, 7);
-    PixelMask.renderMaskCanvas(
+    SliderBoot.renderMosaic(subCv, styledGrid("sub"), t, { maxBlock: 22, ease: "out" });
+    SliderBoot.renderMosaic(
       progCv,
-      gridOf((progEl.textContent || "0 / 13").trim(), 150, 44),
+      styledGrid("prog", (progEl.textContent || "0 / 13").trim()),
       t,
-      cv("--c-ink-soft"),
-      null,
-      5
+      { maxBlock: 16, ease: "out" }
     );
     SliderBoot.renderMosaic(dotsCv, dotsGrid(t), t, { maxBlock: 10, ease: "out" });
     var muted = muteBtn && muteBtn.classList.contains("is-muted");
@@ -412,6 +474,7 @@
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () {
       iconCache = {};
+      styleCache = {};
       paint(lastT);
     });
   }
