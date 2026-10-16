@@ -1,4 +1,4 @@
-/* 雾蓝对照站。关卡面板只换颜色：不要外框，不要不带模糊的实心底影。 */
+/* 雾蓝对照站。面板和弹层描边；左右两张图和关卡滑动条不要线框，也不要实心硬底影。 */
 
 :root {
   --paper: #cde8fa;
@@ -23,13 +23,19 @@ body {
   color: var(--ink);
 }
 
-/* 主关卡面板：色块本身就是面板，不描边、不垫实心硬影 */
+/* 外层面板、选关卡、结束卡、暂停和设置这些弹层保留描边。不要实心硬底影。 */
 .sheet,
-.board,
-.axis-card,
 .level-card,
 .home-card,
-.ov-card,
+.ov-card {
+  border: 2px solid var(--ink);
+  box-shadow: none;
+}
+
+.board,
+.axis-card,
+.gray-bar,
+.map-bar,
 .done-mark,
 .reset,
 .icon-btn,
@@ -57,7 +63,7 @@ body {
 
 .level-card.is-next {
   background: #e1f8ff;
-  border: none;
+  border: 2px solid var(--accent-deep);
   box-shadow: none;
 }
 

@@ -161,13 +161,10 @@
     ctx.fillRect(0, 0, w, h);
     var sw = bgOff.width;
     var sh = bgOff.height;
-    var scale = Math.max(w / sw, h / sh);
+    var scale = Math.min(w / sw, h / sh);
     var dw = sw * scale;
     var dh = sh * scale;
-    // 灯塔在画面偏右，铺满时把这一侧留在屏幕里
-    var dx = Math.min(0, Math.max(w - dw, w * 0.62 - dw * (48 / 64)));
-    var dy = Math.min(0, Math.max(h - dh, h * 0.42 - dh * (28 / 64)));
-    ctx.drawImage(bgOff, dx, dy, dw, dh);
+    ctx.drawImage(bgOff, (w - dw) / 2, (h - dh) / 2, dw, dh);
   }
 
   var lastT = 0;
