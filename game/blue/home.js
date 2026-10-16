@@ -14,9 +14,12 @@
 
   var ART = PhotoArt.landscapeTarget();
   var bgCv = document.getElementById("boBg");
-  var bgOff = document.createElement("canvas");
-  bgOff.width = 512;
-  bgOff.height = 512;
+  var SKY = "#7eafd2";
+  var SEA = "#2f6f88";
+  var SAND = "#e0c8a0";
+  var FOAM = "#e8e0d4";
+  var artKey = "";
+  var artGrid = null;
   var titleCv = document.getElementById("boTitle");
   var ctaCv = document.getElementById("boCtaCv");
   var subCv = document.getElementById("boSubCv");
@@ -146,6 +149,51 @@
     return canvasToGrid(dotsSrc);
   }
 
+  /* 原图是 64×64 的方图。按屏幕比例把天空、海、沙滩接到四周，整张图和窗口同比例。 */
+  function shoreY(sx) {
+    if (sx <= 36) return 52;
+    return Math.max(45, Math.round(52 - (sx - 36) / 3));
+  }
+
+  function extendColor(sx, sy) {
+    var sandLine = shoreY(sx);
+    if (sy === sandLine) return FOAM;
+    if (sy > sandLine) return SAND;
+    if (sy >= 38) return SEA;
+    return SKY;
+  }
+
+  function artForScreen(viewW, viewH) {
+    var key = viewW + "x" + viewH;
+    if (artKey === key) return artGrid;
+    var aspect = viewW / viewH;
+    var cols;
+    var rows;
+    if (aspect >= 1) {
+      rows = 64;
+      cols = Math.max(64, Math.round(64 * aspect));
+    } else {
+      cols = 64;
+      rows = Math.max(64, Math.round(64 / aspect));
+    }
+    var ox = Math.floor((cols - 64) / 2);
+    var oy = Math.floor((rows - 64) / 2);
+    var grid = [];
+    for (var y = 0; y < rows; y++) {
+      var row = [];
+      for (var x = 0; x < cols; x++) {
+        var bx = x - ox;
+        var by = y - oy;
+        if (bx >= 0 && by >= 0 && bx < 64 && by < 64) row.push(ART[by][bx]);
+        else row.push(extendColor(bx, by));
+      }
+      grid.push(row);
+    }
+    artKey = key;
+    artGrid = grid;
+    return grid;
+  }
+
   function paintBg(t) {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var w = Math.max(1, Math.round(window.innerWidth * dpr));
@@ -154,17 +202,10 @@
       bgCv.width = w;
       bgCv.height = h;
     }
-    SliderBoot.renderMosaic(bgOff, ART, t, { maxBlock: 32, ease: "out" });
-    var ctx = bgCv.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
-    ctx.fillStyle = "#cde8fa";
-    ctx.fillRect(0, 0, w, h);
-    var sw = bgOff.width;
-    var sh = bgOff.height;
-    var scale = Math.min(w / sw, h / sh);
-    var dw = sw * scale;
-    var dh = sh * scale;
-    ctx.drawImage(bgOff, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    SliderBoot.renderMosaic(bgCv, artForScreen(window.innerWidth, window.innerHeight), t, {
+      maxBlock: 32,
+      ease: "out",
+    });
   }
 
   var lastT = 0;
