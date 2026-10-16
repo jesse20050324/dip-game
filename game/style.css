@@ -806,6 +806,28 @@ canvas {
   padding: 0 18px;
   font-size: 1rem;
 }
+#winOv .win-note {
+  display: none;
+  margin: 0;
+  flex: 1 0 100%;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.55;
+}
+#winOv .ov-card.has-note {
+  flex-wrap: wrap;
+  width: min(440px, calc(100% - 24px));
+  align-items: flex-start;
+}
+#winOv .ov-card.has-note .win-note {
+  display: block;
+  order: 3;
+}
+#winOv .ov-card.has-note .cta {
+  margin-left: auto;
+  order: 2;
+}
 
 /* 设置里的声音行 */
 .setting-row {

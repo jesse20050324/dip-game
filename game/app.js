@@ -561,6 +561,13 @@
   const wipeOv = document.getElementById("wipeOv");
   const winOv = document.getElementById("winOv");
   const winNext = document.getElementById("winNext");
+  const winNote = document.getElementById("winNote");
+  const WIN_NOTES = {
+    9: "复印件被墨水污染了？把墨水换成纸张的颜色即可。",
+    10: "把杂乱的背景换成一个颜色，你就有了完美的自拍！",
+    11: "不想要水印？那就让他和背景融为一体吧。",
+    12: "老照片褪色了吗？找到他本来的颜色",
+  };
   const muteLabels = Array.from(document.querySelectorAll("[data-mute-label]"));
 
   const SPEAKER_SVG = `<svg class="speaker-svg" viewBox="0 0 24 24" aria-hidden="true">
@@ -1254,6 +1261,13 @@
     }
     const last = levelIndex >= LEVELS.length - 1;
     winNext.textContent = last ? "完成本章" : "下一关";
+    const note = WIN_NOTES[levelIndex] || "";
+    const card = winOv.querySelector(".ov-card");
+    if (winNote) {
+      winNote.textContent = note;
+      winNote.hidden = !note;
+    }
+    if (card) card.classList.toggle("has-note", !!note);
     openOv(winOv);
   }
 
