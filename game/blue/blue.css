@@ -22,6 +22,7 @@
   --c-ink-soft: #556373;
   --c-on-pop: #122133;
   --c-accent: #449df0;
+  --c-ghost: #e1edf6;
 }
 
 body {
@@ -201,23 +202,26 @@ body {
   border-radius: 0;
 }
 
+/* 主角列：标题左对齐；两颗按钮在列内居中。滑条不在这一列里。 */
 .bo-stage {
   position: absolute;
   z-index: 2;
-  left: max(22px, 4vw);
-  top: 50%;
-  width: min(460px, 46vw);
-  transform: translateY(-50%);
+  left: 20vw;
+  top: 26vh;
+  width: min(420px, 40vw);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
+  align-items: center;
+  gap: 22px;
   pointer-events: none;
 }
 
 .bo-title {
-  width: 100%;
+  display: block;
+  align-self: flex-start;
+  width: min(420px, 40vw);
   height: auto;
+  filter: drop-shadow(0 5px 0 rgba(241, 247, 251, 0.9));
 }
 
 .bo-cta,
@@ -233,24 +237,28 @@ body {
   border: 0;
   background: transparent;
   cursor: pointer;
+  display: block;
 }
 
-.bo-cta {
-  width: 100%;
-}
-
-.bo-cta canvas {
-  width: 100%;
-  height: auto;
-}
-
+.bo-cta canvas,
 .bo-sub canvas {
-  width: 210px;
+  display: block;
+  width: 260px;
   height: auto;
+  border-radius: 14px;
+  box-shadow: 0 5px 0 rgba(18, 33, 51, 0.28);
+  transition: box-shadow 0.08s ease, transform 0.08s ease;
+}
+
+.bo-cta:active canvas,
+.bo-sub:active canvas {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(18, 33, 51, 0.28);
 }
 
 .bo-prog {
-  width: 150px;
+  display: block;
+  width: 130px;
   height: auto;
 }
 
@@ -259,11 +267,16 @@ body {
   height: 28px;
 }
 
+/* 滑条挂在屏幕底部中央，拉长到半屏宽。把手仍是双色扣手。 */
 .bo-bar {
-  position: relative;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 7vh;
+  margin: 0 auto;
   z-index: 5;
-  width: 100%;
-  margin-top: 6px;
+  width: min(50vw, 720px);
+  min-width: 300px;
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
@@ -274,7 +287,12 @@ body {
 }
 
 .bo-hint {
-  margin: 10px 0 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  margin: 0;
+  text-align: center;
   font: 800 0.95rem/1 "ZCOOL KuaiLe", "Microsoft YaHei", sans-serif;
   letter-spacing: 0.16em;
   color: #556373;
@@ -386,10 +404,24 @@ body {
   animation: none;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 640px) {
   .bo-stage {
-    left: 14px;
-    width: min(248px, calc(100% - 120px));
-    gap: 10px;
+    left: 22px;
+    top: 20vh;
+    width: calc(100% - 44px);
+  }
+
+  .bo-title {
+    width: min(320px, 82vw);
+  }
+
+  .bo-cta canvas,
+  .bo-sub canvas {
+    width: 230px;
+  }
+
+  .bo-bar {
+    width: 50vw;
+    min-width: 240px;
   }
 }

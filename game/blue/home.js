@@ -32,8 +32,21 @@
   dotsSrc.height = 28;
   var iconCache = {};
 
-  var styleCache = {};
-  var LOGO = "'ZCOOL KuaiLe', 'Yuanti SC', 'YouYuan', sans-serif";
+  var TITLE_G = null;
+  var G_CACHE = {};
+  var BTN_W = 260;
+  var BTN_H = 68;
+
+  function titleGrid() {
+    if (!TITLE_G) TITLE_G = PixelMask.textToGrid("像素修理铺", 620, 150, "left");
+    return TITLE_G;
+  }
+
+  function gridOf(text, w, h) {
+    var k = text + "|" + w + "x" + h;
+    if (!G_CACHE[k]) G_CACHE[k] = PixelMask.textToGrid(text, w, h);
+    return G_CACHE[k];
+  }
 
   function hexByte(n) {
     var s = n.toString(16);
@@ -65,79 +78,6 @@
     ctx.arcTo(x, y + h, x, y, r);
     ctx.arcTo(x, y, x + w, y, r);
     ctx.closePath();
-  }
-
-  function logoFont(size) {
-    return size + "px " + LOGO;
-  }
-
-  function strokeFillText(ctx, text, x, y, size, fill, ratio) {
-    ctx.font = logoFont(size);
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = Math.max(4, Math.round(size * (ratio || 0.2)));
-    ctx.strokeText(text, x, y);
-    ctx.fillStyle = fill || "#243448";
-    ctx.fillText(text, x, y);
-  }
-
-  function drawLogo(ctx) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    strokeFillText(ctx, "像素修理铺", 36, ctx.canvas.height / 2 + 4, 104, "#243448");
-  }
-
-  function drawGameButton(ctx, text, fill) {
-    var w = ctx.canvas.width;
-    var h = ctx.canvas.height;
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = fill;
-    ctx.strokeStyle = "#122133";
-    ctx.lineWidth = 8;
-    ctx.lineJoin = "round";
-    roundRect(ctx, 6, 6, w - 12, h - 12, 26);
-    ctx.fill();
-    ctx.stroke();
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.font = logoFont(text.length > 4 ? 42 : 40);
-    ctx.fillStyle = "#122133";
-    ctx.fillText(text, w / 2, h / 2 + 2);
-  }
-
-  function drawProgress(ctx, text) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    ctx.letterSpacing = "2px";
-    strokeFillText(ctx, text, 14, ctx.canvas.height / 2, 40, "#243448", 0.1);
-  }
-
-  function styledGrid(kind, text) {
-    var key = kind + "|" + (text || "");
-    if (styleCache[key]) return styleCache[key];
-    var c = document.createElement("canvas");
-    if (kind === "title") {
-      c.width = 760;
-      c.height = 188;
-      drawLogo(c.getContext("2d"));
-    } else if (kind === "cta") {
-      c.width = 520;
-      c.height = 112;
-      drawGameButton(c.getContext("2d"), text || "开始游戏", "#449df0");
-    } else if (kind === "sub") {
-      c.width = 280;
-      c.height = 92;
-      drawGameButton(c.getContext("2d"), "选关", "#f7fbff");
-    } else {
-      c.width = 280;
-      c.height = 72;
-      drawProgress(c.getContext("2d"), text || "0 / 13");
-    }
-    styleCache[key] = canvasToGrid(c);
-    return styleCache[key];
   }
 
   function buttonFace(ctx) {
@@ -215,18 +155,64 @@
     return canvasToGrid(dotsSrc);
   }
 
-  /* 原图是 64×64 的方图。按屏幕比例把天空、海、沙滩接到四周，整张图和窗口同比例。 */
+  /* 原图是 64×64 的方图。按屏幕比例把天空、海、沙滩接到四周。
+     接出去的部分带淡云、波纹和沙粒，原图里的平天空也改成同一套渐变。 */
   function shoreY(sx) {
     if (sx <= 36) return 52;
     return Math.max(45, Math.round(52 - (sx - 36) / 3));
   }
 
+  function hash2(x, y) {
+    var h = x * 374761393 + y * 668265263;
+    h = (h ^ (h >> 13)) * 1274126177;
+    h = h ^ (h >> 16);
+    return (h >>> 0) / 4294967295;
+  }
+
+  function mix(a, b, k) {
+    var ar = parseInt(a.slice(1, 3), 16), ag = parseInt(a.slice(3, 5), 16), ab = parseInt(a.slice(5, 7), 16);
+    var br = parseInt(b.slice(1, 3), 16), bg = parseInt(b.slice(3, 5), 16), bb = parseInt(b.slice(5, 7), 16);
+    var r = Math.round(ar + (br - ar) * k), g = Math.round(ag + (bg - ag) * k), bl = Math.round(ab + (bb - ab) * k);
+    return "#" + hexByte(r) + hexByte(g) + hexByte(bl);
+  }
+
+  var SKY_HI = "#a8cbe8";
+  var SKY_LO = "#8fbcdd";
+  var SEA_DK = "#27607a";
+  var SAND_DK = "#d4b98c";
+
+  function skyColor(sx, sy) {
+    var t = Math.min(1, Math.max(0, sy / 38));
+    var c = mix(SKY_HI, SKY_LO, t);
+    var r = hash2(sx, sy);
+    if (r > 0.965) return mix(c, "#ffffff", 0.55);
+    if (r > 0.945) return mix(c, "#ffffff", 0.3);
+    return c;
+  }
+
+  function seaColor(sx, sy) {
+    var depth = (sy - 38) / (52 - 38);
+    var freq = depth > 0.6 ? 7 : 11;
+    var wave = (sy * freq + Math.floor(sx / 3)) % 9 < 2;
+    if (wave) return mix(SEA, FOAM, 0.18 + depth * 0.22);
+    var r = hash2(sx * 3, sy * 5);
+    if (r > 0.94) return mix(SEA, SEA_DK, 0.5);
+    return SEA;
+  }
+
+  function sandColor(sx, sy) {
+    var r = hash2(sx * 5, sy * 7);
+    if (r > 0.93) return SAND_DK;
+    if (r > 0.88) return mix(SAND, FOAM, 0.35);
+    return SAND;
+  }
+
   function extendColor(sx, sy) {
     var sandLine = shoreY(sx);
     if (sy === sandLine) return FOAM;
-    if (sy > sandLine) return SAND;
-    if (sy >= 38) return SEA;
-    return SKY;
+    if (sy > sandLine) return sandColor(sx, sy);
+    if (sy >= 38) return seaColor(sx, sy);
+    return skyColor(sx, sy);
   }
 
   function artForScreen(viewW, viewH) {
@@ -242,7 +228,7 @@
       cols = 64;
       rows = Math.max(64, Math.round(64 / aspect));
     }
-    var ox = cols <= 64 ? 0 : Math.round((cols - 64) * 0.78);
+    var ox = Math.round((cols - 64) * 0.66);
     var oy = Math.floor((rows - 64) / 2);
     var grid = [];
     for (var y = 0; y < rows; y++) {
@@ -250,8 +236,14 @@
       for (var x = 0; x < cols; x++) {
         var bx = x - ox;
         var by = y - oy;
-        if (bx >= 0 && by >= 0 && bx < 64 && by < 64) row.push(ART[by][bx]);
-        else row.push(extendColor(bx, by));
+        var cell;
+        if (bx >= 0 && by >= 0 && bx < 64 && by < 64) {
+          cell = ART[by][bx];
+          if (cell === SKY) cell = skyColor(bx, by);
+        } else {
+          cell = extendColor(bx, by);
+        }
+        row.push(cell);
       }
       grid.push(row);
     }
@@ -269,7 +261,7 @@
       bgCv.height = h;
     }
     SliderBoot.renderMosaic(bgCv, artForScreen(window.innerWidth, window.innerHeight), t, {
-      maxBlock: 32,
+      maxBlock: 10,
       ease: "out",
     });
   }
@@ -278,19 +270,30 @@
   function paint(t) {
     lastT = t;
     paintBg(t);
-    SliderBoot.renderMosaic(titleCv, styledGrid("title"), t, { maxBlock: 28, ease: "out" });
-    SliderBoot.renderMosaic(
+    PixelMask.renderMaskCanvas(titleCv, titleGrid(), t, cv("--c-ink"), null, 12);
+    PixelMask.renderMaskCanvas(
       ctaCv,
-      styledGrid("cta", (startBtn.textContent || "开始游戏").trim()),
+      gridOf((startBtn.textContent || "开始游戏").trim(), BTN_W, BTN_H),
       t,
-      { maxBlock: 26, ease: "out" }
+      cv("--c-on-pop"),
+      cv("--c-accent"),
+      12
     );
-    SliderBoot.renderMosaic(subCv, styledGrid("sub"), t, { maxBlock: 22, ease: "out" });
-    SliderBoot.renderMosaic(
-      progCv,
-      styledGrid("prog", (progEl.textContent || "0 / 13").trim()),
+    PixelMask.renderMaskCanvas(
+      subCv,
+      gridOf("选关", BTN_W, BTN_H),
       t,
-      { maxBlock: 16, ease: "out" }
+      cv("--c-ink"),
+      cv("--c-ghost"),
+      12
+    );
+    PixelMask.renderMaskCanvas(
+      progCv,
+      gridOf((progEl.textContent || "0 / 13").trim(), 180, 52),
+      t,
+      cv("--c-ink-soft"),
+      null,
+      6
     );
     SliderBoot.renderMosaic(dotsCv, dotsGrid(t), t, { maxBlock: 10, ease: "out" });
     var muted = muteBtn && muteBtn.classList.contains("is-muted");
@@ -440,6 +443,8 @@
 
   function firstPaint() {
     setVisual(0);
+    var m = window.location.search.match(/[?&]boT=([\d.]+)/);
+    if (m) boot.set(Math.min(1, parseFloat(m[1])));
   }
   if (document.readyState === "complete") firstPaint();
   else window.addEventListener("load", firstPaint);
@@ -447,7 +452,8 @@
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () {
       iconCache = {};
-      styleCache = {};
+      TITLE_G = null;
+      G_CACHE = {};
       paint(lastT);
     });
   }

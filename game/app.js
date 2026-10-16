@@ -1260,7 +1260,8 @@
       return;
     }
     const last = levelIndex >= LEVELS.length - 1;
-    winNext.textContent = last ? "完成本章" : "下一关";
+    const doneLabel = document.body.dataset.scheme === "blue" ? "通关！" : "完成本章";
+    winNext.textContent = last ? doneLabel : "下一关";
     const note = WIN_NOTES[levelIndex] || "";
     const card = winOv.querySelector(".ov-card");
     if (winNote) {

@@ -16,19 +16,38 @@ window.PixelMask = (function () {
    * @param {string} text
    * @param {number} W 网格宽（同时也是采样 canvas 宽）
    * @param {number} H 网格高
+   * @param {string} align
+   *        "center"（默认）居中不裁边
+   *        "left"    笔迹左对齐到 x=0，并把画布裁到正好包住笔迹（用于标题）
+   *        "left-keep" 笔迹左对齐到 x=2，画布保持 W×H 不裁
    * @returns {number[][]} 1 = 有笔迹，0 = 空
    */
-  function textToGrid(text, W, H) {
+  function textToGrid(text, W, H, align) {
     var c = document.createElement("canvas");
     c.width = W; c.height = H;
     var x = c.getContext("2d");
     x.clearRect(0, 0, W, H);
     x.fillStyle = "#000000";
     // 字号取高度的 0.52：再大就会上下顶格，马赛克阶段会糊出画布
-    x.font = "900 " + Math.round(H * 0.52) + "px 'Arial Black', 'Microsoft YaHei', sans-serif";
+    var fsize = Math.round(H * 0.52);
+    x.font = "900 " + fsize + "px 'Arial Black', 'Microsoft YaHei', sans-serif";
     x.textAlign = "center";
     x.textBaseline = "middle";
-    x.fillText(text, W / 2, H / 2 + 1);
+    var drawX = W / 2;
+    var trim = false;
+    if (align === "left" || align === "left-keep") {
+      var m = x.measureText(text);
+      var inkL = W / 2 - m.width / 2;
+      var inkR = W / 2 + m.width / 2;
+      drawX = W / 2 - inkL;
+      trim = align === "left";
+      if (!trim) drawX = W / 2 - inkL + 2;
+      if (trim) {
+        var padR = Math.max(2, Math.round(fsize * 0.08));
+        W = Math.max(1, Math.round(inkR - inkL) + padR);
+      }
+    }
+    x.fillText(text, drawX, H / 2 + 1);
     var d = x.getImageData(0, 0, W, H).data;
     var grid = [];
     for (var y = 0; y < H; y++) {
@@ -52,6 +71,10 @@ window.PixelMask = (function () {
    */
   function renderMaskCanvas(cv, grid, t, fg, bg, maxBlock) {
     var H = grid.length, W = grid[0].length;
+    if (cv.width !== W || cv.height !== H) {
+      cv.width = W;
+      cv.height = H;
+    }
     var ctx = cv.getContext("2d");
     ctx.imageSmoothingEnabled = false;
     // 揭晓感：越到后面越快（大哥点名要这个，不要两段式）
