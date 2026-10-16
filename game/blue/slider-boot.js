@@ -192,7 +192,10 @@ window.SliderBoot = (function () {
         if (!dragging || fired) return;
         // 🔴 已经没有按键按着了 → 这不是拖动，是上一轮没收尾留下的悬空状态，就地收掉。
         //    没有这道闸，幽灵拖动就会一直存在。
-        if (ev.buttons === 0) { endDrag(ev); return; }
+        if (ev.pointerType !== "touch" && ev.pointerType !== "pen" && ev.buttons === 0) {
+          endDrag(ev);
+          return;
+        }
         emit(ratioFromX(ev.clientX) - dragOffset, false);
       }, true);
 

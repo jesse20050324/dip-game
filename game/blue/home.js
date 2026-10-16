@@ -298,93 +298,63 @@
     SliderBoot.renderMosaic(muteCv, iconGrid(muted ? "mute" : "sound"), t, { maxBlock: 36, ease: "out" });
   }
 
-  function pctFromX(clientX) {
+  var hint = document.getElementById("boHint");
+  var GEO = null;
+  function geom() {
+    if (GEO) return GEO;
     var pad = 3;
+    var inner = track.clientWidth - pad * 2;
+    var kw = parseFloat(getComputedStyle(knob).getPropertyValue("--kw")) || 46;
     var tr = track.getBoundingClientRect();
-    var kw = knob.getBoundingClientRect().width || 86;
-    var start = tr.left + pad + kw * 0.5;
-    var len = Math.max(1, tr.width - pad * 2 - kw);
-    return (clientX - start) / len;
+    var bl = parseFloat(getComputedStyle(track).borderLeftWidth) || 0;
+    var core = knob.querySelector(".bo-knob-core") || knob;
+    GEO = {
+      start: tr.left + bl + pad + core.offsetWidth * 0.5,
+      len: Math.max(1, inner - kw),
+    };
+    return GEO;
+  }
+  window.addEventListener("scroll", function () {
+    GEO = null;
+  }, true);
+  function pctFromX(clientX) {
+    var g = geom();
+    return (clientX - g.start) / g.len;
   }
 
   function setVisual(t) {
     var pad = 3;
     var inner = track.clientWidth - pad * 2;
-    var kw = parseFloat(getComputedStyle(knob).getPropertyValue("--kw")) || 86;
+    var kw = parseFloat(getComputedStyle(knob).getPropertyValue("--kw")) || 46;
     var w = kw * 0.5 + (inner - kw) * t;
-    fill.style.width = pad + w + "px";
+    fill.style.width = "calc(" + pad + "px + " + w + "px)";
     knob.style.setProperty("--p", String(t));
     paint(t);
   }
 
   var unlockT = 0.9;
   var UNLOCKED = false;
-  var value = 0;
-  var dragging = false;
-  var activeId = null;
-  var animToken = 0;
 
-  var boot = {
-    get value() {
-      return value;
-    },
-    set: function (v) {
-      value = Math.max(0, Math.min(1, v));
-      setVisual(value);
-      if (value > 0.05) {
+  var boot = SliderBoot.SliderBoot({
+    range: track,
+    knob: knob,
+    pct: pctFromX,
+    threshold: unlockT,
+    onChange: function (t) {
+      setVisual(t);
+      if (t > 0.05) {
         stage.classList.add("on");
         stage.classList.remove("boot-idle");
-      } else if (!dragging) {
+      } else {
         stage.classList.remove("on");
       }
     },
-  };
-
-  function eventPoint(ev) {
-    if (ev.touches && ev.touches[0]) return ev.touches[0];
-    if (ev.changedTouches && ev.changedTouches[0]) return ev.changedTouches[0];
-    return ev;
-  }
-
-  function beginDrag(ev) {
-    if (UNLOCKED || dragging) return;
-    animToken++;
-    dragging = true;
-    activeId = ev.pointerId != null ? ev.pointerId : "touch";
-    if (ev.cancelable) ev.preventDefault();
-    try {
-      if (ev.pointerId != null && track.setPointerCapture) track.setPointerCapture(ev.pointerId);
-    } catch (err) {}
-    onGrab();
-    boot.set(pctFromX(eventPoint(ev).clientX));
-  }
-
-  function moveDrag(ev) {
-    if (!dragging || UNLOCKED) return;
-    if (ev.pointerId != null && activeId !== ev.pointerId) return;
-    if (ev.cancelable) ev.preventDefault();
-    boot.set(pctFromX(eventPoint(ev).clientX));
-  }
-
-  function endDrag(ev) {
-    if (!dragging) return;
-    if (ev && ev.pointerId != null && activeId !== ev.pointerId) return;
-    dragging = false;
-    activeId = null;
-    onRelease();
-    if (!UNLOCKED && boot.value >= unlockT) finish();
-  }
-
-  track.addEventListener("pointerdown", beginDrag);
-  window.addEventListener("pointermove", moveDrag, { passive: false });
-  window.addEventListener("pointerup", endDrag);
-  window.addEventListener("pointercancel", endDrag);
-  if (typeof window.PointerEvent !== "function") {
-    track.addEventListener("touchstart", beginDrag, { passive: false });
-    window.addEventListener("touchmove", moveDrag, { passive: false });
-    window.addEventListener("touchend", endDrag);
-    window.addEventListener("touchcancel", endDrag);
-  }
+    onDragStart: onGrab,
+    onDragEnd: onRelease,
+    onUnlock: function () {
+      finish();
+    },
+  });
 
   function finish() {
     UNLOCKED = true;
@@ -416,16 +386,14 @@
   }
 
   function springBack() {
-    var token = ++animToken;
     var from = boot.value;
     var t0 = performance.now();
     var DUR = 300;
     (function step(now) {
-      if (token !== animToken) return;
       var k = Math.min(1, (now - t0) / DUR);
       boot.set(Math.max(0, from * (1 - easeOutBack(k))));
       if (k < 1) requestAnimationFrame(step);
-      else if (token === animToken) boot.set(0);
+      else boot.set(0);
     })(performance.now());
   }
 
@@ -433,6 +401,7 @@
     if (UNLOCKED) return;
     stage.classList.remove("boot-idle");
     stage.classList.add("dragging");
+    hint.classList.add("show");
   }
 
   function onRelease() {
@@ -447,6 +416,9 @@
   }
 
   stage.classList.add("boot-idle");
+  setTimeout(function () {
+    if (!UNLOCKED && boot.value <= 0.05) hint.classList.add("show");
+  }, 5000);
 
   ctaEl.addEventListener("click", function () {
     if (UNLOCKED) startBtn.click();
@@ -462,6 +434,7 @@
   mo.observe(progEl, { childList: true, characterData: true, subtree: true });
   if (muteBtn) mo.observe(muteBtn, { attributes: true, attributeFilter: ["class"] });
   window.addEventListener("resize", function () {
+    GEO = null;
     paint(lastT);
   });
 
