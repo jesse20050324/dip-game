@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>像素修理铺</title>
-    <link rel="stylesheet" href="../style.css?v=blue11" />
-    <link rel="stylesheet" href="blue.css?v=blue11" />
+    <title>Gray Mend</title>
+    <link rel="stylesheet" href="../style.css?v=blue12" />
+    <link rel="stylesheet" href="blue.css?v=blue12" />
   </head>
   <body data-scheme="blue">
     <div class="screen" id="home">
       <canvas class="bo-bg" id="boBg" aria-hidden="true"></canvas>
-      <button type="button" class="icon-btn corner-gear" id="gearBtn" aria-label="设置">⚙</button>
-      <button type="button" class="icon-btn speaker js-mute corner-mute" aria-label="声音"></button>
+      <button type="button" class="icon-btn corner-gear" id="gearBtn" aria-label="Settings">⚙</button>
+      <button type="button" class="icon-btn speaker js-mute corner-mute" aria-label="Sound"></button>
       <canvas class="bo-icon bo-icon-gear" id="boGear" width="104" height="104" aria-hidden="true"></canvas>
       <canvas class="bo-icon bo-icon-mute" id="boMute" width="104" height="104" aria-hidden="true"></canvas>
 
@@ -36,38 +36,38 @@
         </div>
       </div>
 
-      <button type="button" class="bo-sr" id="startBtn">开始游戏</button>
-      <button type="button" class="bo-sr" id="selectBtn">选关</button>
+      <button type="button" class="bo-sr" id="startBtn">Play</button>
+      <button type="button" class="bo-sr" id="selectBtn">Levels</button>
       <p class="bo-sr" id="homeProgress">0 / 13</p>
     </div>
 
     <div class="screen" id="levels" hidden>
       <header class="menu-top">
-        <button type="button" class="icon-btn" id="levelsBack" aria-label="返回主页">
+        <button type="button" class="icon-btn" id="levelsBack" aria-label="Home">
           <span class="back-mark"></span>
         </button>
-        <h2 class="menu-title">选关</h2>
-        <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+        <h2 class="menu-title">Levels</h2>
+        <button type="button" class="icon-btn speaker js-mute" aria-label="Sound"></button>
       </header>
       <div class="level-grid" id="levelGrid"></div>
     </div>
 
     <div class="sheet" id="playSheet" hidden>
       <header class="top">
-        <button type="button" class="icon-btn" id="homeBtn" aria-label="暂停">
+        <button type="button" class="icon-btn" id="homeBtn" aria-label="Pause">
           <span class="pause-mark"></span>
         </button>
         <p class="level-label" id="levelLabel">1 / 13</p>
-        <button type="button" class="icon-btn speaker js-mute" aria-label="声音"></button>
+        <button type="button" class="icon-btn speaker js-mute" aria-label="Sound"></button>
       </header>
 
       <p class="scene" id="scene" hidden></p>
-      <section class="boards" aria-label="图像对照">
+      <section class="boards" aria-label="The two images">
         <figure class="board" id="targetBoard">
-          <canvas id="targetCanvas" width="432" height="432" aria-label="目标图"></canvas>
+          <canvas id="targetCanvas" width="432" height="432" aria-label="Target"></canvas>
         </figure>
         <figure class="board" id="workBoard">
-          <canvas id="workCanvas" width="432" height="432" aria-label="操作图"></canvas>
+          <canvas id="workCanvas" width="432" height="432" aria-label="Your image"></canvas>
         </figure>
       </section>
 
@@ -84,63 +84,63 @@
       </section>
 
       <footer class="bar">
-        <button type="button" class="reset" id="reset" aria-label="重置本关">↺</button>
-        <button type="button" class="confirm" id="confirm" hidden aria-label="确定">✓</button>
+        <button type="button" class="reset" id="reset" aria-label="Reset Level">↺</button>
+        <button type="button" class="confirm" id="confirm" hidden aria-label="Confirm">✓</button>
       </footer>
     </div>
 
     <div class="screen" id="done" hidden>
       <div class="home-card done-card">
         <div class="done-mark" aria-hidden="true">✓</div>
-        <h1 class="done-title">全部修好</h1>
-        <p class="done-line">这一章的图都修好了</p>
+        <h1 class="done-title">All Repaired</h1>
+        <p class="done-line">Every image in this chapter is repaired.</p>
         <p class="home-progress" id="doneProgress">13 / 13</p>
-        <button type="button" class="cta" id="againBtn">返回主页</button>
-        <p class="credits">声音：Kenney Interface Sounds（CC0）</p>
+        <button type="button" class="cta" id="againBtn">Home</button>
+        <p class="credits">Sound: Kenney Interface Sounds (CC0)</p>
       </div>
     </div>
 
     <div class="ov" id="pauseOv" hidden>
       <div class="ov-card">
-        <p class="ov-kicker">暂停</p>
-        <button type="button" class="cta" id="pauseResume">继续</button>
-        <button type="button" class="cta cta-ghost" id="pauseRestart">重开本关</button>
-        <button type="button" class="cta cta-ghost" id="pauseLevels">选关</button>
-        <button type="button" class="cta cta-ghost" id="pauseHome">回主页</button>
+        <p class="ov-kicker">Paused</p>
+        <button type="button" class="cta" id="pauseResume">Resume</button>
+        <button type="button" class="cta cta-ghost" id="pauseRestart">Restart Level</button>
+        <button type="button" class="cta cta-ghost" id="pauseLevels">Levels</button>
+        <button type="button" class="cta cta-ghost" id="pauseHome">Home</button>
       </div>
     </div>
 
     <div class="ov" id="settingsOv" hidden>
       <div class="ov-card">
-        <p class="ov-kicker">设置</p>
-        <button type="button" class="setting-row js-mute"><span>声音</span><span data-mute-label>开着</span></button>
-        <button type="button" class="cta cta-ghost" id="wipeAsk">清除进度</button>
-        <p class="ov-copy">一个把灰度修成颜色的小游戏<br />声音：Kenney Interface Sounds（CC0）</p>
-        <button type="button" class="cta" id="settingsClose">好</button>
+        <p class="ov-kicker">Settings</p>
+        <button type="button" class="setting-row js-mute"><span>Sound</span><span data-mute-label>On</span></button>
+        <button type="button" class="cta cta-ghost" id="wipeAsk">Reset Progress</button>
+        <p class="ov-copy">A short game about repairing gray into color.<br />Sound: Kenney Interface Sounds (CC0)</p>
+        <button type="button" class="cta" id="settingsClose">OK</button>
       </div>
     </div>
 
     <div class="ov" id="wipeOv" hidden>
       <div class="ov-card">
-        <p class="ov-kicker">真的清除？</p>
-        <p class="ov-copy">13 关的进度会回到零。声音设置会留下。</p>
-        <button type="button" class="cta" id="wipeNo">取消</button>
-        <button type="button" class="cta cta-ghost" id="wipeYes">清除</button>
+        <p class="ov-kicker">Reset progress?</p>
+        <p class="ov-copy">All 13 levels go back to zero. Sound settings stay.</p>
+        <button type="button" class="cta" id="wipeNo">Cancel</button>
+        <button type="button" class="cta cta-ghost" id="wipeYes">Reset</button>
       </div>
     </div>
 
     <div class="ov" id="winOv" hidden>
       <div class="ov-card">
-        <p class="ov-kicker">✓ 修好了！</p>
+        <p class="ov-kicker">✓ Repaired</p>
         <p class="win-note" id="winNote" hidden></p>
-        <button type="button" class="cta" id="winNext">下一关</button>
+        <button type="button" class="cta" id="winNext">Next Level</button>
       </div>
     </div>
 
-    <script src="../photo-art.js?v=blue11"></script>
-    <script src="../app.js?v=blue11"></script>
-    <script src="slider-boot.js?v=blue11"></script>
-    <script src="pixel-mask.js?v=blue11"></script>
-    <script src="home.js?v=blue11"></script>
+    <script src="../photo-art.js?v=blue12"></script>
+    <script src="../app.js?v=blue12"></script>
+    <script src="slider-boot.js?v=blue12"></script>
+    <script src="pixel-mask.js?v=blue12"></script>
+    <script src="home.js?v=blue12"></script>
   </body>
 </html>

@@ -38,7 +38,7 @@
   var BTN_H = 68;
 
   function titleGrid() {
-    if (!TITLE_G) TITLE_G = PixelMask.textToGrid("像素修理铺", 620, 150, "left");
+    if (!TITLE_G) TITLE_G = PixelMask.textToGrid("Gray Mend", 620, 150, "left");
     return TITLE_G;
   }
 
@@ -273,7 +273,7 @@
     PixelMask.renderMaskCanvas(titleCv, titleGrid(), t, cv("--c-ink"), null, 12);
     PixelMask.renderMaskCanvas(
       ctaCv,
-      gridOf((startBtn.textContent || "开始游戏").trim(), BTN_W, BTN_H),
+      gridOf((startBtn.textContent || "Play").trim(), BTN_W, BTN_H),
       t,
       cv("--c-on-pop"),
       cv("--c-accent"),
@@ -281,7 +281,7 @@
     );
     PixelMask.renderMaskCanvas(
       subCv,
-      gridOf("选关", BTN_W, BTN_H),
+      gridOf((selectBtn.textContent || "Levels").trim(), BTN_W, BTN_H),
       t,
       cv("--c-ink"),
       cv("--c-ghost"),

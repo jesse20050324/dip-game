@@ -562,12 +562,24 @@
   const winOv = document.getElementById("winOv");
   const winNext = document.getElementById("winNext");
   const winNote = document.getElementById("winNote");
-  const WIN_NOTES = {
-    9: "复印件被墨水污染了？把墨水换成纸张的颜色即可。",
-    10: "把杂乱的背景换成一个颜色，你就有了完美的自拍！",
-    11: "不想要水印？那就让他和背景融为一体吧。",
-    12: "老照片褪色了吗？找到他本来的颜色",
-  };
+  const EN = (document.body.dataset.scheme || "") === "blue";
+  function L(zh, en) {
+    return EN ? en : zh;
+  }
+  const WIN_NOTES = EN
+    ? {
+        0: "Grayscale is a pixel's brightness: one value from darkest to lightest.",
+        1: "An image is a collection of pixels.",
+        2: "A color image is the result of mapping grayscale.",
+        9: "What you don't need to keep can be mapped to the same color as the background.",
+        12: "Grayscale keeps the light and dark; mapping from that restores the color image.",
+      }
+    : {
+        9: "复印件被墨水污染了？把墨水换成纸张的颜色即可。",
+        10: "把杂乱的背景换成一个颜色，你就有了完美的自拍！",
+        11: "不想要水印？那就让他和背景融为一体吧。",
+        12: "老照片褪色了吗？找到他本来的颜色",
+      };
   const muteLabels = Array.from(document.querySelectorAll("[data-mute-label]"));
 
   const SPEAKER_SVG = `<svg class="speaker-svg" viewBox="0 0 24 24" aria-hidden="true">
@@ -633,7 +645,7 @@
       btn.setAttribute("aria-pressed", muted ? "true" : "false");
     });
     muteLabels.forEach((el) => {
-      el.textContent = muted ? "关着" : "开着";
+      el.textContent = muted ? L("关着", "Off") : L("开着", "On");
     });
   }
   function vibrate(pattern) {
@@ -874,7 +886,7 @@
       handle.className = "shandle";
       handle.style.left = `${(sliderValue / 256) * 100}%`;
       handle.innerHTML = "<span></span>";
-      handle.setAttribute("aria-label", "滑块");
+      handle.setAttribute("aria-label", L("滑块", "Slider"));
       handle.addEventListener("pointerdown", startSliderDrag);
       handlesLayer.appendChild(handle);
       return;
@@ -891,7 +903,7 @@
       seg.style.flex = String(edges[i + 1] - edges[i]);
       if (regionColors[i]) seg.style.background = regionColors[i];
       seg.dataset.index = String(i);
-      seg.setAttribute("aria-label", `区间 ${i + 1}`);
+      seg.setAttribute("aria-label", L(`区间 ${i + 1}`, `Range ${i + 1}`));
       seg.addEventListener("click", () => onSegClick(i));
       mapBar.appendChild(seg);
     }
@@ -903,7 +915,7 @@
         h.className = "bhandle";
         h.style.left = `${(b / 256) * 100}%`;
         h.innerHTML = "<span></span>";
-        h.setAttribute("aria-label", `边界 ${i + 1}`);
+        h.setAttribute("aria-label", L(`边界 ${i + 1}`, `Boundary ${i + 1}`));
         h.addEventListener("pointerdown", (ev) => startBoundaryDrag(ev, i));
         handlesLayer.appendChild(h);
       });
@@ -923,7 +935,7 @@
       handle.className = "shandle";
       handle.style.left = `${(sliderValue / 256) * 100}%`;
       handle.innerHTML = "<span></span>";
-      handle.setAttribute("aria-label", "滑块");
+      handle.setAttribute("aria-label", L("滑块", "Slider"));
       handle.addEventListener("pointerdown", startSliderDrag);
       handlesLayer.appendChild(handle);
     }
@@ -941,7 +953,7 @@
       chip.type = "button";
       chip.className = "chip" + (selectedChip === color ? " selected" : "");
       chip.style.background = color;
-      chip.setAttribute("aria-label", "色块");
+      chip.setAttribute("aria-label", L("色块", "Swatch"));
       chip.addEventListener("pointerdown", (ev) => startChipDrag(ev, color));
       chip.addEventListener("click", () => {
         selectedChip = selectedChip === color ? null : color;
@@ -1009,7 +1021,11 @@
     const doneCount = Math.max(0, cleared + 1);
     homeProgress.textContent = `${doneCount} / ${total}`;
     startBtn.textContent =
-      cleared < 0 ? "开始游戏" : cleared >= total - 1 ? "再玩一遍" : "继续游戏";
+      cleared < 0
+        ? L("开始游戏", "Play")
+        : cleared >= total - 1
+          ? L("再玩一遍", "Play Again")
+          : L("继续游戏", "Continue");
     if (homeDots) {
       homeDots.innerHTML = "";
       for (let i = 0; i < total; i++) {
@@ -1260,8 +1276,8 @@
       return;
     }
     const last = levelIndex >= LEVELS.length - 1;
-    const doneLabel = document.body.dataset.scheme === "blue" ? "通关！" : "完成本章";
-    winNext.textContent = last ? doneLabel : "下一关";
+    const doneLabel = L("完成本章", "Cleared!");
+    winNext.textContent = last ? doneLabel : L("下一关", "Next Level");
     const note = WIN_NOTES[levelIndex] || "";
     const card = winOv.querySelector(".ov-card");
     if (winNote) {
