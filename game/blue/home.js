@@ -37,8 +37,53 @@
   var BTN_W = 260;
   var BTN_H = 68;
 
+  function trimGrid(grid) {
+    var top = 0;
+    var bot = grid.length - 1;
+    function ink(y) {
+      var row = grid[y];
+      for (var x = 0; x < row.length; x++) if (row[x]) return true;
+      return false;
+    }
+    while (top <= bot && !ink(top)) top++;
+    while (bot >= top && !ink(bot)) bot--;
+    var out = [];
+    for (var y = top; y <= bot; y++) out.push(grid[y]);
+    return out;
+  }
+
+  function stackGrids(a, b, gap) {
+    a = trimGrid(a);
+    b = trimGrid(b);
+    var w = Math.max(a[0].length, b[0].length);
+    var h = a.length + gap + b.length;
+    var grid = [];
+    var y;
+    var x;
+    for (y = 0; y < h; y++) {
+      var row = [];
+      for (x = 0; x < w; x++) row.push(0);
+      grid.push(row);
+    }
+    function blit(src, y0) {
+      var sw = src[0].length;
+      for (var yy = 0; yy < src.length; yy++) {
+        for (var xx = 0; xx < sw; xx++) grid[y0 + yy][xx] = src[yy][xx];
+      }
+    }
+    blit(a, 0);
+    blit(b, a.length + gap);
+    return grid;
+  }
+
   function titleGrid() {
-    if (!TITLE_G) TITLE_G = PixelMask.textToGrid("The Gray Workshop", 1200, 150, "left");
+    if (!TITLE_G) {
+      TITLE_G = stackGrids(
+        PixelMask.textToGrid("The Gray", 1000, 140, "left"),
+        PixelMask.textToGrid("Workshop", 1000, 140, "left"),
+        14
+      );
+    }
     return TITLE_G;
   }
 

@@ -206,9 +206,9 @@ body {
 .bo-stage {
   position: absolute;
   z-index: 2;
-  left: 20vw;
-  top: 26vh;
-  width: min(420px, 40vw);
+  left: max(28px, 10vw);
+  top: 14vh;
+  width: min(500px, 52vw);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -219,7 +219,7 @@ body {
 .bo-title {
   display: block;
   align-self: flex-start;
-  width: min(420px, 40vw);
+  width: 100%;
   height: auto;
   filter: drop-shadow(0 5px 0 rgba(241, 247, 251, 0.9));
 }
@@ -394,12 +394,12 @@ body {
   }
 
   .bo-title {
-    width: min(320px, 82vw);
+    width: 100%;
   }
 
   .bo-cta canvas,
   .bo-sub canvas {
-    width: 230px;
+    width: 200px;
   }
 
   .bo-bar {
