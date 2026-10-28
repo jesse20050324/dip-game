@@ -38,7 +38,7 @@
   var BTN_H = 68;
 
   function titleGrid() {
-    if (!TITLE_G) TITLE_G = PixelMask.textToGrid("Gray Mend", 620, 150, "left");
+    if (!TITLE_G) TITLE_G = PixelMask.textToGrid("The Gray Workshop", 1200, 150, "left");
     return TITLE_G;
   }
 
