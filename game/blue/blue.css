@@ -407,3 +407,18 @@ body {
     min-width: 240px;
   }
 }
+
+/* ---- SVG 图标按钮:居中与去基线 ---- */
+.icon-btn,
+.reset,
+.confirm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn svg,
+.reset svg,
+.confirm svg,
+.done-mark svg {
+  display: block;
+}
