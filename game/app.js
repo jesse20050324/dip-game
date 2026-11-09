@@ -527,6 +527,23 @@
     },
   ];
 
+  // 选关卡片展示用的关卡名/副标题（与 LEVELS 一一对应；不参与判定，不改关卡数据）
+  const LEVEL_META = [
+    { name: "Meeting gray", sub: "Single pixel · Slider" },
+    { name: "Meeting pixels", sub: "Images are made of pixels" },
+    { name: "Color mapping", sub: "Gray stretches map to colors" },
+    { name: "Moves combined", sub: "Gray × mapping together" },
+    { name: "Meet thresholds", sub: "First threshold drag" },
+    { name: "Two thresholds", sub: "Colors pre-painted" },
+    { name: "Fully hands-on", sub: "Thresholds + free painting" },
+    { name: "Synthesis", sub: "Four thresholds · Five chips" },
+    { name: "Delete the sun", sub: "Threshold off the axis" },
+    { name: "Remove ink", sub: "Ink folded into paper" },
+    { name: "Remove branch", sub: "Keep only the person" },
+    { name: "Remove stamp", sub: "Reuses the level 9 fix" },
+    { name: "Restore photo", sub: "Paint deeper colors" },
+  ];
+
   // ---------- DOM ----------
 
   const targetCanvas = document.getElementById("targetCanvas");
@@ -594,6 +611,7 @@
 
   const SCHEME = document.body.dataset.scheme || "x";
   const SAVE_KEY = `dip-lab-${SCHEME}-cleared`;
+  const IS_BLUE = (document.body.dataset.scheme || "") === "blue";
   const MUTE_KEY = "dip-muted";
   const audioDir = new URL(
     "audio/",
@@ -689,6 +707,10 @@
     levelsEl.hidden = false;
     animIn(levelsEl);
     renderMenu();
+    if (IS_BLUE) {
+      const first = levelGrid.querySelector(".level-card");
+      if (first) first.focus({ preventScroll: true });
+    }
   }
   function showDone() {
     hideScreens();
@@ -698,7 +720,7 @@
     animIn(doneEl);
   }
   function enterPlay(i) {
-    if (!isOpen(i)) return;
+    if (!IS_BLUE && !isOpen(i)) return;
     primeAudio();
     hideScreens();
     playSheet.hidden = false;
@@ -1050,16 +1072,40 @@
       num.className = "level-num";
       num.textContent = String(i + 1);
       card.append(canvas, num);
-      if (i <= cleared) card.classList.add("is-done");
-      if (!isOpen(i)) {
-        card.classList.add("is-locked");
-        card.disabled = true;
-      } else {
-        if (i === next && cleared < total - 1) card.classList.add("is-next");
+      if (IS_BLUE) {
+        const meta = LEVEL_META[i] || { name: "Level " + (i + 1) };
+        const nm = document.createElement("span");
+        nm.className = "level-name";
+        nm.textContent = meta.name;
+        card.appendChild(nm);
+        if (meta.sub) {
+          const sb = document.createElement("span");
+          sb.className = "level-sub";
+          sb.textContent = meta.sub;
+          card.appendChild(sb);
+        }
+        card.setAttribute("aria-label", `Level ${i + 1}: ${meta.name}`);
+        if (i <= cleared) card.classList.add("is-done");
+        if (i === 0) {
+          card.classList.add("is-selected");
+          card.setAttribute("aria-current", "true");
+        }
         card.addEventListener("click", () => {
           playSfx("tap", 0.28);
           enterPlay(i);
         });
+      } else {
+        if (i <= cleared) card.classList.add("is-done");
+        if (!isOpen(i)) {
+          card.classList.add("is-locked");
+          card.disabled = true;
+        } else {
+          if (i === next && cleared < total - 1) card.classList.add("is-next");
+          card.addEventListener("click", () => {
+            playSfx("tap", 0.28);
+            enterPlay(i);
+          });
+        }
       }
       levelGrid.appendChild(card);
     });
@@ -1337,6 +1383,10 @@
   startBtn.addEventListener("click", () => {
     primeAudio();
     playSfx("tap", 0.3);
+    if (IS_BLUE) {
+      showLevels();
+      return;
+    }
     const cleared = getCleared();
     if (cleared >= LEVELS.length - 1) enterPlay(0);
     else enterPlay(cleared + 1);

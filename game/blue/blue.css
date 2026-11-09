@@ -422,3 +422,35 @@ body {
 .done-mark svg {
   display: block;
 }
+
+/* ---- 选关卡片：关卡名 / 副标题 / 默认框选 / 键盘焦点 ---- */
+.level-card .level-name {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.level-card .level-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.level-card.is-selected {
+  background: #e1f8ff;
+  border: 2px solid var(--accent-deep);
+  box-shadow: 0 0 0 3px rgba(48, 129, 203, 0.35);
+}
+.level-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+@media (max-width: 420px) {
+  .level-card .level-name { font-size: 0.82rem; }
+  .level-card .level-sub { display: none; }
+}
